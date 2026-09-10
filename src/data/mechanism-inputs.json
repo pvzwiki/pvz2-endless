@@ -8205,6 +8205,8 @@
     }
   ],
   "leaderRate": 2,
+  "leaderProbability": 0.4,
+  "leaderMinCost": 100,
   "lootEntries": [
     {
       "UniqueId": "Silver1",

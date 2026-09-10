@@ -30,6 +30,9 @@ export default function TimingLab() {
       time: 0,
       automatic: 0,
       rejected: 1,
+      eligibleHp: 8000,
+      newcomerHp: 2000,
+      normalInterval: 24,
       finished: 0,
       currentClear: 0,
       olderClear: 0,
@@ -41,11 +44,14 @@ export default function TimingLab() {
       level: [1, 149],
       wave: [1, 14],
       fraction: [0.7, 0.85, 0.01],
-      damage: [0, 10000],
+      damage: [0, 200000],
       at: [0, 35, 0.1],
       time: [0, 40, 0.1],
       automatic: [0, 1],
       rejected: [0, 1],
+      eligibleHp: [0, 100000],
+      newcomerHp: [0, 100000],
+      normalInterval: [20, 25, 0.1],
       finished: [0, 1],
       currentClear: [0, 1],
       olderClear: [0, 1],
@@ -58,12 +64,12 @@ export default function TimingLab() {
     wave = Math.min(state.wave, plan.count - 1),
     next = plan.waves[wave],
     large = next.flag || next.final,
-    interval = large ? 35 : 24,
+    interval = large ? 35 : state.normalInterval,
     guarded = wave % plan.spacing === plan.spacing - 1;
-  const initial = 8000 + (state.rejected ? 0 : 2000),
+  const initial = state.eligibleHp + (state.rejected ? 0 : state.newcomerHp),
     threshold = waveThreshold(initial, state.fraction),
     after = Math.max(0, initial - state.damage),
-    crossing = after <= threshold ? state.at : null,
+    crossing = initial <= threshold ? 0 : after <= threshold ? state.at : null,
     scenario = deadlineScenario(
       interval,
       crossing,
@@ -119,6 +125,22 @@ export default function TimingLab() {
                   </option>
                 ))}
               </select>
+            </label>
+            <label>
+              {t("eligibleHp")}
+              <input type="number" min={0} max={100000} value={state.eligibleHp}
+                onChange={(event) => set({ eligibleHp: Number(event.target.value) })} />
+            </label>
+            <label>
+              {t("newcomerHp")}
+              <input type="number" min={0} max={100000} value={state.newcomerHp}
+                onChange={(event) => set({ newcomerHp: Number(event.target.value) })} />
+            </label>
+            <label>
+              {t("intervalInput")}
+              <input type="number" min={20} max={25} step={0.1} value={state.normalInterval}
+                disabled={large}
+                onChange={(event) => set({ normalInterval: Number(event.target.value) })} />
             </label>
             <label>
               q
@@ -177,7 +199,7 @@ export default function TimingLab() {
             </label>
             <button
               onClick={() =>
-                set({ level: 36, wave: 4, at: 1, damage: 2000, time: 0 })
+                set({ level: 81, wave: 4, at: 1, damage: 2000, time: 0 })
               }
             >
               {t("beforeFlag")}
@@ -185,7 +207,7 @@ export default function TimingLab() {
             <button
               onClick={() =>
                 set({
-                  level: 36,
+                  level: 81,
                   wave: 12,
                   automatic: 1,
                   at: 1,
@@ -326,7 +348,7 @@ export default function TimingLab() {
             <Stat
               label={t("deadline")}
               value={`${deadline}s`}
-              detail={large ? t("largeInterval") : t("ordinaryInterval")}
+              detail={large ? t("largeInterval") : t("ordinaryInterval", { n: state.normalInterval })}
             />
             <Stat
               label={t("visibility")}

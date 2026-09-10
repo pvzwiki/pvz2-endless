@@ -1,5 +1,5 @@
 import data from "@/data/egypt-roster.json";
-import { GameRng } from "./game-rng";
+import { randomSource, type RandomSource } from "./example-rng";
 
 export type SpawnType = { id: string; cost: number; weight: number };
 export type FillStep = {
@@ -12,10 +12,12 @@ export type FillStep = {
 };
 export const egypt = data;
 
-export function selectTypes(level: number, seed: number) {
-  const rng = new GameRng(seed);
-  const remaining = [...data.pool];
-  const initial = [data.basic];
+export type RosterPool = { basic: string; pool: string[]; types: SpawnType[] };
+
+export function selectTypes(level: number, random: number | RandomSource, pool: RosterPool = egypt) {
+  const rng = randomSource(random);
+  const remaining = [...pool.pool];
+  const initial = [pool.basic];
   const draws: {
     before: string[];
     index: number;
@@ -34,11 +36,11 @@ export function selectTypes(level: number, seed: number) {
   if (
     level > 50 &&
     !selected.some(
-      (id) => data.types.find((type) => type.id === id)!.cost >= 1500,
+      (id) => pool.types.find((type) => type.id === id)!.cost >= 1500,
     )
   ) {
     const highCost = remaining.filter(
-      (id) => data.types.find((type) => type.id === id)!.cost >= 1500,
+      (id) => pool.types.find((type) => type.id === id)!.cost >= 1500,
     );
     if (highCost.length) {
       const added = highCost[rng.bounded(highCost.length)];
@@ -49,10 +51,23 @@ export function selectTypes(level: number, seed: number) {
   return { initial, selected, replacement, draws };
 }
 
+/** Integer-weight draw; the caller supplies affordability or leader eligibility. */
+export function drawWeighted(types: SpawnType[], rng: RandomSource) {
+  let totalWeight = 0;
+  const candidates = types.filter((type) => type.weight > 0).map((type) => {
+    const start = totalWeight;
+    totalWeight += type.weight;
+    return { type, start, end: totalWeight };
+  });
+  if (!totalWeight) return null;
+  const draw = rng.bounded(totalWeight);
+  return { draw, totalWeight, candidates, chosen: candidates.find((item) => draw < item.end)!.type };
+}
+
 export function fillBudget(
   budget: number,
   orderedTypes: SpawnType[],
-  seed: number,
+  random: number | RandomSource,
 ) {
   if (!Number.isInteger(budget) || budget < 0 || budget > 30000)
     throw new RangeError("Expected a budget from 0 to 30000.");
@@ -66,22 +81,16 @@ export function fillBudget(
     )
   )
     throw new RangeError("Invalid cost or weight.");
-  const rng = new GameRng(seed);
+  const rng = randomSource(random);
   const steps: FillStep[] = [];
   let remaining = budget;
   while (remaining > 0) {
     const affordable = orderedTypes.filter(
       (type) => type.cost <= remaining && type.weight > 0,
     );
-    let totalWeight = 0;
-    const candidates = affordable.map((type) => {
-      const start = totalWeight;
-      totalWeight += type.weight;
-      return { type, start, end: totalWeight };
-    });
-    if (!totalWeight) break;
-    const draw = rng.bounded(totalWeight);
-    const chosen = candidates.find((item) => draw < item.end)!.type;
+    const picked = drawWeighted(affordable, rng);
+    if (!picked) break;
+    const { chosen, draw, totalWeight, candidates } = picked;
     steps.push({
       before: remaining,
       after: remaining - chosen.cost,

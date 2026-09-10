@@ -16,7 +16,7 @@ import { MechanismLab } from '@/components/mechanism-lab';
 
 世界仍然重要：它提供基础僵尸、可选类型池，以及额外设计器。摩登世界、复兴时代、蒸汽时代和童话森林甚至声明了局部波次增量 20，但这个构建器并不读取该局部字段。公式仍以共享增量为输入。
 
-示例设置为：起始点数 100、每波固定增量 30、随关卡增长的增量 5。波次数上下界为 6 和 15，每五个显示关卡数增加一波。
+示例设置为：起始点数 100、每波固定增量 30、随关卡增长的增量 5。波次数设置为 `MinWaveCount = 5`、`MaxWaveCount = 15`、`WaveAddEach = 1` 和 `WaveAddInterval = 10`：每十个显示关卡数增加一波。
 
 令 $L$ 表示**显示关卡数**，$w$ 表示**从零开始的波次索引**。已存进度值为 $L-1$。在示例安排中，5 的倍数会选择 Boss 文件。因此，下方的普通关卡视图覆盖 $L\in\{1,\ldots,149\}$ 中满足 $L\bmod5\ne0$ 的关卡。<Note id="level" />
 
@@ -29,10 +29,10 @@ import { MechanismLab } from '@/components/mechanism-lab';
 ## 一共有多少波？
 
 $$
-N(L)=\min\left(15,\;6+\left\lfloor\frac{L}{5}\right\rfloor\right)
+N(L)=\min\left(15,\;5+\left\lfloor\frac{L}{10}\right\rfloor\right)
 $$
 
-普通关卡从第 46 关起达到 15 波，此后保持在上限，点数预算则继续增长。<Note id="layout" />
+第 1–9 关的计算结果为 5 波，第 36 关为 8 波，第 49 关为 9 波。公式在第 100 关达到 15 波上限；由于该关卡数选择 Boss 文件，第 101 关才是首个达到上限的普通关卡。此后点数预算继续增长。<Note id="layout" />
 
 </section>
 
@@ -61,11 +61,11 @@ $$
 
 ## 旗帜边界与最终波。
 
-在 6–15 波范围内，目标分组数 $g$ 决定常规旗帜间隔 $s$：<Note id="layout" />
+在 5–15 波范围内，目标分组数 $g$ 决定常规旗帜间隔 $s$：<Note id="layout" />
 
 $$
 g(N)=\begin{cases}
-1,&6\le N<7,\\
+1,&5\le N<7,\\
 2,&7\le N<12,\\
 3,&12\le N\le15,
 \end{cases}

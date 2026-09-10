@@ -16,7 +16,7 @@ The 16 standard worlds all list `DangerRoomJitteredWaveGenerator`. They provide 
 
 The world still matters: it supplies the basic zombie, the pool of selectable types, and any additional designers. Modern, Renai, Steam, and Tale even declare a local wave increment of 20, but this builder does not read that local field. Its shared increment remains the input to the formula.
 
-Our example settings are 100 starting points, a fixed wave increment of 30, and a per-level increment of 5. The wave-count bounds are 6 and 15, with one extra wave per five displayed levels.
+Our example settings are 100 starting points, a fixed wave increment of 30, and a per-level increment of 5. The wave-count settings are `MinWaveCount = 5`, `MaxWaveCount = 15`, `WaveAddEach = 1`, and `WaveAddInterval = 10`: one extra wave per ten displayed levels.
 
 Let $L$ denote the **displayed level** and $w$ a **zero-based wave index**. The stored progress value is $L-1$. In the example schedule, multiples of 5 select Boss files. The ordinary-level views below therefore cover $L\in\{1,\ldots,149\}$ with $L\bmod5\ne0$.<Note id="level" />
 
@@ -29,10 +29,10 @@ Let $L$ denote the **displayed level** and $w$ a **zero-based wave index**. The 
 ## How many waves?
 
 $$
-N(L)=\min\left(15,\;6+\left\lfloor\frac{L}{5}\right\rfloor\right)
+N(L)=\min\left(15,\;5+\left\lfloor\frac{L}{10}\right\rfloor\right)
 $$
 
-The count reaches 15 at ordinary level 46 and remains capped while the point budgets continue growing.<Note id="layout" />
+Levels 1–9 have 5 waves, level 36 has 8, and level 49 has 9. The formula reaches the cap of 15 at level 100; since that number selects a Boss file, level 101 is the first ordinary level at the cap. Point budgets continue growing afterward.<Note id="layout" />
 
 </section>
 
@@ -61,11 +61,11 @@ Within one level, the base budgets form an arithmetic progression. Increasing $L
 
 ## Flag boundaries and the final wave.
 
-Within the 6–15-wave range, the target group count $g$ determines the regular flag spacing $s$:<Note id="layout" />
+Within the 5–15-wave range, the target group count $g$ determines the regular flag spacing $s$:<Note id="layout" />
 
 $$
 g(N)=\begin{cases}
-1,&6\le N<7,\\
+1,&5\le N<7,\\
 2,&7\le N<12,\\
 3,&12\le N\le15,
 \end{cases}

@@ -20,7 +20,7 @@ export type WavePlan = {
 export const ordinaryLevels = Array.from({ length: 149 }, (_, i) => i + 1)
   .filter((level) => level % baseline.bossInterval !== 0);
 
-/** The inspected baseline's arithmetic, including boss-number inputs for verification. */
+/** Reconstructed arithmetic with this guide's wave settings; accepts Boss numbers for boundary checks. */
 export function createWavePlan(level: number): WavePlan {
   if (!Number.isInteger(level) || level < 1 || level > 149) {
     throw new RangeError('Expected an integer level from 1 to 149.');

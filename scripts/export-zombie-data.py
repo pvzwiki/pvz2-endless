@@ -1,4 +1,4 @@
-"""Build a curated catalog, its Egypt view, and component fixtures from the private index."""
+"""Build a curated catalog and its Egypt view from the private index."""
 import argparse
 from contextlib import closing
 import json
@@ -12,9 +12,6 @@ source = parser.parse_args().source.resolve()
 root = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(source / 'src'))
 from pvz2_analysis.zombie_query import open_index, find_zombies, zombie_record, summarize_fields
-from pvz2_analysis.endless import select_level_types
-from pvz2_analysis.rng import GameRng
-from pvz2_analysis.weighted import SpawnType, fill_budget
 
 fields = ['WavePointCost', 'Weight', 'Hitpoints', 'HelmHitpoints', 'EatDPS', 'Speed', 'SizeType',
           'HitRect', 'AttackRect', 'GridExtents', 'CanSpawnPlantFood', 'CanBeLaunchedByPlants',
@@ -77,23 +74,7 @@ for id in ids:
                         'properties': {field: row['values'][field] for field in fields[2:]},
                         'status': {field: row['status'][field] for field in fields[2:]}})
 data = {'world': 'egypt', 'basic': ids[0], 'pool': world['zombie_pool'], 'types': egypt_types}
-costs = {item['id']: item['cost'] for item in egypt_types}
-weights = {item['id']: item['weight'] for item in egypt_types}
-fixtures = []
-for level in [36, 49, 51]:
-    for seed in [1, 7, 36]:
-        chosen = select_level_types(data['pool'], data['basic'], costs, level, GameRng(seed))
-        ordered = [SpawnType(id, costs[id], weights[id]) for id in chosen]
-        for budget in [100, 350, 2350]:
-            roster, remaining = fill_budget(budget, ordered, GameRng(seed + 1))
-            fixtures.append({'level': level, 'seed': seed, 'budget': budget, 'selected': chosen,
-                             'roster': [item.name for item in roster], 'remaining': remaining})
-rng_fixtures = []
-for seed in [0, 1, 7, 36]:
-    rng = GameRng(seed)
-    rng_fixtures.append({'seed': seed, 'raw': [rng.next() for _ in range(640)]})
-outputs = [('src/data/reference-catalog.json', catalog), ('src/data/egypt-roster.json', data),
-           ('tests/fixtures/rosters.json', fixtures), ('tests/fixtures/roster-rng.json', rng_fixtures)]
+outputs = [('src/data/reference-catalog.json', catalog), ('src/data/egypt-roster.json', data)]
 for path, value in outputs:
     text = json.dumps(value, ensure_ascii=False, indent=2, allow_nan=False) + '\n'
     assert not re.search(r'/Users/|/home/|file://|source_json|type_object_id|object_id', text)

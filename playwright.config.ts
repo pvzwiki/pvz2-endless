@@ -18,15 +18,13 @@ export default defineConfig({
   workers: 1,
   timeout: 30000,
   webServer: {
-    command: process.env.CI
-      ? "python3 -m http.server 4173 --bind 127.0.0.1 --directory out"
-      : "npm run dev -- --hostname 127.0.0.1 --port 4173",
-    url: "http://127.0.0.1:4173/en/",
-    reuseExistingServer: !process.env.CI,
+    command: "python3 -m http.server 4184 --bind 127.0.0.1 --directory out",
+    url: "http://127.0.0.1:4184/en/",
+    reuseExistingServer: false,
     timeout: 120000,
   },
   use: {
-    baseURL: "http://127.0.0.1:4173",
+    baseURL: "http://127.0.0.1:4184",
     trace: "retain-on-failure",
     reducedMotion: "reduce",
   },

@@ -45,7 +45,7 @@ export default function PlacementLab() {
       row: 1,
       occupied: 0,
       circle: 1,
-      choice: 0,
+      seed: 7,
       queue: 1,
       jitter: 12,
     },
@@ -58,7 +58,7 @@ export default function PlacementLab() {
       row: [0, 4],
       occupied: [0, 31],
       circle: [0, 1],
-      choice: [0, 4],
+      seed: [0, 65535],
       queue: [0, 2],
       jitter: [0, 29],
     },
@@ -80,13 +80,9 @@ export default function PlacementLab() {
   const weights = rowWeights(history, enabled),
     kind = specialTypes[state.type],
     occupied = [0, 1, 2, 3, 4].filter((row) => state.occupied & (1 << row));
-  const placement = specialPlacement(kind, state.row, occupied, !!state.circle),
+  const placement = specialPlacement(kind, state.row, occupied, !!state.circle, state.seed),
     step = Math.min(state.step, 4);
-  const final = placement.retained
-    ? placement.afterCircle
-    : placement.candidates.includes(state.choice)
-      ? state.choice
-      : placement.exampleFinal;
+  const final = placement.final;
   const row =
     step < 2
       ? state.row
@@ -475,18 +471,8 @@ export default function PlacementLab() {
               <div className="lab-controls">
                 <label>
                   {t("chosenShuffle")}
-                  <select
-                    value={final ?? 0}
-                    onChange={(event) =>
-                      set({ choice: Number(event.target.value) })
-                    }
-                  >
-                    {placement.candidates.map((row) => (
-                      <option key={row} value={row}>
-                        {row + 1}
-                      </option>
-                    ))}
-                  </select>
+                  <input type="number" min={0} max={65535} value={state.seed}
+                    onChange={(event) => set({ seed: Number(event.target.value) })} />
                 </label>
               </div>
             )}

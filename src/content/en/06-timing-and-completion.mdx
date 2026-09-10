@@ -99,7 +99,7 @@ $$
 w\bmod s=s-1.
 $$
 
-The handler also suppresses requests before the first wave. Its boundary expression does not independently inspect the final-wave marker. With $s=5$, current wave 4 is guarded; current wave 12 before a short final wave 13 is not guarded by this expression.
+The handler also suppresses requests before the first wave. Its boundary expression does not independently inspect the final-wave marker. At level 81, $N=13$ and $s=5$: current wave 4 is guarded; current wave 12 before a short final wave 13 is not guarded by this expression.
 
 Turning the option off leaves normal progression active. Turning it on adds these manual-style requests. Because the trigger is a visibility transition, changing the preference while requested visibility remains true is not itself another such event.<Note id="skipOption" />
 

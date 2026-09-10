@@ -1,9 +1,9 @@
 {
   "settings": {
-    "MinWaveCount": 6,
+    "MinWaveCount": 5,
     "MaxWaveCount": 15,
     "WaveAddEach": 1,
-    "WaveAddInterval": 5,
+    "WaveAddInterval": 10,
     "StartingPoints": 100,
     "BasePointIncrementPerWave": 30,
     "BasePointIncrementPerLevel": 5

@@ -1,5 +1,5 @@
 import inputs from "@/data/mechanism-inputs.json";
-import { GameRng } from "./game-rng";
+import { randomSource, type RandomSource } from "./example-rng";
 import { createWavePlan } from "./wave-model";
 
 export const mechanismInputs = inputs;
@@ -85,7 +85,7 @@ export function interpolatedDraw(
   bounds: readonly [number, number],
   low: readonly [number, number],
   high: readonly [number, number],
-  rng: GameRng,
+  rng: RandomSource,
 ): Interpolation {
   const first = low[0] + rng.bounded(low[1] - low[0] + 1);
   const second = high[0] + rng.bounded(high[1] - high[0] + 1);
@@ -123,8 +123,8 @@ export type ReplacementFrame = {
   picked?: number;
   added?: string;
 };
-export function applyJams(level: number, waves: Instruction[][], seed: number) {
-  const rng = new GameRng(seed),
+export function applyJams(level: number, waves: Instruction[][], random: number | RandomSource) {
+  const rng = randomSource(random),
     result = waves.map((wave) => wave.map((item) => ({ ...item })));
   const first = interpolatedDraw(level, [1, 15], [3, 4], [1, 2], rng);
   const available = level >= 7 ? 5 : 4;
@@ -211,52 +211,6 @@ export function applyJams(level: number, waves: Instruction[][], seed: number) {
   return { result, events, available, selected, selectionDraws, first };
 }
 
-/** Fixed input instructions for the replacement experiment; identities persist across frames. */
-export function jamExampleWaves(level: number): Instruction[][] {
-  const plan = createWavePlan(level),
-    request = levelRequest(level);
-  const types = [
-    "eighties",
-    "eighties_armor1",
-    "eighties_armor2",
-    "eighties_punk",
-    "eighties_gargantuar_danger",
-  ];
-  const unseen = new Set(types);
-  return plan.waves.map((wave) => {
-    let remaining = wave.budget;
-    const roster: Instruction[] = [];
-    if (wave.final)
-      for (const zombie of types)
-        if (
-          unseen.has(zombie) &&
-          typeNumber(zombie, "WavePointCost") < remaining
-        ) {
-          roster.push({ zombie, level: request.lower, leader: false });
-          remaining -= typeNumber(zombie, "WavePointCost");
-          unseen.delete(zombie);
-        }
-    let next = 0;
-    while (remaining >= 100) {
-      const proposed = types[next++ % types.length];
-      const zombie =
-        typeNumber(proposed, "WavePointCost") <= remaining
-          ? proposed
-          : "eighties";
-      roster.push({ zombie, level: request.lower, leader: false });
-      remaining -= typeNumber(zombie, "WavePointCost");
-      unseen.delete(zombie);
-    }
-    // An explicit extra-leader scenario, after the budget-paid instructions.
-    if (level >= 4 && wave.number === 2)
-      roster.push({
-        zombie: "eighties_armor1",
-        level: request.upper,
-        leader: true,
-      });
-    return roster;
-  });
-}
 export function rosterCost(roster: Instruction[]) {
   return roster.reduce(
     (sum, item) => sum + typeNumber(item.zombie, "WavePointCost"),
@@ -326,6 +280,7 @@ export function specialPlacement(
   provisional: number,
   occupied: number[],
   circle: boolean,
+  random: number | RandomSource = 0,
 ) {
   const afterCircle = circle ? 2 : provisional;
   const excluded = new Set(occupied);
@@ -340,11 +295,11 @@ export function specialPlacement(
     candidates,
     retained,
     rejected: !candidates.length,
-    exampleFinal: retained ? afterCircle : (candidates[0] ?? null),
+    final: retained ? afterCircle : candidates.length ? candidates[randomSource(random).bounded(candidates.length)] : null,
   };
 }
-export function foodPlan(level: number, seed: number) {
-  const rng = new GameRng(seed),
+export function foodPlan(level: number, random: number | RandomSource) {
+  const rng = randomSource(random),
     flags = inputs.flagRows.filter((row) => row.MinLevel <= level),
     foods = inputs.foodRows.filter((row) => row.MinLevel <= level);
   const chosen = flags[rng.bounded(flags.length)];
@@ -404,8 +359,8 @@ export function carrierRequests(
     };
   });
 }
-export function assignLoot(ids: string[], count: number, seed: number) {
-  const rng = new GameRng(seed),
+export function assignLoot(ids: string[], count: number, random: number | RandomSource) {
+  const rng = randomSource(random),
     remaining = ids.map((id, index) => ({
       id,
       index,

@@ -49,7 +49,7 @@ $$
 
 The rows declaring 2 do not displace the earlier row declaring 1. Both effective bounds remain 1 until the level-55 row makes them zero. At level 49, four eligible flag rows request one draw and one row requests two, so $Q$ is 1 or 2 depending on the chosen row.
 
-Allocation visits **regular flag boundaries in order**, giving each one unit while any remain. Only afterward does it place remaining units on randomly chosen waves, with repeats possible. A short final wave is not inserted into the regular-boundary pass merely because it is final. At level 49, the 15-wave plan has boundaries 5, 10, and 15: one unit goes to wave 5, and a possible second goes to wave 10.
+Allocation visits **regular flag boundaries in order**, giving each one unit while any remain. Only afterward does it place remaining units on randomly chosen waves, with repeats possible. A short final wave is not inserted into the regular-boundary pass merely because it is final. At level 49, the 9-wave plan has only one regular boundary, wave 5: the first unit goes there, and a possible second goes to a randomly chosen wave. The final wave 9 receives no priority in this allocation.
 
 Each wave’s allocation is copied to its ordinary action’s `AdditionalPlantfood`. This is an action quota; the independent flag-zombie action has its own default-zero quota. The generator leaves `DynamicPlantfood` and `SpawnPlantName` empty.<Note id="foodPlan" />
 

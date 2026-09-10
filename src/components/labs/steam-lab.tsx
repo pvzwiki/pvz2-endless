@@ -1,6 +1,7 @@
 "use client";
 import { useTranslations } from "next-intl";
 import { clamp, f32 } from "@/lib/mechanism-model";
+import { advanceSmokeDamage } from "@/lib/runtime-model";
 import {
   LevelControl,
   Playback,
@@ -22,7 +23,8 @@ export default function SteamLab() {
       blocked: 0,
       size: 0,
       count: 1,
-      updates: 0,
+      accumulator: 0,
+      passes: 0,
       delta: 1.2,
     },
     {
@@ -33,7 +35,8 @@ export default function SteamLab() {
       blocked: [0, 1],
       size: [0, 2],
       count: [1, 5],
-      updates: [0, 10],
+      accumulator: [0, Number.MAX_SAFE_INTEGER, 0],
+      passes: [0, Number.MAX_SAFE_INTEGER],
       delta: [0, 4, 0.1],
     },
   );
@@ -52,15 +55,7 @@ export default function SteamLab() {
     under = 2 + (blocked ? 12 : 0),
     complete = 3 + (blocked ? 12 : 0),
     admitted = state.size === 0 && pipes > 0;
-  let accumulator = 0,
-    passes = 0;
-  for (let i = 0; i < state.updates; i++) {
-    accumulator = f32(accumulator + state.delta);
-    if (accumulator > 1) {
-      passes++;
-      accumulator = f32(accumulator - 1);
-    }
-  }
+  const { accumulator, passes } = state;
   const activeSmoke = state.mode === 0 && state.step === 3;
   return (
     <div>
@@ -83,12 +78,12 @@ export default function SteamLab() {
       <div className="lab-controls">
         <LevelControl
           value={state.level % 5 === 0 ? state.level + 1 : state.level}
-          onChange={(level) => set({ level, time: 0, step: 0, updates: 0 })}
+          onChange={(level) => set({ level, time: 0, step: 0, accumulator: 0, passes: 0 })}
         />
         {[21, 34, 67, 101].map((level) => (
           <button
             key={level}
-            onClick={() => set({ level, time: 0, step: 0, updates: 0 })}
+            onClick={() => set({ level, time: 0, step: 0, accumulator: 0, passes: 0 })}
           >
             L {level}
           </button>
@@ -271,7 +266,7 @@ export default function SteamLab() {
           <Playback
             step={smoke ? state.step : 0}
             total={smoke ? 7 : 0}
-            onChange={(step) => set({ step, updates: 0 })}
+            onChange={(step) => set({ step, accumulator: 0, passes: 0 })}
           />
           <div className="lab-readout">
             <h3>
@@ -300,17 +295,16 @@ export default function SteamLab() {
                     max={4}
                     value={state.delta}
                     onChange={(event) =>
-                      set({ delta: Number(event.target.value), updates: 0 })
+                      set({ delta: Number(event.target.value) })
                     }
                   />
                 </label>
                 <button
-                  onClick={() => set({ updates: state.updates + 1 })}
-                  disabled={state.updates >= 10}
+                  onClick={() => set({ ...advanceSmokeDamage(state, state.delta) })}
                 >
                   {t("update")}
                 </button>
-                <button onClick={() => set({ updates: 0 })}>
+                <button onClick={() => set({ accumulator: 0, passes: 0 })}>
                   {t("resetDamage")}
                 </button>
               </div>
@@ -369,7 +363,7 @@ export default function SteamLab() {
           <div className="lab-stat-grid">
             <Stat
               label={t("blockerDps")}
-              value={blocked && admitted ? damage : 0}
+              value={blocked && admitted && state.time <= complete ? damage : 0}
               detail={t("notPerZombie")}
             />
             <Stat

@@ -2,13 +2,13 @@
 import { useLocale, useTranslations } from "next-intl";
 import {
   applyJams,
-  jamExampleWaves,
   jamNames,
   rosterCost,
   typeRecord,
   type VisualInstruction,
 } from "@/lib/mechanism-model";
-import { createWavePlan } from "@/lib/wave-model";
+import { useMemo } from "react";
+import { generateOrdinaryRosters } from "@/lib/roster-simulation";
 import {
   LevelControl,
   Playback,
@@ -26,6 +26,8 @@ const marks: Record<string, string> = {
   eighties_mc: "MC",
   eighties_breakdancer: "BR",
   eighties_arcade: "AR",
+  eighties_imp: "IM",
+  eighties_boombox: "BO",
 };
 const colors = ["#bca3c9", "#dca07e", "#caba71", "#8bb9b4", "#98a9d0"];
 export default function JamLab() {
@@ -37,10 +39,13 @@ export default function JamLab() {
     { level: 36, seed: 7, event: 0, step: 0 },
     { level: [1, 149], seed: [0, 65535], event: [0, 14], step: [0, 30] },
   );
-  const level = state.level % 5 === 0 ? state.level + 1 : state.level,
-    plan = createWavePlan(level);
-  const input = jamExampleWaves(level),
-    out = applyJams(level, input, state.seed);
+  const level = state.level;
+  const { generated, out } = useMemo(() => {
+    const generated = generateOrdinaryRosters('eighties', level, state.seed);
+    const out = applyJams(level, generated.waves.map((wave) => wave.instructions), state.seed + 1);
+    return { generated, out };
+  }, [level, state.seed]);
+  const { plan } = generated;
   const event = out.events[Math.min(state.event, out.events.length - 1)],
     step = Math.min(state.step, event.frames.length - 1),
     frame = event.frames[step],
@@ -248,6 +253,10 @@ export default function JamLab() {
               <g
                 className="lab-token"
                 key={original.key}
+                data-level={item.level}
+                data-type={item.zombie}
+                data-leader={item.leader}
+                data-replaced={isNew}
                 style={{
                   transform: `translate(${item.x}px,${item.y}px)`,
                   opacity: item.removed ? 0.45 : 1,
@@ -313,6 +322,16 @@ export default function JamLab() {
         ))}
       </div>
       <p className="lab-caption">{t("inputDetail")}</p>
+      <details className="lab-details">
+        <summary>{t("generationDetails")}</summary>
+        <p>{t("selectedTypes", { names: generated.types.map((type) => typeRecord(type.id).name[locale]).join(" · ") })}</p>
+        <p>{t("budgetDetail", {
+          budget: generated.waves[event.wave - 1].budget,
+          remaining: generated.waves[event.wave - 1].remaining,
+          reserved: generated.waves[event.wave - 1].reserved.length,
+          leaders: generated.waves[event.wave - 1].leader ? 1 : 0,
+        })}</p>
+      </details>
       <details className="lab-details">
         <summary>{t("subsetTrace")}</summary>
         <p>{t("subsetExplanation")}</p>

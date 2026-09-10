@@ -13,5 +13,5 @@ test('comparison filters support exact numbers, lists, and ranges without Boss l
 });
 test('flag grouping preserves absolute wave numbers and the short final group', () => {
   assert.deepEqual(groupWaves(createWavePlan(149).waves).map((group) => group.map((wave) => wave.number)), [[1,2,3,4,5],[6,7,8,9,10],[11,12,13,14,15]]);
-  assert.deepEqual(groupWaves(createWavePlan(36).waves).map((group) => group.length), [5,5,3]);
+  assert.deepEqual(groupWaves(createWavePlan(81).waves).map((group) => group.length), [5,5,3]);
 });

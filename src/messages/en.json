@@ -315,16 +315,15 @@
     "pipeline": {
       "title": "Follow one wave through construction",
       "description": "See where its budget ends and later changes begin.",
-      "intro": "Follow one Ancient Egypt wave. The budget is spent on ordinary instructions; a chosen extra leader and the independent flag action are separate additions.",
-      "leaderInput": "Include a successful extra-leader attempt in this wave",
+      "intro": "Generate an Ancient Egypt level, then inspect one wave. Type selection, budget filling, final reservation, instruction levels, and the one-per-level leader attempt all contribute to the result.",
       "budget": "Ordinary filler budget",
-      "spent": "Spent by the filler",
+      "spent": "Spent by reservation and filling",
       "left": "{n} points unspent",
-      "count": "Instructions now",
-      "health": "Post-placement H₀",
+      "count": "Ordinary-action instructions",
+      "health": "Ordinary-action HP subtotal",
       "flagExtra": "{n} independent flag instruction",
       "entityLevel": "Entity level {n}",
-      "entitiesCaption": "These are created entities now. Their health exists only after level, leader, and placement processing.",
+      "entitiesCaption": "Each instruction uses its own sampled level. The HP subtotal assumes neutral creation modifiers and successful placement for these ordinary-action entities.",
       "instructionsCaption": "Each tile is one spawn instruction. Its cost is an input to construction, not its health.",
       "typesCaption": "The basic type and four chosen pool entries become the filler’s active types.",
       "stages": {
@@ -337,20 +336,26 @@
         "flag": "Flag action",
         "entities": "Create entities",
         "placement": "Place entities",
-        "snapshot": "Sample health"
+        "snapshot": "Calculate ordinary-action HP"
       },
       "explain": {
         "inputs": "The displayed level supplies the common count and point formulas. Egypt supplies its own basic type and zombie pool.",
         "budget": "The selected wave starts on the base progression. A regular flag boundary or final wave applies one ×2.5 multiplier.",
-        "types": "Four pool entries are selected by index without replacement. The basic type is added separately. This example holds the selection seed fixed.",
-        "fill": "Each draw rebuilds the affordable weighted bag. The chosen cost is subtracted; any amount below every remaining cost stays unspent.",
-        "extra": "The toggle supplies the outcome of a separate leader attempt. An allowed leader is appended after filling, so it increases the roster without subtracting more from the filler budget.",
+        "types": "Four pool entries are selected by index without replacement. The basic type is added separately. The seed generates a repeatable level.",
+        "fill": "The final wave first reserves strictly affordable unseen types. Weighted filling then spends the remaining budget, accepting exact matches. Earlier waves determine which types are still unseen.",
+        "extra": "One level-wide chance can assign a leader to one wave. Its type is drawn by weight from selected types costing more than 100. Its cost is outside the ordinary budget.",
         "world": "Egypt has no extra world designer here. Other worlds can now replace instructions or append independent actions; Chapter 3 follows those changes.",
         "flag": "A flag/final wave receives a separate flag-zombie action unless suppressed. It has its own placement spacing and is outside the ordinary budget.",
-        "entities": "At wave start the actions create their batches. The requested entity level is resolved, shared health/attack rows are read, and leader health is applied.",
-        "placement": "Rows and spacing are applied before placement callbacks finish. Rejected or relocated newcomers can change what the later health query sees.",
-        "snapshot": "Only after every wave action returns does WaveManager record eligible current-wave body and helmet health. That H₀ determines the remaining-health threshold."
-      }
+        "entities": "Each instruction has a sampled level. This neutral calculation reads the shared health table and applies the leader multiplier separately.",
+        "placement": "This view assumes successful placement for the generated Egypt roster. Chapter 5 lets you supply occupied rows and inspect rejection or relocation.",
+        "snapshot": "This is the ordinary action’s calculated HP subtotal under the stated assumptions. The game samples all eligible current-wave entities after every action returns, including an eligible flag entity."
+      },
+      "newSeed": "Next seed",
+      "noLeaderAttempt": "This level is below the extra-entry threshold of 4.",
+      "leaderOutcome": "One leader roll for this level: {roll} out of 100, successful below {threshold}. Assigned wave: {wave}.",
+      "separateFlag": "Separate flag action: {name}. Its entity level and health are resolved separately and are not included in this subtotal.",
+      "reservationDetail": "The final pass reserved {n} types that had not appeared in earlier budget-paid rosters.",
+      "subtotalDetail": "Excludes the separate flag action"
     },
     "reservation": {
       "title": "The final-wave inclusion pass",
@@ -381,7 +386,7 @@
     "jam": {
       "title": "Inside the music schedule",
       "description": "Choose a level, inspect each music wave, and replay its replacements.",
-      "intro": "The seed controls Jam’s global random stream. Read the selected music set, then choose a music wave and replay the exact remove-and-append operations.",
+      "intro": "Generate an Eighties roster and music schedule from a repeatable example seed. Choose a music wave to follow its removals and replacements.",
       "newSeed": "Next seed",
       "names": {
         "jam_pop": "Pop",
@@ -403,16 +408,18 @@
       "diagram": "Animated instruction replacement with saved levels",
       "savedLevels": "Removed instructions: only their levels are carried forward",
       "new": "NEW",
-      "inputDetail": "Ordinary instructions fit each wave’s budget. At L ≥ 4, wave 2 also has one chosen extra leader. These input rosters are fixed for the selected level; the seed controls Jam’s postprocessing. The animation follows saved levels into new instructions.",
+      "inputDetail": "The input roster is generated by pool selection, weighted filling, final-wave reservation, per-instruction level draws, and a level-wide leader attempt. Jam then removes and appends instructions while retaining their levels. A new seed regenerates both parts.",
       "subsetTrace": "How the distinct music subset was selected",
-      "subsetExplanation": "Draw repeatedly from the eligible music list. ✓ adds a new type; ↻ discards a duplicate while still consuming the random draw. Event choices later draw from the completed subset with repeats allowed."
+      "subsetExplanation": "Draw repeatedly from the eligible music list. ✓ adds a new type; ↻ discards a duplicate while still consuming the random draw. Event choices later draw from the completed subset with repeats allowed.",
+      "generationDetails": "How this wave was generated",
+      "selectedTypes": "Selected types: {names}",
+      "budgetDetail": "Budget {budget}; {remaining} unspent; {reserved} final reservations; {leaders} extra leaders before music replacement."
     },
     "portals": {
       "title": "A portal, from queue to closure",
       "description": "Inspect every family list and step through emission and removal.",
       "intro": "A Modern event creates a portal action. Follow one resulting portal: it copies four family slots, shuffles them, emits children on its own clock, and remains a victory blocker until removal.",
       "family": "Portal family",
-      "order": "Chosen shuffle outcome",
       "interval": "Later interval (seconds)",
       "offset": "First requested offset",
       "parameters": "Inspect the Modern event parameters at this level",
@@ -439,31 +446,29 @@
       "blockedPortal": "Completion is blocked by the portal itself, even if its queue or the lawn is empty.",
       "blockedChildren": "The portal is gone, but its surviving children still block completion.",
       "clear": "Neither this portal nor its emitted children block completion now. Other level predicates still apply.",
-      "orderDetail": "A, B, and C are chosen shuffle outcomes, not seeds for the imported C++ engine. Identical type names remain separate slots. The interval controls fix the outcomes of this example’s timing draws.",
+      "orderDetail": "The example RNG shuffles all family slots, including duplicates. Each replay step supplies an update or animation callback to the portal state. Timing controls supply the opening time, first offset, and later interval; the closing-animation duration is not modeled.",
       "stages": {
-        "0": "Copy all four family slots",
-        "1": "Shuffle the full list",
-        "2": "Opening animation",
-        "3": "Opening has completed",
-        "4": "Emit child 1",
-        "5": "Emit child 2",
-        "6": "Emit child 3",
-        "7": "Emit child 4: the queue becomes empty",
-        "8": "Next due check finds the empty queue",
-        "9": "Close-animation callback removes the portal"
+        "copy": "Copy all four family slots",
+        "shuffle": "Shuffle the full list",
+        "opening": "Opening animation",
+        "open": "Opening has completed",
+        "emit": "Emit child {n}",
+        "closing": "Next due check finds the empty queue",
+        "removed": "Close-animation callback removes the portal"
       },
       "explain": {
-        "0": "The ordinary action leaves the runtime count/range overrides untouched. Every slot is copied, including duplicates.",
-        "1": "Reordering changes when each slot is consumed. It does not deduplicate names or shorten this four-slot list.",
-        "2": "A first deadline is requested from the creation time. Emission also waits for opening to finish; an early deadline alone is insufficient.",
-        "3": "The portal can emit once both the opening-state gate and the requested deadline permit it.",
-        "4": "Consume one slot, create its child with marker -5, and advance the scheduled deadline by the selected interval.",
-        "5": "The next interval is added to the previous scheduled deadline, rather than starting a new timer from a late actual emission.",
-        "6": "Duplicate entries still produce separate children. Neither the ordinary point budget nor current-wave HP schedules these emissions.",
-        "7": "The final slot is consumed, but the same branch still advances the next deadline. It does not begin closure immediately.",
-        "8": "At the next due emission check, the empty-queue branch requests the closing state and starts the close animation.",
-        "9": "The animation-completion callback requests removal. Only now does the portal’s own resolvable-object blocker disappear."
-      }
+        "copy": "The ordinary action leaves the runtime count/range overrides untouched. Every slot is copied, including duplicates.",
+        "shuffle": "Reordering changes when each slot is consumed. It does not deduplicate names or shorten this four-slot list.",
+        "opening": "A first deadline is requested from the creation time. Emission also waits for opening to finish; an early deadline alone is insufficient.",
+        "open": "The portal can emit once both the opening-state gate and the requested deadline permit it.",
+        "emit": "A due update consumes one slot and creates its child with marker -5. The selected interval is added to the previous deadline, even for a late update or the final child. An empty queue starts closing only at a later due update.",
+        "closing": "At the next due emission check, the empty-queue branch requests the closing state and starts the close animation.",
+        "removed": "The animation-completion callback requests removal. Only now does the portal’s own resolvable-object blocker disappear."
+      },
+      "reshuffle": "Next shuffle",
+      "opening": "Opening-completion time (seconds)",
+      "clock": "Time at this update",
+      "callbackTime": "Close-completion callback"
     },
     "steam": {
       "title": "Smoke and pipeline clocks",
@@ -509,7 +514,7 @@
       "passes": "Damage passes",
       "accumulator": "Accumulator left",
       "targetDamage": "Damage requested across passes",
-      "onePass": "Each update can execute one pass when the accumulator is strictly greater than 1, then subtracts 1. Each of the nine cells selects one plant target; stacked layers are not all damaged independently.",
+      "onePass": "Each update uses the chosen delta once; changing it leaves earlier updates intact. An accumulator strictly greater than 1 executes one pass and subtracts 1. Each of the nine cells selects one plant target; stacked layers are not all damaged independently.",
       "time": "Time since the entry request",
       "denied": "Entry is not admitted",
       "completed": "Completion deadline strictly exceeded",
@@ -607,7 +612,7 @@
       "historyRow": "Row credited in history",
       "visibleRow": "Current visible row",
       "candidates": "Rows remaining after the scan",
-      "chosenShuffle": "Chosen outcome if a shuffle is needed",
+      "chosenShuffle": "Row-draw seed",
       "hookStages": {
         "0": "Sample the provisional row",
         "1": "Apply the jittered position",
@@ -622,10 +627,10 @@
         "3": "Fisherman excludes itself from the same-class scan. King includes itself, so its own current row is removed too. Gold rings show the remaining candidates."
       },
       "retainedRow": "The current row remains available and is retained: row {n}.",
-      "shuffledRow": "The current row is unavailable. The chosen shuffle outcome places the newcomer in row {n}, at the last column.",
+      "shuffledRow": "The current row is unavailable. A draw among the remaining candidates places the newcomer in row {n}, at the last column.",
       "rejectedKing": "No candidate remains. The normal King path enters ZS_Die. It does not retry, refund the instruction, or remove an older King.",
       "rejectedFisher": "No candidate remains. The normal Fisherman path dispatches removal immediately. Board-list erasure happens separately, and the ordinary loot path remains reachable.",
-      "hookCaption": "The outlined original row keeps its history contribution. A shown shuffle result is an explicit outcome, not a reimplementation of the imported C++ shuffle.",
+      "hookCaption": "The provisional row and jitter are supplied inputs. If relocation is needed, the example RNG samples a remaining row. The original row keeps its history contribution.",
       "ordinaryHook": "This ordinary type has no King/Fisherman occupancy scan. Its position after the base event is retained.",
       "queueCount": "Earlier entities in this action/row",
       "jitter": "Chosen jitter J (0–29)"
@@ -636,10 +641,10 @@
       "views": "Wave and completion views",
       "advancement": "Advance a wave",
       "completion": "Complete the battle",
-      "intro": "This example has 8,000 HP of eligible newcomers and one 2,000-HP newcomer that can be rejected before the snapshot. Move a later health-loss event and compare the first advance through each path.",
+      "intro": "Supply the HP of eligible newcomers and an optional newcomer that can be rejected before the snapshot. Set a later health-loss event to compare the timed and automatic paths. These are scenario inputs, independent of the level’s point budget.",
       "trackedWave": "Tracked current wave",
       "automatic": "Automatic next-wave option",
-      "reject": "Reject the 2,000-HP newcomer before H₀",
+      "reject": "Reject the optional newcomer before H₀",
       "healthLoss": "Later loss of tracked-wave HP",
       "lossAt": "Health-loss time (seconds)",
       "beforeFlag": "Before regular flag wave 5",
@@ -652,7 +657,7 @@
       "clock": "Inspect time",
       "deadline": "Health-adjusted deadline D",
       "largeInterval": "35s before a large wave",
-      "ordinaryInterval": "24s chosen from the 20–25s interval",
+      "ordinaryInterval": "{n}s chosen from the 20–25s interval",
       "visibility": "Button becomes available",
       "guarded": "Automatic request suppressed here",
       "allowed": "Automatic request can run",
@@ -675,7 +680,10 @@
       },
       "victory": "Completion passes",
       "blocked": "Completion is still blocked",
-      "completionDetail": "This panel supplies the listed predicate outcomes. The entity-clear predicate applies the exact exceptions described in the article; it does not substitute body HP > 0 for its native filters."
+      "completionDetail": "This panel supplies the listed predicate outcomes. The entity-clear predicate applies the exact exceptions described in the article; it does not substitute body HP > 0 for its native filters.",
+      "eligibleHp": "Other eligible newcomers: HP",
+      "newcomerHp": "Optional newcomer: HP",
+      "intervalInput": "Ordinary interval (seconds)"
     },
     "loot": {
       "title": "From planned counts to actual carriers",
@@ -741,7 +749,7 @@
       "drawnCount": "Chosen count",
       "planNext": "Plan another level",
       "equality": "Inspect exact equality",
-      "waveLength": "Use the 15-wave length",
+      "waveLength": "Use the {count}-wave length",
       "scheduleDiagram": "Saved loot schedule with planning-length marker",
       "emitted": "{n} loot codes emitted so far",
       "scheduleDetail": "Each call adds {length} length units. New periods use phase {phase} and count {count} here. An open circle is a scheduled drop; filled circles are drops already emitted. ∞ is the no-pending-drop sentinel.",

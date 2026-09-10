@@ -1,31 +1,32 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { GameRng } from '../src/lib/game-rng';
 import { egypt, selectTypes, fillBudget, reserveUnseen } from '../src/lib/roster-model';
-import fixtures from './fixtures/rosters.json';
-import rngFixtures from './fixtures/roster-rng.json';
+test('weighted draws exclude unaffordable and zero-weight entries', () => {
+  const types = [
+    { id: 'light', cost: 100, weight: 1 },
+    { id: 'heavy', cost: 100, weight: 3 },
+    { id: 'disabled', cost: 100, weight: 0 },
+    { id: 'too-expensive', cost: 101, weight: 1000 },
+  ];
+  let draw = 0;
+  const chosen = [];
+  for (draw = 0; draw < 4; draw++) {
+    const fill = fillBudget(100, types, { bounded: () => draw });
+    chosen.push(fill.steps[0].chosen.id);
+    assert.equal(fill.remaining, 0);
+  }
+  assert.deepEqual(chosen, ['light', 'heavy', 'heavy', 'heavy']);
+});
 
-test('the integer stream matches the research component through state rollover', () => {
-  for (const fixture of rngFixtures) {
-    const rng = new GameRng(fixture.seed);
-    assert.deepEqual(fixture.raw.map(() => rng.next()), fixture.raw);
-  }
+test('filling spends only the budget and stops when no positive-weight type fits', () => {
+  const fill = fillBudget(550, [
+    { id: 'small', cost: 100, weight: 2 },
+    { id: 'large', cost: 300, weight: 1 },
+  ], 7);
+  assert.equal(fill.remaining, 50);
+  assert.equal(fill.steps.reduce((sum, step) => sum + step.chosen.cost, 0), 500);
 });
-test('selection and filling match 27 independently generated research cases', () => {
-  for (const fixture of fixtures) {
-    const selection = selectTypes(fixture.level, fixture.seed);
-    assert.deepEqual(selection.selected, fixture.selected);
-    const types = selection.selected.map((id) => egypt.types.find((type) => type.id === id)!);
-    const result = fillBudget(fixture.budget, types, fixture.seed + 1);
-    assert.deepEqual(result.steps.map((step) => step.chosen.id), fixture.roster);
-    assert.equal(result.remaining, fixture.remaining);
-    for (const step of result.steps) {
-      assert.ok(step.chosen.cost <= step.before);
-      assert.equal(step.before - step.chosen.cost, step.after);
-      assert.ok(step.candidates.every(({ type }) => type.cost <= step.before));
-    }
-  }
-});
+
 test('exact matches are allowed by filling but excluded by final reservation', () => {
   const type = { id: 'example', cost: 300, weight: 1000 };
   assert.equal(reserveUnseen(300, [type]).result.length, 0);

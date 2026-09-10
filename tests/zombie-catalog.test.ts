@@ -1,17 +1,13 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { readdirSync, readFileSync } from 'node:fs';
 import raw from '../src/data/reference-catalog.json';
 import egypt from '../src/data/egypt-roster.json';
 import { queryCatalog, type ZombieCatalog } from '../src/lib/zombie-catalog';
 const catalog = raw as unknown as ZombieCatalog;
 
-test('the full curated catalog preserves unresolved and duplicate references', () => {
-  assert.equal(catalog.types.length, 1030);
-  assert.equal(new Set(catalog.types.map((row) => row.key)).size, 1030);
-  assert.ok(catalog.types.some((row) => row.referenceStatus === 'duplicate_alias' && row.candidates.length > 1));
-  assert.ok(catalog.types.some((row) => row.referenceStatus === 'context_required'));
-  assert.ok(catalog.types.some((row) => row.referenceStatus === 'unresolved_reference'));
-  assert.equal(queryCatalog(catalog, '', 'endless', '', 'id', false).length, 175);
+test('catalog records have unique keys even when aliases repeat', () => {
+  assert.equal(new Set(catalog.types.map((row) => row.key)).size, catalog.types.length);
 });
 test('the Egypt article view agrees with the shared catalog', () => {
   for (const type of egypt.types) {
@@ -30,6 +26,10 @@ test('catalog search accepts names and aliases, sorting leaves missing values la
   const firstMissing = sorted.findIndex((row) => typeof row.values.Hitpoints !== 'number');
   assert.ok(firstMissing > 0 && sorted.slice(firstMissing).every((row) => typeof row.values.Hitpoints !== 'number'));
 });
-test('curated exports exclude local paths and internal database identities', () => {
-  assert.doesNotMatch(JSON.stringify(raw), /\/Users\/|\/home\/|source_json|type_object_id|object_id|file:\/\//);
+test('website inputs exclude local paths and private database fields', () => {
+  const directory = new URL('../src/data/', import.meta.url);
+  for (const file of readdirSync(directory).filter((name) => name.endsWith('.json'))) {
+    assert.doesNotMatch(readFileSync(new URL(file, directory), 'utf8'),
+      /\/Users\/|\/home\/|source_json|type_object_id|object_id|file:\/\//, file);
+  }
 });

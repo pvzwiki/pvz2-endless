@@ -13,7 +13,8 @@ export function useParameters<T extends Record<string, number>>(
   const bounds = useRef(limits);
   const normalize = (key: keyof T, value: number) => {
     const [min, max, step = 1] = bounds.current[key];
-    let result = Math.max(min, Math.min(max, Math.round(value / step) * step));
+    // A zero step preserves a computed state value (such as the smoke accumulator).
+    let result = Math.max(min, Math.min(max, step ? Math.round(value / step) * step : value));
     if (key === "level" && result % 5 === 0) result = Math.min(max, result + 1);
     return result;
   };

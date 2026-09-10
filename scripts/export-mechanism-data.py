@@ -2,17 +2,11 @@
 import argparse
 import json
 from pathlib import Path
-import sys
 
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--source', required=True, type=Path)
 source = parser.parse_args().source.resolve()
 root = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(source / 'src'))
-from pvz2_analysis.endless import zombie_level_range, wave_layout, plantfood_by_wave
-from pvz2_analysis.jams import apply_jams
-from pvz2_analysis.rng import GameRng
-
 worlds = json.loads((source / 'catalog/endless/worlds.json').read_text())['worlds']
 shared = json.loads((source / 'catalog/endless/shared-declared-config.json').read_text())['objdata']
 portals = json.loads((source / 'catalog/endless/modern-portals.json').read_text())['portals']
@@ -39,19 +33,7 @@ for record in reference:
 inputs = {'worlds':world_view,'portals':portal_view,'types':types,
           'flagRows':shared['FlagWaveSetupList'],'foodRows':shared['PlantfoodSetupList'],
           'strengthRows':shared['ZombieLevelStats'],'leaderRate':shared['LeaderStrengthenRate'],
+          'leaderProbability':shared['LeaderProbability'],'leaderMinCost':shared['LeaderMinWaveCost'],
           'lootEntries':[row for row in loot if not row.get('World')]}
 (root / 'src/data/mechanism-inputs.json').write_text(json.dumps(inputs,ensure_ascii=False,indent=2)+'\n')
-levels = [{'level':level,**zombie_level_range(level)} for level in range(1,150)]
-food = []
-for level in [1,4,6,16,31,41,49,51,54,56,149]:
-    for seed in [1,7,19]:
-        food.append({'level':level,'seed':seed,'quota':plantfood_by_wave(level,shared['FlagWaveSetupList'],shared['PlantfoodSetupList'],GameRng(seed))})
-jams = []
-for level in [1,6,7,14,16,36,49,51,149]:
-    for seed in [1,7]:
-        inputs_waves = [[{'zombie':['eighties','eighties_armor1','eighties_armor2','eighties_punk'][i%4], 'level':1+i%5, 'leader':i==0} for i in range(8)] for _ in range(wave_layout(level)['wave_count'])]
-        output,events = apply_jams(level,inputs_waves,GameRng(seed))
-        jams.append({'level':level,'seed':seed,'input':inputs_waves,'output':output,'events':events})
-for file,content in [('levels',levels),('food',food),('jams',jams)]:
-    (root / f'tests/fixtures/{file}-mechanism.json').write_text(json.dumps(content,ensure_ascii=False,indent=2)+'\n')
-print(f'Exported {len(world_view)} worlds, {len(portal_view)} portal families, {len(types)} selected type definitions, and component fixtures.')
+print(f'Exported {len(world_view)} worlds, {len(portal_view)} portal families, and {len(types)} selected type definitions.')

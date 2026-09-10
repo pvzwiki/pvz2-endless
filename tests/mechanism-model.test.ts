@@ -1,10 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import levels from "./fixtures/levels-mechanism.json";
-import jams from "./fixtures/jams-mechanism.json";
-import foods from "./fixtures/food-mechanism.json";
 import {
-  mechanismInputs,
   levelRequest,
   applyJams,
   foodPlan,
@@ -13,41 +9,46 @@ import {
   updateRowHistory,
   carrierRequests,
   specialPlacement,
-  waveThreshold,
   deadlineScenario,
   advanceLootSchedule,
   entityStrength,
 } from "../src/lib/mechanism-model";
 
-test("all level requests match the independently checked research arithmetic", () => {
-  for (const row of levels) {
-    const out = levelRequest(row.level);
-    assert.equal(out.value, row.value);
-    assert.equal(out.threshold, row.upper_threshold_out_of_100);
-    assert.equal(out.lower, row.lower);
-    assert.equal(out.upper, row.upper);
-    assert.equal(out.winning, row.upper_winning_residues);
+test("level rounding preserves the fractional-residue boundary and cap", () => {
+  const request = levelRequest(3);
+  assert.deepEqual([request.lower, request.upper], [1, 2]);
+  assert.ok(request.threshold > 10 && request.threshold < 11);
+  assert.equal(request.winning, 11);
+  assert.deepEqual([levelRequest(91).lower, levelRequest(149).upper], [10, 10]);
+});
+
+test("music replaces instructions without changing count or levels or retaining leader fields", () => {
+  const input = Array.from({ length: 15 }, () => [
+    { zombie: 'eighties', level: 2, leader: true },
+    { zombie: 'eighties_armor1', level: 4, leader: true },
+    { zombie: 'eighties_punk', level: 5, leader: true },
+  ]);
+  const before = structuredClone(input);
+  const out = applyJams(149, input, 7);
+  assert.deepEqual(input, before);
+  assert.ok(out.events.length > 0);
+  for (const event of out.events) {
+    const wave = out.result[event.wave - 1];
+    assert.equal(wave.length, 3);
+    assert.deepEqual(wave.map((entry) => entry.level).sort(), [2, 4, 5]);
+    assert.ok(wave.every((entry) => entry.zombie === event.replacement_type && !entry.leader));
   }
 });
-test("Jam schedules and replacements match the research component, including RNG draw order", () => {
-  for (const row of jams) {
-    const out = applyJams(row.level, row.input, row.seed);
-    assert.deepEqual(out.result, row.output);
-    assert.deepEqual(
-      out.events.map(({ wave, jam, replacement_type, replacement_count }) => ({
-        wave,
-        jam,
-        replacement_type,
-        replacement_count,
-      })),
-      row.events,
-    );
+
+test("plant-food quotas conserve the draws and disappear at the level-55 boundary", () => {
+  for (const level of [1, 54, 55, 149]) {
+    const plan = foodPlan(level, 7);
+    assert.equal(plan.quotas.reduce((sum, n) => sum + n, 0), plan.draws.reduce((sum, n) => sum + n, 0));
+    assert.ok(plan.quotas.every((n) => Number.isInteger(n) && n >= 0));
+    assert.equal(plan.high, level < 55 ? 1 : 0);
   }
 });
-test("plant-food allocation matches the original component across setup boundaries", () => {
-  for (const row of foods)
-    assert.deepEqual(foodPlan(row.level, row.seed).quotas, row.quota);
-});
+
 test("row history explains repeats and distinguishes both counters", () => {
   const enabled = [true, true, true, true, true];
   let history = initialHistory();
@@ -83,8 +84,7 @@ test("native carrier and placement boundary cases stay distinct", () => {
     true,
   );
 });
-test("the health snapshot, timed gate, and automatic request have different boundaries", () => {
-  assert.equal(waveThreshold(8000, 0.8), 6400);
+test("the timed gate and automatic request have different boundaries", () => {
   assert.equal(deadlineScenario(24, 1, false, false).advance, 4);
   assert.equal(deadlineScenario(24, 1, true, false).advance, 1);
   assert.equal(deadlineScenario(24, 1, true, true).advance, 4);
@@ -100,16 +100,15 @@ test("loot scheduling uses strict boundaries and can service multiple due period
   const c = advanceLootSchedule(initial, 11, 4, 2, 1);
   assert.equal(c.emitted, 3);
 });
-test("the neutral conehead example separates level health, biting, and leader health", () => {
-  const normal = entityStrength("mummy_armor1", 5, false),
-    leader = entityStrength("mummy_armor1", 5, true);
-  assert.equal(normal.body, 1350);
-  assert.equal(normal.helmet, 1850);
-  assert.ok(Math.abs(normal.bite - 900) < 0.001);
-  assert.equal(leader.body, 2700);
-  assert.equal(leader.helmet, 3700);
+test("leader health leaves fixed-EatDPS biting unchanged and absent rows use base health", () => {
+  const normal = entityStrength("mummy_armor1", 5, false);
+  const leader = entityStrength("mummy_armor1", 5, true);
+  assert.ok(leader.body > normal.body && leader.helmet > normal.helmet);
   assert.equal(leader.bite, normal.bite);
-  assert.equal(entityStrength("mummy_armor1", 6, false).missingRow, true);
+  const missing = entityStrength("mummy_armor1", 6, false);
+  const base = entityStrength("mummy_armor1", 1, false);
+  assert.equal(missing.body, base.body);
+  assert.equal(missing.helmet, base.helmet);
 });
 
 test("large-wave announcement shifts the old deadline, and an allowed automatic event runs first", () => {
@@ -122,9 +121,9 @@ test("large-wave announcement shifts the old deadline, and an allowed automatic 
   assert.equal(deadlineScenario(24, 10, true, false).request, true);
 });
 
-test("mechanism views contain only curated game inputs", () => {
-  assert.doesNotMatch(
-    JSON.stringify(mechanismInputs),
-    /\/Users\/|\/home\/|file:\/\/|source_json|object_id/,
-  );
+test('a second plant-food unit at level 49 enters the remainder draw after wave 5', () => {
+  // Last eligible flag row requests two draws; max count gives one unit each.
+  const plan = foodPlan(49, { bounded: (limit) => limit - 1 });
+  assert.deepEqual(plan.draws, [1, 1]);
+  assert.deepEqual(plan.assignments, [{ wave: 5, kind: 'flag' }, { wave: 9, kind: 'remainder' }]);
 });

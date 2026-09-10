@@ -1,8 +1,8 @@
 export const evidence = {
   randomStreams: {
     number: '07', addresses: ['0x101d47624', '0x101c79bec', '0x101ce66dc', '0x100121044'],
-    en: { title: 'Separate random-state consumers', text: 'Fresh DangerRoom initialization constructs designer state, materializes waves, runs world postprocessing, installs runtime actions and loot tags, then reseeds the WaveManager. Jam uses the global RNG; Modern queue shuffling calls imported C++ machinery. The component examples expose explicit stream inputs instead of treating one timestamp as the complete state.' },
-    'zh-CN': { title: '独立的随机状态消耗者', text: '全新 DangerRoom 初始化构建设计器状态、转换波次、运行世界后处理、安装运行时动作与掉落标记，随后重新播种 WaveManager。Jam 使用全局 RNG；摩登世界队列打乱调用导入的 C++ 机制。组件示例公开明确的随机流输入，不把一个时间戳当作完整状态。' },
+    en: { title: 'Separate random-state consumers', text: 'Fresh DangerRoom initialization constructs designer state, materializes waves, runs world postprocessing, installs runtime actions and loot tags, then reseeds the WaveManager. Jam uses the global RNG; Modern queue shuffling calls imported C++ machinery. The website uses a small seeded example generator for repeatable rule demonstrations; it does not reproduce these native random streams.' },
+    'zh-CN': { title: '独立的随机状态消耗者', text: '全新 DangerRoom 初始化构建设计器状态、转换波次、运行世界后处理、安装运行时动作与掉落标记，随后重新播种 WaveManager。Jam 使用全局 RNG；摩登世界队列打乱调用导入的 C++ 机制。网站使用小型带种子的示例生成器，演示可重复的规则计算；它不复现这些原生随机流。' },
   },
   circleLifetime: {
     number: '06', addresses: ['0x100ccab7c', '0x100ccb0a4', '0x100cda0cc'],
@@ -477,8 +477,8 @@ export const evidence = {
   },
   ordering: {
     number: '05', addresses: ['0x100c03c8c'],
-    en: { title: 'Ordering and the component example', text: 'The native ordered-set comparator compares type-pointer values. The interactive filler uses the selected display order and independently seeded selection/filling streams. Its integer RNG and component outputs are checked against the research implementation, including state rollover. It illustrates the ordinary filling rule; it does not incorporate extra leaders, the final-wave reservation, or world postprocessing.' },
-    'zh-CN': { title: '顺序与组件示例', text: '原生有序集合比较器比较类型指针值。交互填充器使用所显示的已选顺序，并分别为种类选择和填充设置随机流种子。其整数随机数与组件输出对照研究实现进行了检查，包括状态块切换。它展示普通填充规则，不包含额外首领、最终波补入或世界后处理。' },
+    en: { title: 'Ordering and the component example', text: 'The native ordered-set comparator compares type-pointer values. The website uses selected display order and a small seeded example RNG. The isolated filler demonstrates budget spending; the construction and music views generate preceding waves, final reservation, per-instruction levels, and the level-wide leader attempt. They demonstrate the traced rules without reproducing a native random sequence.' },
+    'zh-CN': { title: '顺序与组件示例', text: '原生有序集合比较器比较类型指针值。网站使用所显示的已选顺序和小型带种子的示例 RNG。独立填充器展示预算消耗；构建与音乐视图生成此前各波、最终波预留、各指令等级，以及每关一次的首领尝试。它们演示已追踪的规则，不复现原生随机序列。' },
   },
   extras: {
     number: '06', addresses: ['0x101ce8a54', '0x101ab6840'],
@@ -497,13 +497,13 @@ export const evidence = {
   },
   layout: {
     number: '03', addresses: ['0x101ab6840', '0x101d4a7e8'],
-    en: { title: 'Wave count and flag spacing', text: 'The description builder uses MinWaveCount, MaxWaveCount, WaveAddEach, and WaveAddInterval. The inspected baseline is 6, 15, 1, and 5. Within its 6–15-wave range, the target group count is 1 below 7 waves, 2 below 12, and 3 otherwise. The resulting spacing equals the wave count divided by that target, rounded up.' },
-    'zh-CN': { title: '波次数与旗帜间隔', text: '描述构建器使用 MinWaveCount、MaxWaveCount、WaveAddEach 和 WaveAddInterval。已检查的基线分别是 6、15、1 和 5。在其 6–15 波范围内，目标分组数在少于 7 波时为 1，少于 12 波时为 2，其余为 3。得到的间隔等于波次数除以目标分组数，再向上取整。' },
+    en: { title: 'Wave count and flag spacing', text: 'The description builder uses MinWaveCount, MaxWaveCount, WaveAddEach, and WaveAddInterval. The inspected constructor defaults are 6, 15, 1, and 5. This guide uses the supplied gameplay wave settings 5, 15, 1, and 10. Within the resulting 5–15-wave range, the target group count is 1 below 7 waves, 2 below 12, and 3 otherwise. The resulting spacing equals the wave count divided by that target, rounded up.' },
+    'zh-CN': { title: '波次数与旗帜间隔', text: '描述构建器使用 MinWaveCount、MaxWaveCount、WaveAddEach 和 WaveAddInterval。已检查的构造函数默认值分别是 6、15、1 和 5。本指南采用收到的实际游玩波次设置 5、15、1 和 10。在得到的 5–15 波范围内，目标分组数在少于 7 波时为 1，少于 12 波时为 2，其余为 3。得到的间隔等于波次数除以目标分组数，再向上取整。' },
   },
   budget: {
     number: '04', addresses: ['0x101ab6840', '0x101d4a7e8'],
-    en: { title: 'The underlying budget', text: 'The shared constructor supplies StartingPoints = 100, BasePointIncrementPerWave = 30, and BasePointIncrementPerLevel = 5. The description builder adds the combined per-wave increment once for each zero-based wave index. The website calculation is checked against the independent research helper at every input from 1–149.' },
-    'zh-CN': { title: '基础预算', text: '共享构造函数提供 StartingPoints = 100、BasePointIncrementPerWave = 30 和 BasePointIncrementPerLevel = 5。描述构建器根据从零开始的波次索引，逐次增加合并后的每波增量。网站计算对照独立的研究辅助工具检查了 1–149 的每一个输入。' },
+    en: { title: 'The underlying budget', text: 'The shared constructor supplies StartingPoints = 100, BasePointIncrementPerWave = 30, and BasePointIncrementPerLevel = 5. The description builder adds the combined per-wave increment once for each zero-based wave index.' },
+    'zh-CN': { title: '基础预算', text: '共享构造函数提供 StartingPoints = 100、BasePointIncrementPerWave = 30 和 BasePointIncrementPerLevel = 5。描述构建器根据从零开始的波次索引，逐次增加合并后的每波增量。' },
   },
   boost: {
     number: '05', addresses: ['0x101ce8a54'],

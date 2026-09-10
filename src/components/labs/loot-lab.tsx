@@ -548,9 +548,9 @@ export default function LootLab() {
               {t("equality")}
             </button>
             <button
-              onClick={() => set({ entry: 0, length: 0, level: 49, runs: 0 })}
+              onClick={() => set({ entry: 0, length: 0, runs: 0 })}
             >
-              {t("waveLength")}
+              {t("waveLength", { count: plan.count })}
             </button>
           </div>
           <div className="lab-stage" ref={ref}>

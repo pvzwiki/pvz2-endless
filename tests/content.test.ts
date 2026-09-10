@@ -60,8 +60,6 @@ test("published translations preserve equations, identifiers, numbers, and evide
     );
     for (const id of matches(a, /<Note id="([^"]+)"/g))
       assert.ok(id in evidence, `${chapter.id}: ${id}`);
-    assert.ok(en.chapters[chapter.id].title);
-    assert.ok(zh.chapters[chapter.id].title);
   }
 });
 

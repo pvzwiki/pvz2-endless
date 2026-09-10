@@ -14,11 +14,17 @@ Articles live in `src/content/`; interface translations in `src/messages/`. Calc
 ```sh
 npm test
 npm run typecheck
-npm run test:browser   # starts a local server if needed
 npm run build         # static output in out/
+npm run test:browser   # serves this checkout's out/ on a dedicated port
 ```
 
-To regenerate the selected inputs and comparison fixtures from the local research checkout:
+Tests cover arithmetic boundaries, roster accounting, state transitions, translation integrity, links, and browser controls. Assertions should protect a concrete behavior or boundary, not freeze a displayed answer that merely repeats a calculation. Exporters write website inputs only; generated result snapshots and exact game-RNG streams are outside this site's test scope.
+
+The construction and music views generate ordinary rosters for Egypt and Eighties using the traced selection, filling, reservation, level, and leader rules. A small seeded RNG makes examples repeatable; native pointer order and game random streams are not reproduced. The construction view reports neutral ordinary-action HP and identifies the separate flag action without inventing its effective level.
+
+The portal replay advances a queue through opening, due updates, and a separate removal callback. Placement draws from the computed remaining rows. Steam damage keeps its accumulator between updates; changing the next delta does not reset history. Timing, carrier, and saved-loot views keep explicit editable scenario inputs and calculate the resulting rules.
+
+To regenerate the selected website inputs from the local research checkout:
 
 ```sh
 python3 scripts/export-wave-data.py --source ../analyze

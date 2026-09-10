@@ -1,9 +1,8 @@
-"""Export selected article inputs and independent reference results; never copy the database."""
+"""Export selected article inputs; never copy the database."""
 
 import argparse
 import json
 from pathlib import Path
-import sys
 
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--source', type=Path, required=True)
@@ -15,7 +14,9 @@ declared = json.loads((source / 'catalog/endless/shared-declared-config.json').r
 fields = ['MinWaveCount', 'MaxWaveCount', 'WaveAddEach', 'WaveAddInterval',
           'StartingPoints', 'BasePointIncrementPerWave', 'BasePointIncrementPerLevel']
 data = {
-    'settings': {field: native['defaults'][field] for field in fields},
+    # Wave-count settings supplied for the guide; constructor defaults remain in the research catalog.
+    'settings': {**{field: native['defaults'][field] for field in fields},
+                 'MinWaveCount': 5, 'WaveAddInterval': 10},
     'flagMultiplier': 2.5,
     'bossInterval': declared['BossInterval'],
     'sample': {
@@ -23,13 +24,7 @@ data = {
         'addressConvention': 'unslid virtual addresses',
     },
 }
-sys.path.insert(0, str(source / 'src'))
-from pvz2_analysis.endless import wave_layout
-
-fixtures = [wave_layout(level) for level in range(1, 150)]
-for relative, value in [('src/data/wave-baseline.json', data),
-                        ('tests/fixtures/wave-plans.json', fixtures)]:
-    target = root / relative
-    target.parent.mkdir(parents=True, exist_ok=True)
-    target.write_text(json.dumps(value, ensure_ascii=False, indent=2) + '\n')
-print('Exported selected wave settings and 149 reference calculations. No local paths or raw objects included.')
+target = root / 'src/data/wave-baseline.json'
+target.parent.mkdir(parents=True, exist_ok=True)
+target.write_text(json.dumps(data, ensure_ascii=False, indent=2) + '\n')
+print('Exported selected wave settings.')
