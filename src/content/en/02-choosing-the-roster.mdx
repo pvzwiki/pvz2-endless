@@ -1,0 +1,119 @@
+import { Note } from '@/components/evidence-notes';
+import { RosterExplorer } from '@/components/roster-explorer';
+import { MechanismLab } from '@/components/mechanism-lab';
+import { Link } from '@/i18n/navigation';
+
+<div className="article-lead">
+The budget determines what a wave can spend. Two different selection rules determine what it buys: an index-based choice of types, followed by repeated weighted draws among those that remain affordable.
+</div>
+
+<section id="choosing-types" className="prose-section">
+
+<span className="section-number">01 / THE CAST</span>
+
+## Choose the types first.
+
+Start with the world's basic zombie $b$ and configured pool $R_0$. The generator selects $k=4$ pool entries without replacement, using a bounded integer draw at each step. `Weight` does not participate in this choice.<Note id="selection" />
+
+$$
+\begin{aligned}
+j_t &= u_t\bmod |R_t|,\\
+z_{t+1} &= R_t[j_t],\\
+R_{t+1} &= R_t\setminus\{\text{entry }j_t\},\qquad t=0,\ldots,k-1.
+\end{aligned}
+$$
+
+Removing the vector entry prevents that pool entry from being picked twice. A type with a large `Weight` has no larger interval in this initial draw: each remaining pool entry contributes one index.
+
+The selected types, together with $b$, become available to the ordinary filler from the first wave. The pool choice and the eventual frequency of a type are therefore separate questions.
+
+For $L>50$, an additional rule checks whether a selected type costs at least 1500 points. If none does, the last pool choice is replaced by a randomly chosen remaining type meeting that cost threshold. This is a `WavePointCost` test, not a test for the Gargantuar class.<Note id="highCost" />
+
+</section>
+
+<section id="cost-and-weight" className="prose-section">
+
+<span className="section-number">02 / THE DRAW</span>
+
+## Cost admits. Weight selects.
+
+Let $S$ be the active types. For each type $i$, write $c_i$ for `WavePointCost` and $a_i$ for `Weight`. With $r$ points remaining, the positive-weight candidates form
+
+$$
+A(r)=\{i\in S:c_i\le r,\ a_i>0\},\qquad T(r)=\sum_{i\in A(r)}a_i.
+$$
+
+Each candidate owns an integer interval of length $a_i$ in a bag of size $T(r)$. For the chosen ordering, let $C_i$ be the cumulative weight before $i$. A draw selects the unique interval containing $d$:<Note id="filling" />
+
+$$
+d=u\bmod T(r),\qquad C_i\le d<C_i+a_i,\qquad r\leftarrow r-c_i.
+$$
+
+The nominal share of the bag is $a_i/T(r)$. The bag is rebuilt as affordability changes; a type can disappear from consideration while still having a large weight. Filling ends when no positive-weight candidate fits, so the budget can leave a remainder.
+
+Neither `FirstWave` nor the separate property named `Cost` is used by this filler. An entry's declared first wave is therefore not an additional gate on this path.
+
+<RosterExplorer />
+
+</section>
+
+<section id="final-reservation" className="prose-section">
+
+<span className="section-number">03 / THE LAST WAVE</span>
+
+## One last inclusion attempt.
+
+The materializer tracks which selected types have appeared in earlier instructions. Before filling the final wave normally, it visits the remaining unseen types in the active set’s order. It attempts to insert them in order, subtracting each admitted cost from the remaining budget. This pass uses a strict inequality:<Note id="unseen" />
+
+$$
+\begin{array}{ll}
+\text{Final-wave reservation:} & c_i<r,\\
+\text{Ordinary filling:} & c_i\le r.
+\end{array}
+$$
+
+An exact cost match can be accepted by ordinary filling and rejected by the reservation pass. Skipping a reservation does not remove that type from the later weighted bag. Earlier accepted reservations also reduce the balance for later ones.
+
+For an ordered unseen pair costing 200 and 400 with 600 points left, the first insertion leaves an exact match for the second, which the reservation skips. Reversing the order changes which type receives the reservation. The filler can still draw an affordable skipped type afterward.
+
+<MechanismLab kind="reservation" />
+
+</section>
+
+<section id="after-filling" className="prose-section">
+
+<span className="section-number">04 / THE RESULT</span>
+
+## The roster is still a starting point.
+
+The ordering of a weighted bag affects its draw-to-type mapping. The native set is ordered by type pointers; equal costs and weights therefore do not make an arbitrary replacement order reproduce the same seeded sequence.<Note id="ordering" />
+
+From level 4 onward, generation makes an extra wealth-entry attempt and an extra leader-entry attempt for the **level**, then assigns a successful entry to a chosen wave. This is not a fresh 0.4 leader roll on every wave. The baseline leader probability is 0.4; its type is selected by weight from types whose cost is strictly greater than 100.
+
+The baseline wealth probability is zero, but its chance draw is still consumed. If both features are enabled and succeed, another draw suppresses one. A surviving extra entry is appended after ordinary filling without deducting its cost from the ordinary budget. World processing can then replace it, including clearing a removed leader’s marker when Jam constructs its replacement.<Note id="extras" />
+
+Together with the <Link href="/wave-plan/">wave plan</Link>, these rules explain how a point allowance becomes an ordered list of ordinary spawn instructions. Placement, strength, and timing operate on that result later.
+
+</section>
+
+<section id="random-streams" className="prose-section">
+
+<span className="section-number">05 / RANDOM STATE</span>
+
+## Why one seed is not the whole level
+
+The bag equations use the inspected integer stream: MT-style state, a 31-bit result, then modulo reduction for bounded draws. A zero seed becomes 4357. Different parts of generation own different stream states:<Note id="randomStreams" />
+
+| Decision | Random state used |
+| --- | --- |
+| Wave description and initial pool choices | Description-builder RNG |
+| Materializing ordinary wave instructions | Materializer RNG |
+| Runtime wave actions and row sampling | WaveManager RNG supplied to the action |
+| Jam, Dinosaur, and general-loot draws | Global RNG |
+| Modern family/row selection | Supplied designer RNG |
+| Modern endpoint interpolation | Global RNG |
+| Portal queue shuffle | Imported C++ RNG machinery |
+
+`GetSeed(1)` reads `time(NULL)`, but the timestamp alone does not specify every stream’s state or earlier consumption. Rejected duplicate choices, zero-probability attempts, and computed values that are later discarded can still advance a stream. The component controls expose their own input seeds so the individual rules remain reproducible.
+
+</section>

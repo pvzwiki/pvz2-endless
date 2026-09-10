@@ -1,0 +1,119 @@
+import { Note } from '@/components/evidence-notes';
+import { RosterExplorer } from '@/components/roster-explorer';
+import { MechanismLab } from '@/components/mechanism-lab';
+import { Link } from '@/i18n/navigation';
+
+<div className="article-lead">
+预算决定一波能花多少点数。两种不同的选择规则决定它买什么：先按索引选择种类，再在仍然买得起的种类中反复进行加权抽取。
+</div>
+
+<section id="choosing-types" className="prose-section">
+
+<span className="section-number">01 / 种类</span>
+
+## 先选择种类。
+
+从世界的基础僵尸 $b$ 和配置池 $R_0$ 开始。生成器每次使用一次有界整数抽取，从池中不放回地选择 $k=4$ 个条目。`Weight` 不参与这个选择。<Note id="selection" />
+
+$$
+\begin{aligned}
+j_t &= u_t\bmod |R_t|,\\
+z_{t+1} &= R_t[j_t],\\
+R_{t+1} &= R_t\setminus\{\text{entry }j_t\},\qquad t=0,\ldots,k-1.
+\end{aligned}
+$$
+
+移除向量条目，可以防止同一个池条目被再次选中。`Weight` 较大的类型在这次初始抽取中并不占有更长区间：每个剩余池条目只贡献一个索引。
+
+选中的种类与 $b$ 一起，从第一波起就可供普通填充流程使用。因此，是否进入候选种类与最终出现多少次，是两个不同的问题。
+
+当 $L>50$ 时，额外规则会检查已选种类中是否有成本至少为 1500 点的类型。如果没有，就从剩余池中随机选择一个满足该成本阈值的种类，替换最后一次池选择。这检查的是 `WavePointCost`，而不是 Gargantuar 类。<Note id="highCost" />
+
+</section>
+
+<section id="cost-and-weight" className="prose-section">
+
+<span className="section-number">02 / 抽取</span>
+
+## 成本决定准入，权重决定选择。
+
+令 $S$ 为当前可用种类。对种类 $i$，以 $c_i$ 表示 `WavePointCost`，以 $a_i$ 表示 `Weight`。剩余 $r$ 点时，正权重候选集合为
+
+$$
+A(r)=\{i\in S:c_i\le r,\ a_i>0\},\qquad T(r)=\sum_{i\in A(r)}a_i.
+$$
+
+每个候选在大小为 $T(r)$ 的抽签袋中，占据长度为 $a_i$ 的整数区间。对于给定顺序，令 $C_i$ 为 $i$ 之前的累计权重。一次抽取选择包含 $d$ 的唯一区间：<Note id="filling" />
+
+$$
+d=u\bmod T(r),\qquad C_i\le d<C_i+a_i,\qquad r\leftarrow r-c_i.
+$$
+
+候选在袋中的名义份额为 $a_i/T(r)$。随着可负担范围改变，抽签袋也会重建；即使权重很高，种类也可能不再进入候选范围。当没有正权重候选符合预算时，填充结束，因此预算可以有余数。
+
+这个填充流程既不使用 `FirstWave`，也不使用单独名为 `Cost` 的属性。因此，条目声明的首波编号不是这条路径上的额外门槛。
+
+<RosterExplorer />
+
+</section>
+
+<section id="final-reservation" className="prose-section">
+
+<span className="section-number">03 / 最终波</span>
+
+## 最后一次补入尝试。
+
+波次转换流程追踪哪些已选种类已经出现在更早的指令中。在正常填充最终波之前，它按活动集合的顺序访问剩余尚未出现的种类。它尝试按顺序插入，并从剩余预算中扣除每个获准种类的成本。这个流程使用严格不等式：<Note id="unseen" />
+
+$$
+\begin{array}{ll}
+\text{Final-wave reservation:} & c_i<r,\\
+\text{Ordinary filling:} & c_i\le r.
+\end{array}
+$$
+
+成本恰好相等时，普通填充可以接受，补入流程却会拒绝。跳过补入并不会把该类型从之后的加权袋中移除。较早被接受的补入，也会减少后续条目的可用余额。
+
+对于按顺序排列、成本为 200 和 400 的两个尚未出现类型，若剩余 600 点，第一次插入会使第二个类型恰好匹配剩余预算，因此补入会跳过它。反转顺序会改变哪个类型获得补入。之后，填充器仍可以抽到可负担的被跳过类型。
+
+<MechanismLab kind="reservation" />
+
+</section>
+
+<section id="after-filling" className="prose-section">
+
+<span className="section-number">04 / 结果</span>
+
+## 阵容仍然只是起点。
+
+加权抽签袋的顺序会影响抽取值与种类之间的对应关系。原生集合按类型指针排序；因此，即使成本和权重相同，任意替换顺序也不能复现相同的种子序列。<Note id="ordering" />
+
+从第 4 关起，生成流程为**整个关卡**进行额外财神条目和额外首领条目的尝试，再把成功的条目分配到选定波次。这不是每一波都重新进行一次 0.4 的首领概率判断。基线首领概率为 0.4；其类型从成本严格大于 100 的种类中按权重选择。
+
+基线财神概率为零，但仍消耗这次概率抽取。如果两个特性均启用且成功，另一次抽取会抑制其中一个。保留下来的额外条目在普通填充之后追加，不从普通预算中扣除成本。随后世界处理仍可替换它；例如 Jam 构造替换指令时，不会保留被移除首领的标记。<Note id="extras" />
+
+这些规则与<Link href="/wave-plan/">波次方案</Link>一起，解释了一份点数额度如何变成有序的普通出怪指令列表。位置、强度与时机，是之后在这个结果之上继续处理的内容。
+
+</section>
+
+<section id="random-streams" className="prose-section">
+
+<span className="section-number">05 / 随机状态</span>
+
+## 为什么一个种子不能代表整个关卡
+
+抽签袋公式使用所检查的整数随机流：MT 式状态、31 位结果，以及有界抽取的模约减。零种子会变为 4357。生成过程的不同部分拥有不同的随机流状态：<Note id="randomStreams" />
+
+| 决策 | 使用的随机状态 |
+| --- | --- |
+| 波次描述与初始池选择 | 描述构建器 RNG |
+| 将普通波次转换为指令 | 波次转换器 RNG |
+| 运行时波次动作与行采样 | 传入动作的 WaveManager RNG |
+| Jam、恐龙与一般掉落抽取 | 全局 RNG |
+| 摩登世界家族／行选择 | 传入的设计器 RNG |
+| 摩登世界端点插值 | 全局 RNG |
+| 传送门队列打乱 | 导入的 C++ RNG 机制 |
+
+`GetSeed(1)` 读取 `time(NULL)`，但仅有时间戳，并不能确定每个随机流的状态或此前消耗。被拒绝的重复选择、零概率尝试，以及最终被丢弃的计算结果，仍可能推进随机流。组件控件公开各自的输入种子，使这些单独规则可以重复检验。
+
+</section>

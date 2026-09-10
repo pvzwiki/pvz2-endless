@@ -1,0 +1,107 @@
+import { Note } from '@/components/evidence-notes';
+import { WaveExplorer } from '@/components/wave-explorer';
+import { MechanismLab } from '@/components/mechanism-lab';
+
+<div className="article-lead">
+一个编号波次是一批预定动作。在这些动作创建任何僵尸之前，普通无尽先构建波次方案：有多少波、哪些是旗帜边界，以及每波普通阵容可以花费多少点数。显示关卡数决定这套共同框架。
+</div>
+
+<section id="shared-rules" className="prose-section">
+
+<span className="section-number">01 / 输入</span>
+
+## 共同的输入。
+
+16 个标准世界都列出了 `DangerRoomJitteredWaveGenerator`。它们提供不同的僵尸池，但普通描述构建器从共享 `DangerRoomPropertySheet` 读取点数参数，而不是读取生成器对象自身的点数声明。<Note id="shared" />
+
+世界仍然重要：它提供基础僵尸、可选类型池，以及额外设计器。摩登世界、复兴时代、蒸汽时代和童话森林甚至声明了局部波次增量 20，但这个构建器并不读取该局部字段。公式仍以共享增量为输入。
+
+示例设置为：起始点数 100、每波固定增量 30、随关卡增长的增量 5。波次数上下界为 6 和 15，每五个显示关卡数增加一波。
+
+令 $L$ 表示**显示关卡数**，$w$ 表示**从零开始的波次索引**。已存进度值为 $L-1$。在示例安排中，5 的倍数会选择 Boss 文件。因此，下方的普通关卡视图覆盖 $L\in\{1,\ldots,149\}$ 中满足 $L\bmod5\ne0$ 的关卡。<Note id="level" />
+
+</section>
+
+<section id="counting-waves" className="prose-section">
+
+<span className="section-number">02 / 长度</span>
+
+## 一共有多少波？
+
+$$
+N(L)=\min\left(15,\;6+\left\lfloor\frac{L}{5}\right\rfloor\right)
+$$
+
+普通关卡从第 46 关起达到 15 波，此后保持在上限，点数预算则继续增长。<Note id="layout" />
+
+</section>
+
+<section id="building-a-budget" className="prose-section">
+
+<span className="section-number">03 / 预算</span>
+
+## 基础增长规律。
+
+对于 $w=0,\ldots,N(L)-1$，定义增量 $\Delta$ 与基础预算 $P$：
+
+$$
+\begin{aligned}
+\Delta(L)&=30+5L,\\
+P(L,w)&=100+\Delta(L)w.
+\end{aligned}
+$$
+
+同一关卡内的基础预算构成等差数列。增大 $L$ 会改变其斜率；第一波仍然是 100 点。<Note id="budget" />
+
+</section>
+
+<section id="larger-waves" className="prose-section">
+
+<span className="section-number">04 / 重音</span>
+
+## 旗帜边界与最终波。
+
+在 6–15 波范围内，目标分组数 $g$ 决定常规旗帜间隔 $s$：<Note id="layout" />
+
+$$
+g(N)=\begin{cases}
+1,&6\le N<7,\\
+2,&7\le N<12,\\
+3,&12\le N\le15,
+\end{cases}
+\qquad
+s(L)=\left\lceil\frac{N(L)}{g(N(L))}\right\rceil.
+$$
+
+填充预算 $B$ 为：
+
+$$
+B(L,w)=\begin{cases}
+\lfloor2.5P(L,w)\rfloor,&(w+1)\bmod s(L)=0\;\lor\;w=N(L)-1,\\
+P(L,w),&\text{otherwise}.
+\end{cases}
+$$
+
+当从一开始计数的波号是 $s$ 的倍数时，就出现一个常规旗帜边界。最后一波即使所在分组更短，也获得较大的预算。这些标记描述波次方案，还没有计算额外的旗帜僵尸。
+
+逻辑“或”很重要：同时属于最终波和常规旗帜边界的波次，只应用**一次**倍率，而非两次。下一波仍沿用未加成的基础增长规律。<Note id="boost" />
+
+<WaveExplorer />
+
+</section>
+
+<section id="beyond-the-budget" className="prose-section">
+
+<span className="section-number">05 / 下一步</span>
+
+## 这份计划覆盖什么。
+
+普通填充流程按所选种类的 `WavePointCost` 消耗 $B$。它既不是僵尸数量，也不是总生命值上限。无法花出的点数可以剩余；额外首领与独立的旗帜动作在其他环节添加。世界特有的处理还可以替换或补充生成的阵容。<Note id="scope" />
+
+在旗帜边界或最终波，安装流程可以添加一个**独立的旗帜僵尸动作**。它有自己的默认间距，不从 $B$ 中支付成本。世界处理与额外首领同样在不同阶段运行。波次时钟使用的生命值总量，要等这些动作创建并放置实体后才采样。
+
+<MechanismLab kind="pipeline" />
+
+下一个问题是游戏如何选择阵容：**哪些种类会被选中，它们的成本与权重又如何决定下一只僵尸？**
+
+</section>

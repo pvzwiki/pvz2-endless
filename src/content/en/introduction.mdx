@@ -1,0 +1,21 @@
+This is an independent series about ordinary Endless Challenge in the Chinese mainland iOS edition of *Plants vs. Zombies 2*. It is not affiliated with or endorsed by EA, PopCap, or the game's operators.
+
+I stopped playing the game years ago. My impression of leaderboard play is that clear speed matters greatly, and some plant mechanics and artifacts can make a level end in several seconds. My interest here is in how the system works; knowing these details may offer limited practical help with faster clears.
+
+I do not expect this series to reach many people. It is a personal exploration of a question I found interesting.
+
+## How this series was made
+
+Most of the technical analysis and drafting was carried out with assistance from OpenAI's GPT-6 Astra and Anthropic's Claude Fable 5.1. I have not independently checked every mechanism described here. The research examines game resources and ARM64 instructions, with selected isolated checks. It did not run the game to verify the complete behavior.
+
+Errors and omissions are possible. Corrections supported by evidence are welcome, and I am sorry for any confusion caused by mistakes.
+
+<h2 id="method">What the examples mean</h2>
+
+Unless another input set is named, numerical examples use the supplied sample's bundled resources and native constructor defaults. The game's effective settings can be supplied by the server. These examples explain the inspected calculation; they are not measurements of the current online game.
+
+The analyzed executable came from an archive labeled version 4.2.2.394. The hash below identifies the exact sample behind the native addresses. Those addresses are **unslid virtual addresses** within that executable.
+
+Evidence notes explain the relevant code paths and preserve their native addresses. Code registrations and decompiler output are evidence used in reconstruction, not the game's original source code.
+
+English is the editorial source. The Simplified Chinese version translates the same content, examples, and evidence. Both versions use the same numerical model.

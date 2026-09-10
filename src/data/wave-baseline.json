@@ -1,0 +1,17 @@
+{
+  "settings": {
+    "MinWaveCount": 6,
+    "MaxWaveCount": 15,
+    "WaveAddEach": 1,
+    "WaveAddInterval": 5,
+    "StartingPoints": 100,
+    "BasePointIncrementPerWave": 30,
+    "BasePointIncrementPerLevel": 5
+  },
+  "flagMultiplier": 2.5,
+  "bossInterval": 5,
+  "sample": {
+    "executableSha256": "9abd8714973e082e2a618ff0b10e5132038cc4d07f92aa9445254f45c60f27bf",
+    "addressConvention": "unslid virtual addresses"
+  }
+}

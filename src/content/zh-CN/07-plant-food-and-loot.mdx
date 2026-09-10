@@ -1,0 +1,157 @@
+import { Note } from '@/components/evidence-notes';
+import { Link } from '@/i18n/navigation';
+import { MechanismLab } from '@/components/mechanism-lab';
+
+<div className="article-lead">
+两个分配系统为之后的掉落事件提供输入。能量豆从每波配额开始，按指令顺序请求携带者；一般掉落从按条目保存的计划开始，按单个波次成本分配标记。计划数量或已接受标记，都还不是已经收集的奖励。
+</div>
+
+<section id="planned-quota" className="prose-section">
+
+## 什么叫“符合条件的设置行”
+
+当设置行的 `MinLevel` 不大于显示关卡数 $L$ 时，该行符合条件。生成器从**全部**符合条件的 `FlagWaveSetupList` 行中选择一行。其 `FlagCount` 给出能量豆数量的抽取次数，而非新版波次布局公式中的波次数或间隔。
+
+| `MinLevel` | `FlagCount` |
+| --- | ---: |
+| 1 | 1 |
+| 5 | 1 |
+| 15 | 1 |
+| 30 | 1 |
+| 40 | 2 |
+| 50 | 2 |
+
+独立的 `PlantfoodSetupList` 提供抽取边界。其随包条目如下：
+
+| `MinLevel` | `MinPlantfoodPerFlagWave` | `MaxPlantfoodPerFlagWave` |
+| --- | ---: | ---: |
+| 1 | 1 | 1 |
+| 5 | 2 | 2 |
+| 15 | 2 | 2 |
+| 30 | 1 | 1 |
+| 50 | 1 | 1 |
+| 55 | 0 | 0 |
+
+对于符合条件的能量豆设置行 $I(L)$，两个边界都通过取最小值来归约：
+
+$$
+\begin{aligned}
+a(L)&=\min_{i\in I(L)}\operatorname{MinPlantfoodPerFlagWave}_i,\\
+b(L)&=\min_{i\in I(L)}\operatorname{MaxPlantfoodPerFlagWave}_i.
+\end{aligned}
+$$
+
+令 $k$ 等于选中的 `FlagCount`，计划总量为
+
+$$
+Q=\sum_{j=1}^{k}\left(a+u_j\bmod(b-a+1)\right).
+$$
+
+声明为 2 的行不会替代较早声明为 1 的行。两个有效边界一直保持为 1，直到第 55 关的行将它们降为零。第 49 关时，四个合格旗帜行要求抽取一次，另一行要求抽取两次，因此根据选中行不同，$Q$ 为 1 或 2。
+
+分配**按顺序访问常规旗帜边界**，只要有余量，就各给一个单位。之后才将剩余单位放到随机选择的波次，允许重复。较短分组的最终波，不会仅因它是最终波就被插入常规边界遍历。第 49 关的 15 波方案具有第 5、10、15 波边界：第一个单位分给第 5 波，可能存在的第二个分给第 10 波。
+
+每波的分配被复制到其普通动作的 `AdditionalPlantfood`。这是动作配额；独立旗帜僵尸动作有自己的默认零配额。生成器将 `DynamicPlantfood` 和 `SpawnPlantName` 留空。<Note id="foodPlan" />
+
+</section>
+
+<section id="carrier-requests" className="prose-section">
+
+## 请求可以消耗配额，却仍然失败
+
+创建器按顺序扫描普通指令。只要还有配额，`CanSpawnPlantFood: true` 就消耗一个单位，并请求在新实体上标记携带者。属性为假则跳过，不消耗单位。这里没有额外的随机携带者选择过程。
+
+标记函数随后应用档案与模式条件。在 DangerRoom 中，`IsA(ZombieGargantuar)` 会拒绝真值请求，包括子类。这是运行时类检查，与阵容选择中的高成本检查不同。请求已经被消耗，调用方没有成功结果、退还或重试分支。<Note id="foodMarker" />
+
+| 配额为 1 时的输入顺序 | 配额扫描 | 被接受的携带者 |
+| --- | --- | --- |
+| `eighties_gargantuar_danger`、`eighties` | 巨人声明为假；请求到达基础僵尸 | `eighties` |
+| `cowboy_gargantuar_danger`、`cowboy` | 巨人声明为真，消耗请求后被类条件拒绝 | 无 |
+| `cowboy`、`cowboy_gargantuar_danger` | 基础僵尸先消耗请求 | `cowboy` |
+
+Jam 替换早于这次扫描。它保留数值配额，却改变接收请求的类型与顺序；此时不存在需要保留的 Jam 替换前实体标记。动作结束后仍剩余的配额，不会由这个循环转交给其他动作。传送门子僵尸使用独立释放器。
+
+请求同样早于<Link href="/placement/#placement-hooks">位置钩子</Link>。在那里被拒绝的国王或渔夫，可能已经拥有接受的标记。尽管死亡／移除方式不同，两条拒绝路径都可以到达普通掉落处理。
+
+</section>
+
+<section id="food-pickup" className="prose-section">
+
+## 后续事件请求拾取物
+
+基础僵尸掉落方法先发出 Board 事件，再设置已处理掉落标记。监听器要求事件尚未处理、`m_canDropLoot`、`hasplantfood` 状态，以及相应模式许可。
+
+在普通的空 `SpawnPlantName` 分支中，监听器清除携带状态，并请求 `plantfood` 拾取物。非空名称改走种子包分支。基础移除同样到达掉落分发器，因此移除本身并不意味着没有掉落。<Note id="foodDrop" />
+
+携带者视图分别展示属性检查、已消耗请求、已接受标记与拾取物事件。重排同样两条指令，可以在不改变原配额的情况下改变结果。
+
+<MechanismLab kind="loot" />
+
+</section>
+
+<section id="loot-schedule" className="prose-section">
+
+## 一般掉落推进按条目保存的计划
+
+波次安装在世界后处理之后、运行时 WaveManager 重新播种之前，执行一般掉落流程。配置必须存在、处于启用状态，且收集到的波次总成本为正。在 `LevelLength = -1` 时，它根据已安装的 $N$ 波估计规划长度：
+
+$$
+\lambda(N)=\frac{N-10}{3}+4.
+$$
+
+运算先使用 float32，再扩展为 double。明确的 `LevelLength` 可以替代该估计。这些是规划单位，并非战斗耗时。
+
+合格掉落表行必须通过 `World` 和 `EnabledAfter` 检查。世界标签来自精确的世界地图关卡节点查询，并不简单等于场景世界名。所检查的地图集合没有匹配的 DangerRoom 节点，因此留下空标签；限定世界的行无法匹配。七个不限世界的回退行仍要求 `tutorial4` 进度：
+
+| `UniqueId` | `Type` | `Min`–`Max` | `Period` |
+| --- | --- | ---: | ---: |
+| `Silver1` | `SilverCoin` | 1–3 | 1 |
+| `Gold1` | `GoldCoin` | 1–1 | 20 |
+| `Gold2` | `GoldCoin` | 1–1 | 20 |
+| `Gold3` | `GoldCoin` | 1–3 | 30 |
+| `Gold4` | `GoldCoin` | 1–3 | 30 |
+| `Diamond1` | `Diamond` | 1–1 | 30 |
+| `Diamond2` | `Diamond` | 1–1 | 40 |
+
+每个合格行拥有以 `UniqueId` 为键的保存记录。因此，即使类型与周期相同，两个金币行仍保留独立历史。以 $C$ 表示 `LevelLengthsPlayed`，$D$ 表示 `NextDropTime`，$S$ 表示 `NextScheduleTime`。新记录初始为 $C=0$、$D=\infty$、$S=0$；其中 $\infty$ 代表没有待处理掉落的哨兵值。
+
+每次规划调用：
+
+1. 把 $\lambda$ 加到 $C$。
+2. 若 $D<C$，从包含两端的 `Min`–`Max` 中抽取数量，追加相应数量的掉落代码，再把 $D$ 重置为哨兵值。
+3. 若 $S<C$，在 `Period` 内选择相位，把 $D$ 设为**原来的** $S$ 加上该相位，再把 `Period` 加到 $S$。
+4. 只要仍需要另一轮安排，就重复掉落／安排处理。
+
+两个比较均为严格比较。新安排的掉落，可能在同一次规划调用中已经到期，并在下一轮处理。相等时，需要等待以后累积更多长度。相位／数量抽取消耗全局 RNG，管理器随后请求保存更新记录。<Note id="lootSchedule" />
+
+这解释了为什么当前关卡与一个生成种子无法确定计划列表：有效表条目、档案资格、已保存历史，以及较早的全局抽取都参与其中。
+
+</section>
+
+<section id="loot-assignment" className="prose-section">
+
+## 成本为单个指令提供权重
+
+流程收集普通和独立旗帜生成器的类型向量，并创建平行、初始填零的掉落数组。传送门子僵尸尚未存在于这些生成器向量中，不是此流程中的条目。
+
+对于每个非零掉落代码，成本为 $c_i$ 的未标记指令 $i$ 在抽签袋中的名义份额为
+
+$$
+\frac{c_i}{\sum_{j\in U}c_j},
+$$
+
+其中 $U$ 是剩余未标记集合。按累积成本抽取一条指令，分配标记，并从之后的抽取中移除其成本。分配不放回；没有可选的剩余候选时停止。它使用 `WavePointCost`，而非 `Weight`、HP、实体等级或首领生命值。<Note id="lootAssignment" />
+
+由于流程在 Jam 之后，它使用替换后的成本。注释数组不改变指令顺序、行、等级、首领字段或能量豆配额。创建时，每条指令对应索引上的标记被复制到其实体。
+
+基础掉落分发器随后根据保存代码请求拾取物别名，并受其掉落／状态条件约束：
+
+| 代码 | 注册枚举 | 请求拾取物 |
+| --- | --- | --- |
+| 1 | `SilverCoin` | `coin_silver` |
+| 2 | `GoldCoin` | `coin_gold` |
+| 3 | `Diamond` | `coin_gold` |
+
+代码 4–13 不在这个分发器中创建拾取物。因此，不能只凭代码 3 的枚举名称，推断生成别名或最终物品栏入账。<Note id="lootDispatch" />
+
+</section>

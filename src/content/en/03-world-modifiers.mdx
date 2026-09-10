@@ -1,0 +1,163 @@
+import { Note } from '@/components/evidence-notes';
+import { Link } from '@/i18n/navigation';
+import { MechanismLab } from '@/components/mechanism-lab';
+
+<div className="article-lead">
+A world can change the plan after the common roster has been built. Eighties replaces ordinary instructions; Dinosaur and Modern add independent actions; Steam installs board systems during a later setup pass. To understand the resulting battle, we need the schedule, the operation performed at each event, and the order in which those results reach the Board.
+</div>
+
+<section id="interpolation" className="prose-section">
+
+## Draw endpoints, then interpolate
+
+Several designers use the same helper. For a parameter with level bounds $L_0,L_1$, it draws integers $a$ and $b$ from the inclusive low-level and high-level endpoint ranges, then computes
+
+$$
+\begin{aligned}
+\alpha(L)&=\operatorname{clamp}\left(\frac{L-L_0}{L_1-L_0},0,1\right),\\
+v(L)&=\operatorname{trunc}\bigl(a+\alpha(L)(b-a)\bigr).
+\end{aligned}
+$$
+
+The native arithmetic uses float32 and fused multiply-add. A fixed endpoint still consumes its draw, and both endpoints are drawn even when the clamped fraction is 0 or 1. Thus a table of endpoint ranges defines **a draw followed by interpolation**, not a uniform draw between two interpolated limits.<Note id="interpolation" />
+
+</section>
+
+<section id="jam" className="prose-section">
+
+## Eighties: schedule music and replace instructions
+
+`DangerRoomJamDesigner` runs after ordinary filling, using the global RNG. It prepares music events in the wave properties before the battle creates those zombies.
+
+### First choose the music set
+
+Below level 7, the candidates are Pop, Punk, Rap, and 8-bit. Metal joins at level 7. The desired number of distinct types interpolates from 2 at level 1 to 5 at level 15, capped by the eligible candidate count. The designer repeatedly draws a candidate until it has enough distinct types. A duplicate is discarded, but its random draw is still consumed.
+
+Every event later draws from this completed subset. **Consecutive events can choose the same music.** Choosing the subset without duplicates does not make the event sequence nonrepeating. `jam_ballad` occurs in a broader music list but is absent from this Endless candidate list.
+
+### Then choose the event waves
+
+The music schedule is independent of the flag spacing from Chapter 1. Let $w_j$ be the zero-based wave index of event $j$:
+
+$$
+w_0=I_{\mathrm{first}}(L),\qquad
+w_{j+1}=w_j+I_{\mathrm{gap}}(L).
+$$
+
+Each $I$ is a fresh endpoint-draw interpolation using level bounds 1–15. Events are added while $w_j<N(L)$.
+
+| Parameter | Level 1 endpoint | Level 15+ endpoint |
+| --- | ---: | ---: |
+| Number of distinct music types | 2 | 5 |
+| First event, zero-based wave index | 3–4 | 1–2 |
+| Later event spacing, in waves | 4–5 | 2–3 |
+
+The first event is therefore on player-facing wave 4–5 at the low endpoint and wave 2–3 at the high endpoint. Event spacing is counted in waves, not seconds; each event’s next gap is drawn again.
+
+### What an event changes
+
+For one event, the designer chooses one replacement type from this mapping. Rap makes one choice for the whole event, not one choice per replaced instruction.
+
+| Notification event | Replacement type |
+| --- | --- |
+| `jam_pop` | `eighties_glitter` |
+| `jam_punk` | `eighties_punk` |
+| `jam_rap` | `eighties_mc` or `eighties_breakdancer` |
+| `jam_8bit` | `eighties_arcade` |
+| `jam_metal` | `eighties_gargantuar_danger` |
+
+The replacement count uses a separate level range, 1–50: its endpoint ranges are 1–2 and 5–7. The result is capped by the current instruction count. For each removal, the designer chooses a remaining index, saves that instruction’s level, moves the final instruction into its slot, and shortens the vector. It then appends new instructions of the selected replacement type using the saved levels.
+
+Only the levels are carried forward. New instruction fields use defaults, including a false leader marker. Unselected instructions keep their fields, but swap-removal can change their order. The final count and level multiset are preserved; total cost and leader markings can change. No ordinary budget check is repeated, so Metal can inject giants even when their replacement costs exceed the original allowance.
+
+The event name is appended to `NotificationEvents`. At runtime, the action creates and positions its batch, then emits those notifications. The replacement was already decided during generation; notification delivery is the later point where the music event reaches the Board.<Note id="jam" />
+
+<MechanismLab kind="jam" />
+
+`AdditionalPlantfood` stays unchanged. Its carrier requests are assigned later from the modified order and types. General-loot assignment also runs afterward and sees replacement costs. Finally, the <Link href="/timing/#wave-health">wave-health snapshot</Link> measures the resulting eligible entities after placement. These are three different downstream consequences of the same replacement pass.
+
+</section>
+
+<section id="dinosaurs" className="prose-section">
+
+## Dinosaur: append events alongside the roster
+
+The candidate types are `raptor`, `stego`, `ptero`, `tyranno`, and `ankylo`. The designer uses repeated unique draws for its subset, then chooses one type for each dinosaur event. Its endpoint interpolation uses level bounds 1–20.
+
+| Parameter | Level 1 endpoint | Level 20+ endpoint |
+| --- | ---: | ---: |
+| Selected dinosaur types | 2 | 5 |
+| First event, zero-based wave index | 3–4 | 2–3 |
+| Later event spacing, in waves | 3–4 | 1–2 |
+| Dinosaur count in the event | 1–2 | 3–4 |
+
+The first index and subsequent gaps define an event sequence just as above. At an event, the requested number of dinosaur actions is appended alongside ordinary zombie actions. Rows are drawn from a consumable list of 0–4, replenished when too few entries remain for the upcoming event. These choices consume the global RNG and do not spend the ordinary zombie budget.<Note id="dinosaurs" />
+
+</section>
+
+<section id="extra-actions" className="prose-section">
+
+## Modern: an event creates portals with their own queues
+
+The fallback candidates are ten families: Eighties, Dinosaur, Lost City, Ice Age, Beach, Dark Ages, Future, West, Egypt, and Pirate. Their initial selection weights are all 1.0. The designer selects families without replacement, with subset size growing from 1 at level 1 to 4 at level 30. Each portal-event wave chooses a family from that subset.
+
+| Event parameter | Level 1 endpoint | Level 30+ endpoint |
+| --- | ---: | ---: |
+| First event, zero-based wave index | 4 | 2–3 |
+| Later event spacing, in waves | 4 | 2 |
+| Portals in one event | 1 | 3–4 |
+| Spawn column, zero-based | 8 | 5–6 |
+| Computed zombies-per-portal value | 1–2 | 3–4 |
+| Computed list start index | 0 | 0 |
+| Computed list end index | 0 | 3 |
+
+Rows are sampled from 0–4 without replacement, with replenishment. Family and row choices use the supplied designer RNG; endpoint interpolation consumes the global RNG.
+
+The last three computed values are **not forwarded** by the ordinary `SpawnModernPortalsWaveAction`. It forwards the portal family and position, leaving the runtime count/start/end overrides at their defaults. Those discarded computations still consumed their random draws.
+
+The portal therefore copies its family’s full four-slot list and shuffles it through the imported C++ RNG machinery. Duplicate names remain separate slots. For Egypt, the source list is `ra`, `explorer`, `explorer`, `pharaoh`: two Explorer slots, not one. All ten families can be inspected in the view below.
+
+### Opening, emission, and closure
+
+The first requested deadline is the creation time plus a random offset between zero and a draw from the 10–12-second interval. Emission also waits for opening to finish. Each later interval is added to the **previous scheduled deadline**, not simply to a delayed actual emission time.
+
+Each emitted child receives wave marker $-5$. It is excluded from ordinary current-wave health and initial off-lawn rush, while still participating in the separate victory and loss predicates. Its requested-level bounds come from the shared DangerRoom curve, but its choice uses a global float draw rather than the ordinary instruction’s integer-residue comparison.
+
+After emitting the last slot, the portal still schedules another due check. That later check sees an empty queue and starts closing; the close-animation callback then requests removal. Until removal, the portal itself remains a completion blocker, independently of its surviving children.<Note id="portals" />
+
+<MechanismLab kind="portals" />
+
+</section>
+
+<section id="steam" className="prose-section">
+
+## Steam: fixed board systems and separate clocks
+
+Steam uses the later setup hook. With $\alpha=\operatorname{clamp}((L-1)/99,0,1)$, its counts are
+
+$$
+n_{\mathrm{smoke}}=\lfloor3\alpha\rfloor,\qquad
+n_{\mathrm{pipe}}=\lfloor5\alpha\rfloor.
+$$
+
+Smoke-hole counts first reach 1, 2, and 3 at levels 34, 67, and 100; pipeline counts reach 1–5 at 21, 41, 61, 81, and 100. Their positions are fixed: player-facing smoke column 6, starting at row 2; pipelines from column 7 to column 5, starting at row 1.
+
+The first smoke-start parameter interpolates from 15 to 30 seconds. Both smoke damage and pipeline blockage damage interpolate from 30 to 100, using the pipeline-named damage fields. The smoke-start call uses the fields in the reverse order suggested by their `Min`/`Max` names.
+
+### Smoke waits for events
+
+At the start call, the first alert deadline is $t+3$, while the first roar deadline is independently $t+\operatorname{StartTime}$. Roar-animation completion activates the smoke. While active, an accumulator strictly greater than 1 second causes one damage pass and subtraction of 1 second. The pass selects one plant target in each of the hole’s cell and eight neighbors; it does not independently damage every stacked layer.
+
+There is no automatic five-second expiry of active smoke. A clearing path such as `blow_off` or `absorb` must complete. Its removal event starts the cooldown: the next alert is clearing time + 5 seconds, and the next roar is another 3 seconds later, before extra delay. The inspected removal event is broadcast to registered hole handlers without an owning-hole argument.
+
+### Pipes retain the same entities
+
+Entry requires a qualifying zombie in the entrance cell, X distance strictly below 0.5 from the entrance, runtime size `small`, and the shared capability/state checks including `CanBeLaunchedByPlants`. The Steam coal miner is `mid`, and its giant is `big`, so they fail this size gate.
+
+The ordinary two-column distance produces a duration parameter of 2 seconds, but the entity deadlines are $t+1$, $t+2$, and $t+3$. It starts using the exit position at the underground deadline and finishes only after the final deadline is strictly exceeded. Several zombies can be in flight together; this is not a single-server queue.
+
+The blocking plant `flattenedshroom` can extend the underground and completion deadlines; its supplied `BlockTime` is 12 seconds. When transported references remain, damage is applied once per blocking plant per update as `DamagePerSecond` times game delta, not once per transported zombie. Transport retains the original level and wave marker, and state `ZS_StuckInGround` is not excluded by the base current-wave health query.<Note id="steam" />
+
+<MechanismLab kind="steam" />
+
+</section>

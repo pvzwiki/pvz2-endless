@@ -1,0 +1,106 @@
+import { Note } from '@/components/evidence-notes';
+import { Link } from '@/i18n/navigation';
+import { MechanismLab } from '@/components/mechanism-lab';
+
+<div className="article-lead">
+Point cost buys an instruction; it does not specify that zombie’s health. Strength is resolved through three distinct inputs: the instruction’s requested level, the entity’s effective level after creation modifiers, and the shared health/attack table. Leader marking is another operation afterward.
+</div>
+
+<section id="requested-level" className="prose-section">
+
+## From the displayed level to an integer request
+
+The baseline coefficients are `ZombieLevelBase = 0.9` and `ZombieLevelAdd = 0.1`. Let $F_{32}$ mean rounding to float32, and $\operatorname{fma}_{32}(x,y,z)$ mean a fused $xy+z$ followed by that rounding. Decimal truncation and the level curve are
+
+$$
+\begin{aligned}
+D(x)&=F_{32}\!\left(\frac{\operatorname{trunc}(F_{32}(10x))}{10}\right),\\
+q(L)&=\min\left(10,D\!\left(\operatorname{fma}_{32}(L,F_{32}(0.1),F_{32}(0.9))\right)\right).
+\end{aligned}
+$$
+
+Define the integer bounds $a=\operatorname{clamp}(\lfloor q\rfloor,1,10)$ and $b=\operatorname{clamp}(\lceil q\rceil,1,10)$. If $a=b$, every instruction requests that level. Otherwise, let $d=u\bmod100$ for the next integer draw and calculate
+
+$$
+\tau=F_{32}\!\left(100F_{32}(q-a)\right),\qquad
+\ell_{\mathrm{request}}=\begin{cases}
+b,&d<\tau,\\
+a,&d\ge\tau.
+\end{cases}
+$$
+
+The fractional part therefore selects between adjacent integer levels; it is not itself the stored entity level. In the baseline, the request becomes fixed at $[10,10]$ from level 91.<Note id="spawnLevels" />
+
+Float32 cannot represent every decimal exactly. Inputs 2 and 3 both reach approximately 1.100000024 after the native truncation sequence, and their slightly-above-10 threshold accepts residues 0–10. The view below exposes every ordinary level, its bounds, threshold, and accepted residues.
+
+This residue test belongs to ordinary spawn instructions. <Link href="/worlds/#extra-actions">Modern portal children</Link> use the same level bounds but a separate global floating-point draw path.
+
+</section>
+
+<section id="strength-table" className="prose-section">
+
+## Resolve the entity level, then look up its row
+
+Creation can apply level-module modifiers before storing the effective level $\ell$. `ZombieMaxLevel` defaults to $-1$, so its clamp is inactive unless overridden. The ordinary definitions do not impose a five-level cap.
+
+For a non-Zomboss entity in DangerRoom, both multipliers come from the shared `ZombieLevelStats` vector. The type’s own level-stat vector is not the table used by this path. The lookup uses index $\ell-1$:
+
+| Effective level $\ell$ | Health $h_\ell$ | Attack $a_\ell$ |
+| --- | ---: | ---: |
+| 1 | 1 | 1 |
+| 2 | 2 | 2 |
+| 3 | 3 | 3 |
+| 4 | 4.5 | 4.5 |
+| 5 | 5 | 5 |
+
+Those are the five bundled rows. A missing index returns multiplier 1; it neither repeats the last row nor extrapolates a growth formula. The generator’s request range of 1–10 and this table’s length are independent inputs.<Note id="strengthTable" />
+
+`neccd.zls` can replace the entire ordered vector with attack/health pairs. Row order determines which effective level reads each pair. Replacing the table does not require changing the level curve, and a module-level override does not create a missing table row.
+
+</section>
+
+<section id="health-and-bite" className="prose-section">
+
+## Health and chewing use different calculations
+
+With other health modifiers neutral, the <Link href="/zombies/">resource values</Link> give
+
+$$
+H_{\mathrm{body}}=H_{\mathrm{base}}h_\ell,\qquad
+H_{\mathrm{helmet}}=H_{\mathrm{helm,base}}h_\ell
+$$
+
+when a helmet is present. The implementation also accounts for module modifiers and existing health-reduction factors.
+
+The chewing-rate getter chooses its base rate $E$ in this priority order:
+
+1. Positive `EatDPSRatio` times maximum body HP.
+2. Otherwise, positive instance `m_extraEatDPS`.
+3. Otherwise, positive instance `m_baseEatDPS`.
+4. Otherwise, the property `EatDPS`.
+
+For the base bite implementation, with other target/type modifiers neutral,
+
+$$
+\Delta H_{\mathrm{plant}}=\max\!\left(0,\;E\,a_\ell\,v_{\mathrm{attack}}\,\Delta t\,[1+0.2(\ell-1)]\right).
+$$
+
+Here $v_{\mathrm{attack}}$ is the condition-dependent attack-pace factor and $\Delta t$ is game-clock delta. The table’s attack multiplier is therefore only one factor; a fixed `EatDPS` is not the complete final bite rate. Specialized subclass attacks can use other implementations.<Note id="bite" />
+
+For a neutral level-5 `mummy_armor1`, declared body/helmet HP 270/370 becomes 1350/1850. Its `EatDPS = 100`, attack multiplier 5, and level factor 1.8 produce 900 damage per game second at attack pace 1. The interactive calculation keeps requested level, effective level, and table lookup separate.
+
+<MechanismLab kind="strength" />
+
+</section>
+
+<section id="leaders" className="prose-section">
+
+## Leader marking changes current and maximum health
+
+On the first true leader mark, current body HP is multiplied by `LeaderStrengthenRate` and the result becomes maximum body HP. The baseline rate is 2. A present helmet is strengthened separately with its existing armor-health reduction factor reapplied and a nonnegative clamp; its resulting current HP also becomes its maximum.
+
+Repeating the true mark does not multiply again, and a false call does not undo the earlier operation. This path changes neither $\ell$ nor the cached attack-table multiplier. For the fixed-`EatDPS` conehead above, the neutral leader result is 2700/3700 HP while the bite rate remains 900. A type using `EatDPSRatio` can instead gain bite damage indirectly through its larger maximum body HP.
+
+The leader update changes its overlay as combined body/helmet health falls through approximately 67% and 33% of the combined maximum. Those transitions do not heal it. A qualifying leader at $X<232$ in the ordinary five-row layout enters a retreat path, starts a 2.3-game-second countdown, and requests removal when it expires.<Note id="leaders" />
+
+</section>

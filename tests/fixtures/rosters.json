@@ -1,0 +1,499 @@
+[
+  {
+    "level": 36,
+    "seed": 1,
+    "budget": 100,
+    "selected": [
+      "mummy",
+      "ra",
+      "explorer",
+      "tomb_raiser",
+      "camel_onehump"
+    ],
+    "roster": [
+      "ra"
+    ],
+    "remaining": 0
+  },
+  {
+    "level": 36,
+    "seed": 1,
+    "budget": 350,
+    "selected": [
+      "mummy",
+      "ra",
+      "explorer",
+      "tomb_raiser",
+      "camel_onehump"
+    ],
+    "roster": [
+      "camel_onehump"
+    ],
+    "remaining": 50
+  },
+  {
+    "level": 36,
+    "seed": 1,
+    "budget": 2350,
+    "selected": [
+      "mummy",
+      "ra",
+      "explorer",
+      "tomb_raiser",
+      "camel_onehump"
+    ],
+    "roster": [
+      "camel_onehump",
+      "tomb_raiser",
+      "tomb_raiser",
+      "camel_onehump",
+      "tomb_raiser",
+      "explorer",
+      "ra",
+      "explorer",
+      "ra"
+    ],
+    "remaining": 0
+  },
+  {
+    "level": 36,
+    "seed": 7,
+    "budget": 100,
+    "selected": [
+      "mummy",
+      "egypt_gargantuar_danger",
+      "tomb_raiser",
+      "ra",
+      "explorer"
+    ],
+    "roster": [
+      "mummy"
+    ],
+    "remaining": 0
+  },
+  {
+    "level": 36,
+    "seed": 7,
+    "budget": 350,
+    "selected": [
+      "mummy",
+      "egypt_gargantuar_danger",
+      "tomb_raiser",
+      "ra",
+      "explorer"
+    ],
+    "roster": [
+      "mummy",
+      "explorer"
+    ],
+    "remaining": 0
+  },
+  {
+    "level": 36,
+    "seed": 7,
+    "budget": 2350,
+    "selected": [
+      "mummy",
+      "egypt_gargantuar_danger",
+      "tomb_raiser",
+      "ra",
+      "explorer"
+    ],
+    "roster": [
+      "egypt_gargantuar_danger",
+      "explorer",
+      "tomb_raiser",
+      "ra",
+      "mummy"
+    ],
+    "remaining": 50
+  },
+  {
+    "level": 36,
+    "seed": 36,
+    "budget": 100,
+    "selected": [
+      "mummy",
+      "ra",
+      "explorer",
+      "tomb_raiser",
+      "mummy_armor1"
+    ],
+    "roster": [
+      "mummy"
+    ],
+    "remaining": 0
+  },
+  {
+    "level": 36,
+    "seed": 36,
+    "budget": 350,
+    "selected": [
+      "mummy",
+      "ra",
+      "explorer",
+      "tomb_raiser",
+      "mummy_armor1"
+    ],
+    "roster": [
+      "explorer",
+      "ra"
+    ],
+    "remaining": 0
+  },
+  {
+    "level": 36,
+    "seed": 36,
+    "budget": 2350,
+    "selected": [
+      "mummy",
+      "ra",
+      "explorer",
+      "tomb_raiser",
+      "mummy_armor1"
+    ],
+    "roster": [
+      "explorer",
+      "tomb_raiser",
+      "explorer",
+      "tomb_raiser",
+      "mummy_armor1",
+      "ra",
+      "explorer",
+      "mummy_armor1",
+      "mummy_armor1",
+      "mummy_armor1"
+    ],
+    "remaining": 0
+  },
+  {
+    "level": 49,
+    "seed": 1,
+    "budget": 100,
+    "selected": [
+      "mummy",
+      "ra",
+      "explorer",
+      "tomb_raiser",
+      "camel_onehump"
+    ],
+    "roster": [
+      "ra"
+    ],
+    "remaining": 0
+  },
+  {
+    "level": 49,
+    "seed": 1,
+    "budget": 350,
+    "selected": [
+      "mummy",
+      "ra",
+      "explorer",
+      "tomb_raiser",
+      "camel_onehump"
+    ],
+    "roster": [
+      "camel_onehump"
+    ],
+    "remaining": 50
+  },
+  {
+    "level": 49,
+    "seed": 1,
+    "budget": 2350,
+    "selected": [
+      "mummy",
+      "ra",
+      "explorer",
+      "tomb_raiser",
+      "camel_onehump"
+    ],
+    "roster": [
+      "camel_onehump",
+      "tomb_raiser",
+      "tomb_raiser",
+      "camel_onehump",
+      "tomb_raiser",
+      "explorer",
+      "ra",
+      "explorer",
+      "ra"
+    ],
+    "remaining": 0
+  },
+  {
+    "level": 49,
+    "seed": 7,
+    "budget": 100,
+    "selected": [
+      "mummy",
+      "egypt_gargantuar_danger",
+      "tomb_raiser",
+      "ra",
+      "explorer"
+    ],
+    "roster": [
+      "mummy"
+    ],
+    "remaining": 0
+  },
+  {
+    "level": 49,
+    "seed": 7,
+    "budget": 350,
+    "selected": [
+      "mummy",
+      "egypt_gargantuar_danger",
+      "tomb_raiser",
+      "ra",
+      "explorer"
+    ],
+    "roster": [
+      "mummy",
+      "explorer"
+    ],
+    "remaining": 0
+  },
+  {
+    "level": 49,
+    "seed": 7,
+    "budget": 2350,
+    "selected": [
+      "mummy",
+      "egypt_gargantuar_danger",
+      "tomb_raiser",
+      "ra",
+      "explorer"
+    ],
+    "roster": [
+      "egypt_gargantuar_danger",
+      "explorer",
+      "tomb_raiser",
+      "ra",
+      "mummy"
+    ],
+    "remaining": 50
+  },
+  {
+    "level": 49,
+    "seed": 36,
+    "budget": 100,
+    "selected": [
+      "mummy",
+      "ra",
+      "explorer",
+      "tomb_raiser",
+      "mummy_armor1"
+    ],
+    "roster": [
+      "mummy"
+    ],
+    "remaining": 0
+  },
+  {
+    "level": 49,
+    "seed": 36,
+    "budget": 350,
+    "selected": [
+      "mummy",
+      "ra",
+      "explorer",
+      "tomb_raiser",
+      "mummy_armor1"
+    ],
+    "roster": [
+      "explorer",
+      "ra"
+    ],
+    "remaining": 0
+  },
+  {
+    "level": 49,
+    "seed": 36,
+    "budget": 2350,
+    "selected": [
+      "mummy",
+      "ra",
+      "explorer",
+      "tomb_raiser",
+      "mummy_armor1"
+    ],
+    "roster": [
+      "explorer",
+      "tomb_raiser",
+      "explorer",
+      "tomb_raiser",
+      "mummy_armor1",
+      "ra",
+      "explorer",
+      "mummy_armor1",
+      "mummy_armor1",
+      "mummy_armor1"
+    ],
+    "remaining": 0
+  },
+  {
+    "level": 51,
+    "seed": 1,
+    "budget": 100,
+    "selected": [
+      "mummy",
+      "ra",
+      "explorer",
+      "tomb_raiser",
+      "egypt_gargantuar_danger"
+    ],
+    "roster": [
+      "ra"
+    ],
+    "remaining": 0
+  },
+  {
+    "level": 51,
+    "seed": 1,
+    "budget": 350,
+    "selected": [
+      "mummy",
+      "ra",
+      "explorer",
+      "tomb_raiser",
+      "egypt_gargantuar_danger"
+    ],
+    "roster": [
+      "mummy",
+      "ra",
+      "mummy"
+    ],
+    "remaining": 50
+  },
+  {
+    "level": 51,
+    "seed": 1,
+    "budget": 2350,
+    "selected": [
+      "mummy",
+      "ra",
+      "explorer",
+      "tomb_raiser",
+      "egypt_gargantuar_danger"
+    ],
+    "roster": [
+      "egypt_gargantuar_danger",
+      "tomb_raiser",
+      "tomb_raiser",
+      "ra"
+    ],
+    "remaining": 50
+  },
+  {
+    "level": 51,
+    "seed": 7,
+    "budget": 100,
+    "selected": [
+      "mummy",
+      "egypt_gargantuar_danger",
+      "tomb_raiser",
+      "ra",
+      "explorer"
+    ],
+    "roster": [
+      "mummy"
+    ],
+    "remaining": 0
+  },
+  {
+    "level": 51,
+    "seed": 7,
+    "budget": 350,
+    "selected": [
+      "mummy",
+      "egypt_gargantuar_danger",
+      "tomb_raiser",
+      "ra",
+      "explorer"
+    ],
+    "roster": [
+      "mummy",
+      "explorer"
+    ],
+    "remaining": 0
+  },
+  {
+    "level": 51,
+    "seed": 7,
+    "budget": 2350,
+    "selected": [
+      "mummy",
+      "egypt_gargantuar_danger",
+      "tomb_raiser",
+      "ra",
+      "explorer"
+    ],
+    "roster": [
+      "egypt_gargantuar_danger",
+      "explorer",
+      "tomb_raiser",
+      "ra",
+      "mummy"
+    ],
+    "remaining": 50
+  },
+  {
+    "level": 51,
+    "seed": 36,
+    "budget": 100,
+    "selected": [
+      "mummy",
+      "ra",
+      "explorer",
+      "tomb_raiser",
+      "egypt_gargantuar_danger"
+    ],
+    "roster": [
+      "mummy"
+    ],
+    "remaining": 0
+  },
+  {
+    "level": 51,
+    "seed": 36,
+    "budget": 350,
+    "selected": [
+      "mummy",
+      "ra",
+      "explorer",
+      "tomb_raiser",
+      "egypt_gargantuar_danger"
+    ],
+    "roster": [
+      "mummy",
+      "explorer"
+    ],
+    "remaining": 0
+  },
+  {
+    "level": 51,
+    "seed": 36,
+    "budget": 2350,
+    "selected": [
+      "mummy",
+      "ra",
+      "explorer",
+      "tomb_raiser",
+      "egypt_gargantuar_danger"
+    ],
+    "roster": [
+      "explorer",
+      "tomb_raiser",
+      "explorer",
+      "tomb_raiser",
+      "explorer",
+      "tomb_raiser",
+      "tomb_raiser",
+      "ra",
+      "ra"
+    ],
+    "remaining": 0
+  }
+]

@@ -1,0 +1,475 @@
+{
+  "world": "egypt",
+  "basic": "mummy",
+  "pool": [
+    "camel_onehump",
+    "explorer",
+    "mummy_armor1",
+    "mummy_armor2",
+    "pharaoh",
+    "ra",
+    "tomb_raiser",
+    "egypt_gargantuar_danger"
+  ],
+  "types": [
+    {
+      "id": "mummy",
+      "name": {
+        "en": "Mummy",
+        "zh-CN": "木乃伊僵尸"
+      },
+      "cost": 100,
+      "weight": 1000,
+      "properties": {
+        "Hitpoints": 270,
+        "HelmHitpoints": null,
+        "EatDPS": 100,
+        "Speed": 0.185,
+        "SizeType": "small",
+        "HitRect": {
+          "mX": 10,
+          "mY": 10,
+          "mWidth": 32,
+          "mHeight": 95
+        },
+        "AttackRect": {
+          "mX": 15,
+          "mY": 0,
+          "mWidth": 20,
+          "mHeight": 95
+        },
+        "GridExtents": null,
+        "CanSpawnPlantFood": true,
+        "CanBeLaunchedByPlants": null,
+        "CanTriggerZombieWin": null,
+        "FirstWave": 1,
+        "Cost": 150,
+        "type.HastyOnStart": null
+      },
+      "status": {
+        "Hitpoints": "declared",
+        "HelmHitpoints": "omitted",
+        "EatDPS": "declared",
+        "Speed": "declared",
+        "SizeType": "declared",
+        "HitRect": "declared",
+        "AttackRect": "declared",
+        "GridExtents": "omitted",
+        "CanSpawnPlantFood": "declared",
+        "CanBeLaunchedByPlants": "omitted",
+        "CanTriggerZombieWin": "omitted",
+        "FirstWave": "declared",
+        "Cost": "declared",
+        "type.HastyOnStart": "omitted"
+      }
+    },
+    {
+      "id": "camel_onehump",
+      "name": {
+        "en": "Camel",
+        "zh-CN": "骆驼僵尸"
+      },
+      "cost": 300,
+      "weight": 3000,
+      "properties": {
+        "Hitpoints": 240,
+        "HelmHitpoints": null,
+        "EatDPS": 100,
+        "Speed": 0.12,
+        "SizeType": "small",
+        "HitRect": {
+          "mX": 5,
+          "mY": 10,
+          "mWidth": 37,
+          "mHeight": 110
+        },
+        "AttackRect": {
+          "mX": 15,
+          "mY": 0,
+          "mWidth": 20,
+          "mHeight": 125
+        },
+        "GridExtents": null,
+        "CanSpawnPlantFood": true,
+        "CanBeLaunchedByPlants": null,
+        "CanTriggerZombieWin": null,
+        "FirstWave": 3,
+        "Cost": 150,
+        "type.HastyOnStart": null
+      },
+      "status": {
+        "Hitpoints": "declared",
+        "HelmHitpoints": "omitted",
+        "EatDPS": "declared",
+        "Speed": "declared",
+        "SizeType": "declared",
+        "HitRect": "declared",
+        "AttackRect": "declared",
+        "GridExtents": "omitted",
+        "CanSpawnPlantFood": "declared",
+        "CanBeLaunchedByPlants": "omitted",
+        "CanTriggerZombieWin": "omitted",
+        "FirstWave": "declared",
+        "Cost": "declared",
+        "type.HastyOnStart": "omitted"
+      }
+    },
+    {
+      "id": "explorer",
+      "name": {
+        "en": "Explorer",
+        "zh-CN": "探险家僵尸"
+      },
+      "cost": 250,
+      "weight": 3000,
+      "properties": {
+        "Hitpoints": 350,
+        "HelmHitpoints": null,
+        "EatDPS": 100,
+        "Speed": 0.25,
+        "SizeType": "small",
+        "HitRect": {
+          "mX": 10,
+          "mY": 10,
+          "mWidth": 32,
+          "mHeight": 95
+        },
+        "AttackRect": {
+          "mX": 0,
+          "mY": 10,
+          "mWidth": 20,
+          "mHeight": 95
+        },
+        "GridExtents": null,
+        "CanSpawnPlantFood": true,
+        "CanBeLaunchedByPlants": null,
+        "CanTriggerZombieWin": null,
+        "FirstWave": 3,
+        "Cost": 100,
+        "type.HastyOnStart": null
+      },
+      "status": {
+        "Hitpoints": "declared",
+        "HelmHitpoints": "omitted",
+        "EatDPS": "declared",
+        "Speed": "declared",
+        "SizeType": "declared",
+        "HitRect": "declared",
+        "AttackRect": "declared",
+        "GridExtents": "omitted",
+        "CanSpawnPlantFood": "declared",
+        "CanBeLaunchedByPlants": "omitted",
+        "CanTriggerZombieWin": "omitted",
+        "FirstWave": "declared",
+        "Cost": "declared",
+        "type.HastyOnStart": "omitted"
+      }
+    },
+    {
+      "id": "mummy_armor1",
+      "name": {
+        "en": "Conehead Mummy",
+        "zh-CN": "路障木乃伊僵尸"
+      },
+      "cost": 200,
+      "weight": 3000,
+      "properties": {
+        "Hitpoints": 270,
+        "HelmHitpoints": 370,
+        "EatDPS": 100,
+        "Speed": 0.185,
+        "SizeType": "small",
+        "HitRect": {
+          "mX": 10,
+          "mY": 10,
+          "mWidth": 32,
+          "mHeight": 95
+        },
+        "AttackRect": {
+          "mX": 15,
+          "mY": 0,
+          "mWidth": 20,
+          "mHeight": 95
+        },
+        "GridExtents": null,
+        "CanSpawnPlantFood": true,
+        "CanBeLaunchedByPlants": null,
+        "CanTriggerZombieWin": null,
+        "FirstWave": 2,
+        "Cost": 150,
+        "type.HastyOnStart": null
+      },
+      "status": {
+        "Hitpoints": "declared",
+        "HelmHitpoints": "declared",
+        "EatDPS": "declared",
+        "Speed": "declared",
+        "SizeType": "declared",
+        "HitRect": "declared",
+        "AttackRect": "declared",
+        "GridExtents": "omitted",
+        "CanSpawnPlantFood": "declared",
+        "CanBeLaunchedByPlants": "omitted",
+        "CanTriggerZombieWin": "omitted",
+        "FirstWave": "declared",
+        "Cost": "declared",
+        "type.HastyOnStart": "omitted"
+      }
+    },
+    {
+      "id": "mummy_armor2",
+      "name": {
+        "en": "Buckethead Mummy",
+        "zh-CN": "铁桶木乃伊僵尸"
+      },
+      "cost": 400,
+      "weight": 4000,
+      "properties": {
+        "Hitpoints": 270,
+        "HelmHitpoints": 1100,
+        "EatDPS": 100,
+        "Speed": 0.185,
+        "SizeType": "small",
+        "HitRect": {
+          "mX": 10,
+          "mY": 10,
+          "mWidth": 32,
+          "mHeight": 95
+        },
+        "AttackRect": {
+          "mX": 15,
+          "mY": 0,
+          "mWidth": 20,
+          "mHeight": 95
+        },
+        "GridExtents": null,
+        "CanSpawnPlantFood": true,
+        "CanBeLaunchedByPlants": null,
+        "CanTriggerZombieWin": null,
+        "FirstWave": 3,
+        "Cost": 150,
+        "type.HastyOnStart": null
+      },
+      "status": {
+        "Hitpoints": "declared",
+        "HelmHitpoints": "declared",
+        "EatDPS": "declared",
+        "Speed": "declared",
+        "SizeType": "declared",
+        "HitRect": "declared",
+        "AttackRect": "declared",
+        "GridExtents": "omitted",
+        "CanSpawnPlantFood": "declared",
+        "CanBeLaunchedByPlants": "omitted",
+        "CanTriggerZombieWin": "omitted",
+        "FirstWave": "declared",
+        "Cost": "declared",
+        "type.HastyOnStart": "omitted"
+      }
+    },
+    {
+      "id": "pharaoh",
+      "name": {
+        "en": "Pharaoh",
+        "zh-CN": "法老僵尸"
+      },
+      "cost": 450,
+      "weight": 3000,
+      "properties": {
+        "Hitpoints": 405,
+        "HelmHitpoints": 1200,
+        "EatDPS": 100,
+        "Speed": 0.185,
+        "SizeType": "small",
+        "HitRect": {
+          "mX": -15,
+          "mY": 10,
+          "mWidth": 32,
+          "mHeight": 125
+        },
+        "AttackRect": {
+          "mX": -10,
+          "mY": 0,
+          "mWidth": 20,
+          "mHeight": 125
+        },
+        "GridExtents": null,
+        "CanSpawnPlantFood": true,
+        "CanBeLaunchedByPlants": null,
+        "CanTriggerZombieWin": null,
+        "FirstWave": 4,
+        "Cost": 225,
+        "type.HastyOnStart": null
+      },
+      "status": {
+        "Hitpoints": "declared",
+        "HelmHitpoints": "declared",
+        "EatDPS": "declared",
+        "Speed": "declared",
+        "SizeType": "declared",
+        "HitRect": "declared",
+        "AttackRect": "declared",
+        "GridExtents": "omitted",
+        "CanSpawnPlantFood": "declared",
+        "CanBeLaunchedByPlants": "omitted",
+        "CanTriggerZombieWin": "omitted",
+        "FirstWave": "declared",
+        "Cost": "declared",
+        "type.HastyOnStart": "omitted"
+      }
+    },
+    {
+      "id": "ra",
+      "name": {
+        "en": "Ra",
+        "zh-CN": "太阳神僵尸"
+      },
+      "cost": 100,
+      "weight": 700,
+      "properties": {
+        "Hitpoints": 270,
+        "HelmHitpoints": null,
+        "EatDPS": 100,
+        "Speed": 0.2,
+        "SizeType": "small",
+        "HitRect": {
+          "mX": 10,
+          "mY": 10,
+          "mWidth": 32,
+          "mHeight": 95
+        },
+        "AttackRect": {
+          "mX": 15,
+          "mY": 0,
+          "mWidth": 20,
+          "mHeight": 95
+        },
+        "GridExtents": null,
+        "CanSpawnPlantFood": true,
+        "CanBeLaunchedByPlants": null,
+        "CanTriggerZombieWin": null,
+        "FirstWave": 2,
+        "Cost": 150,
+        "type.HastyOnStart": null
+      },
+      "status": {
+        "Hitpoints": "declared",
+        "HelmHitpoints": "omitted",
+        "EatDPS": "declared",
+        "Speed": "declared",
+        "SizeType": "declared",
+        "HitRect": "declared",
+        "AttackRect": "declared",
+        "GridExtents": "omitted",
+        "CanSpawnPlantFood": "declared",
+        "CanBeLaunchedByPlants": "omitted",
+        "CanTriggerZombieWin": "omitted",
+        "FirstWave": "declared",
+        "Cost": "declared",
+        "type.HastyOnStart": "omitted"
+      }
+    },
+    {
+      "id": "tomb_raiser",
+      "name": {
+        "en": "Tomb Raiser",
+        "zh-CN": "死神僵尸"
+      },
+      "cost": 350,
+      "weight": 2000,
+      "properties": {
+        "Hitpoints": 540,
+        "HelmHitpoints": null,
+        "EatDPS": 100,
+        "Speed": 0.185,
+        "SizeType": "small",
+        "HitRect": {
+          "mX": 10,
+          "mY": 10,
+          "mWidth": 32,
+          "mHeight": 95
+        },
+        "AttackRect": {
+          "mX": 15,
+          "mY": 0,
+          "mWidth": 20,
+          "mHeight": 95
+        },
+        "GridExtents": null,
+        "CanSpawnPlantFood": true,
+        "CanBeLaunchedByPlants": null,
+        "CanTriggerZombieWin": null,
+        "FirstWave": 3,
+        "Cost": 150,
+        "type.HastyOnStart": null
+      },
+      "status": {
+        "Hitpoints": "declared",
+        "HelmHitpoints": "omitted",
+        "EatDPS": "declared",
+        "Speed": "declared",
+        "SizeType": "declared",
+        "HitRect": "declared",
+        "AttackRect": "declared",
+        "GridExtents": "omitted",
+        "CanSpawnPlantFood": "declared",
+        "CanBeLaunchedByPlants": "omitted",
+        "CanTriggerZombieWin": "omitted",
+        "FirstWave": "declared",
+        "Cost": "declared",
+        "type.HastyOnStart": "omitted"
+      }
+    },
+    {
+      "id": "egypt_gargantuar_danger",
+      "name": {
+        "en": "Endless Gargantuar",
+        "zh-CN": "埃及巨人僵尸（无尽）"
+      },
+      "cost": 1500,
+      "weight": 3000,
+      "properties": {
+        "Hitpoints": 3600,
+        "HelmHitpoints": null,
+        "EatDPS": 0,
+        "Speed": 0.16,
+        "SizeType": "big",
+        "HitRect": {
+          "mX": 0,
+          "mY": 10,
+          "mWidth": 42,
+          "mHeight": 95
+        },
+        "AttackRect": {
+          "mX": 10,
+          "mY": 10,
+          "mWidth": 50,
+          "mHeight": 95
+        },
+        "GridExtents": null,
+        "CanSpawnPlantFood": true,
+        "CanBeLaunchedByPlants": null,
+        "CanTriggerZombieWin": null,
+        "FirstWave": 5,
+        "Cost": 150,
+        "type.HastyOnStart": null
+      },
+      "status": {
+        "Hitpoints": "declared",
+        "HelmHitpoints": "omitted",
+        "EatDPS": "declared",
+        "Speed": "declared",
+        "SizeType": "declared",
+        "HitRect": "declared",
+        "AttackRect": "declared",
+        "GridExtents": "omitted",
+        "CanSpawnPlantFood": "declared",
+        "CanBeLaunchedByPlants": "omitted",
+        "CanTriggerZombieWin": "omitted",
+        "FirstWave": "declared",
+        "Cost": "declared",
+        "type.HastyOnStart": "omitted"
+      }
+    }
+  ]
+}

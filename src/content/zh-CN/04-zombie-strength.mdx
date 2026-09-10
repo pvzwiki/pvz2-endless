@@ -1,0 +1,106 @@
+import { Note } from '@/components/evidence-notes';
+import { Link } from '@/i18n/navigation';
+import { MechanismLab } from '@/components/mechanism-lab';
+
+<div className="article-lead">
+点数成本购买一条指令，并不指定该僵尸的生命值。强度通过三个独立输入确定：指令请求等级、创建修正后的实体有效等级，以及共享生命值／攻击表。首领标记则是之后的另一次操作。
+</div>
+
+<section id="requested-level" className="prose-section">
+
+## 从显示关卡数到整数请求
+
+基线系数为 `ZombieLevelBase = 0.9` 和 `ZombieLevelAdd = 0.1`。令 $F_{32}$ 表示舍入到 float32，$\operatorname{fma}_{32}(x,y,z)$ 表示融合计算 $xy+z$ 后再进行该舍入。十进制截断与等级曲线为
+
+$$
+\begin{aligned}
+D(x)&=F_{32}\!\left(\frac{\operatorname{trunc}(F_{32}(10x))}{10}\right),\\
+q(L)&=\min\left(10,D\!\left(\operatorname{fma}_{32}(L,F_{32}(0.1),F_{32}(0.9))\right)\right).
+\end{aligned}
+$$
+
+定义整数边界 $a=\operatorname{clamp}(\lfloor q\rfloor,1,10)$ 与 $b=\operatorname{clamp}(\lceil q\rceil,1,10)$。若 $a=b$，每条指令都请求该等级。否则，对下一个整数抽取令 $d=u\bmod100$，并计算
+
+$$
+\tau=F_{32}\!\left(100F_{32}(q-a)\right),\qquad
+\ell_{\mathrm{request}}=\begin{cases}
+b,&d<\tau,\\
+a,&d\ge\tau.
+\end{cases}
+$$
+
+因此，小数部分用于在相邻整数等级之间选择，本身不是存储的实体等级。在基线中，从第 91 关起，请求固定为 $[10,10]$。<Note id="spawnLevels" />
+
+Float32 无法精确表示每个十进制小数。输入 2 和 3 经过原生截断序列后，都得到约 1.100000024；它们略大于 10 的阈值接受余数 0–10。下方视图公开每个普通关卡的边界、阈值与接受余数。
+
+这个余数检查属于普通生成指令。<Link href="/worlds/#extra-actions">摩登世界传送门子僵尸</Link>使用相同的等级边界，但采用另一条全局浮点抽取路径。
+
+</section>
+
+<section id="strength-table" className="prose-section">
+
+## 先确定实体等级，再查询对应行
+
+创建时，可以先应用关卡模块修正，再存储有效等级 $\ell$。`ZombieMaxLevel` 默认为 $-1$，因此未覆盖时不启用其限制。普通定义没有施加五级上限。
+
+对于 DangerRoom 中的非 Zomboss 实体，两种倍率都来自共享 `ZombieLevelStats` 向量。这条路径使用的并非类型自身的等级数值向量。查询索引为 $\ell-1$：
+
+| 有效等级 $\ell$ | 生命值 $h_\ell$ | 攻击 $a_\ell$ |
+| --- | ---: | ---: |
+| 1 | 1 | 1 |
+| 2 | 2 | 2 |
+| 3 | 3 | 3 |
+| 4 | 4.5 | 4.5 |
+| 5 | 5 | 5 |
+
+这些是随包的五行。缺失索引返回倍率 1，既不会复用最后一行，也不会按增长公式外推。生成器的 1–10 请求范围与这张表的长度，是独立输入。<Note id="strengthTable" />
+
+`neccd.zls` 可以用攻击／生命值数值对替换整个有序向量。行顺序决定哪个有效等级读取哪一对。替换表格不要求改变等级曲线；模块的等级覆盖也不会创建缺失的表格行。
+
+</section>
+
+<section id="health-and-bite" className="prose-section">
+
+## 生命值与啃咬使用不同计算
+
+其他生命值修正均为中性时，<Link href="/zombies/">资源数值</Link>给出
+
+$$
+H_{\mathrm{body}}=H_{\mathrm{base}}h_\ell,\qquad
+H_{\mathrm{helmet}}=H_{\mathrm{helm,base}}h_\ell
+$$
+
+其中头盔公式在头盔存在时适用。实现还会考虑模块修正与现有生命值削减因子。
+
+啃咬速率查询按以下优先级选择基础速率 $E$：
+
+1. 正值 `EatDPSRatio` 乘以最大本体 HP。
+2. 否则，使用正的实例 `m_extraEatDPS`。
+3. 否则，使用正的实例 `m_baseEatDPS`。
+4. 否则，使用属性 `EatDPS`。
+
+对于基础啃咬实现，在其他目标／类型修正均为中性时，
+
+$$
+\Delta H_{\mathrm{plant}}=\max\!\left(0,\;E\,a_\ell\,v_{\mathrm{attack}}\,\Delta t\,[1+0.2(\ell-1)]\right).
+$$
+
+其中 $v_{\mathrm{attack}}$ 是由状态决定的攻击速度因子，$\Delta t$ 是游戏时钟增量。因此，表中的攻击倍率只是一个因子；固定 `EatDPS` 并不是完整的最终啃咬速率。子类的特殊攻击可以使用其他实现。<Note id="bite" />
+
+对于中性条件下的 5 级 `mummy_armor1`，声明的本体／头盔 HP 270/370 变为 1350/1850。其 `EatDPS = 100`、攻击倍率 5 与等级因子 1.8，在攻击速度为 1 时产生每游戏秒 900 伤害。交互计算分别保留请求等级、有效等级与表格查询。
+
+<MechanismLab kind="strength" />
+
+</section>
+
+<section id="leaders" className="prose-section">
+
+## 首领标记改变当前与最大生命值
+
+首次设置真值首领标记时，当前本体 HP 乘以 `LeaderStrengthenRate`，结果成为最大本体 HP。基线倍率为 2。已有头盔单独强化，重新应用现有护甲生命值削减因子，并限制为非负；所得当前 HP 也成为其最大值。
+
+重复设置真值标记，不会再次相乘；调用假值也不会撤销之前的操作。这条路径既不改变 $\ell$，也不改变缓存的攻击表倍率。对于上面使用固定 `EatDPS` 的路障僵尸，中性首领结果为 2700/3700 HP，啃咬速率仍是 900。使用 `EatDPSRatio` 的类型则可以通过更高的最大本体 HP 间接增加啃咬伤害。
+
+首领更新会在本体／头盔合计生命值降至合计最大值约 67% 和 33% 时改变叠加外观。这些转换不会治疗它。在普通五行布局中，符合条件的首领于 $X<232$ 时进入撤退路径，开始 2.3 游戏秒倒计时，并在到期后请求移除。<Note id="leaders" />
+
+</section>

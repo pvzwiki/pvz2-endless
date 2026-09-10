@@ -1,0 +1,107 @@
+import { Note } from '@/components/evidence-notes';
+import { WaveExplorer } from '@/components/wave-explorer';
+import { MechanismLab } from '@/components/mechanism-lab';
+
+<div className="article-lead">
+A numbered wave is a batch of scheduled actions. Before those actions create any zombies, ordinary Endless constructs a wave plan: how many waves exist, which are flag boundaries, and how many points the ordinary roster may spend in each wave. A displayed level number determines this common framework.
+</div>
+
+<section id="shared-rules" className="prose-section">
+
+<span className="section-number">01 / THE INPUTS</span>
+
+## The common inputs.
+
+The 16 standard worlds all list `DangerRoomJitteredWaveGenerator`. They provide different zombie pools, but the ordinary description builder reads its point parameters from the shared `DangerRoomPropertySheet`, rather than the generator object's local point declarations.<Note id="shared" />
+
+The world still matters: it supplies the basic zombie, the pool of selectable types, and any additional designers. Modern, Renai, Steam, and Tale even declare a local wave increment of 20, but this builder does not read that local field. Its shared increment remains the input to the formula.
+
+Our example settings are 100 starting points, a fixed wave increment of 30, and a per-level increment of 5. The wave-count bounds are 6 and 15, with one extra wave per five displayed levels.
+
+Let $L$ denote the **displayed level** and $w$ a **zero-based wave index**. The stored progress value is $L-1$. In the example schedule, multiples of 5 select Boss files. The ordinary-level views below therefore cover $L\in\{1,\ldots,149\}$ with $L\bmod5\ne0$.<Note id="level" />
+
+</section>
+
+<section id="counting-waves" className="prose-section">
+
+<span className="section-number">02 / THE LENGTH</span>
+
+## How many waves?
+
+$$
+N(L)=\min\left(15,\;6+\left\lfloor\frac{L}{5}\right\rfloor\right)
+$$
+
+The count reaches 15 at ordinary level 46 and remains capped while the point budgets continue growing.<Note id="layout" />
+
+</section>
+
+<section id="building-a-budget" className="prose-section">
+
+<span className="section-number">03 / THE BUDGET</span>
+
+## The underlying progression.
+
+For $w=0,\ldots,N(L)-1$, define the increment $\Delta$ and base budget $P$:
+
+$$
+\begin{aligned}
+\Delta(L)&=30+5L,\\
+P(L,w)&=100+\Delta(L)w.
+\end{aligned}
+$$
+
+Within one level, the base budgets form an arithmetic progression. Increasing $L$ changes its slope; the first wave remains at 100 points.<Note id="budget" />
+
+</section>
+
+<section id="larger-waves" className="prose-section">
+
+<span className="section-number">04 / THE ACCENTS</span>
+
+## Flag boundaries and the final wave.
+
+Within the 6–15-wave range, the target group count $g$ determines the regular flag spacing $s$:<Note id="layout" />
+
+$$
+g(N)=\begin{cases}
+1,&6\le N<7,\\
+2,&7\le N<12,\\
+3,&12\le N\le15,
+\end{cases}
+\qquad
+s(L)=\left\lceil\frac{N(L)}{g(N(L))}\right\rceil.
+$$
+
+The filler budget $B$ is:
+
+$$
+B(L,w)=\begin{cases}
+\lfloor2.5P(L,w)\rfloor,&(w+1)\bmod s(L)=0\;\lor\;w=N(L)-1,\\
+P(L,w),&\text{otherwise}.
+\end{cases}
+$$
+
+A regular flag boundary occurs whenever the one-based wave number is a multiple of $s$. The last wave also receives the larger budget even when its group is shorter. These markers describe the wave plan; they do not yet count an extra flag zombie.
+
+The logical OR matters: a wave that is both final and at a regular flag boundary receives **one** multiplier, not two. The next wave still follows the unboosted progression.<Note id="boost" />
+
+<WaveExplorer />
+
+</section>
+
+<section id="beyond-the-budget" className="prose-section">
+
+<span className="section-number">05 / THE NEXT STEP</span>
+
+## What this plan covers.
+
+The ordinary filler spends $B$ using each selected type's `WavePointCost`. This is neither a zombie count nor a total-health cap. Unspendable points may remain; extra leaders and separate flag actions are added elsewhere. World-specific processing can then replace or supplement the generated roster.<Note id="scope" />
+
+At a flag boundary or the final wave, installation can add a **separate flag-zombie action**. It has its own default spacing and does not pay its cost from $B$. World processing and extra leaders likewise operate at different stages. The health total used by the wave clock is sampled only after these actions have created and placed their entities.
+
+<MechanismLab kind="pipeline" />
+
+The next question is how the game chooses that roster: **which types are selected, and how do their costs and weights determine the next zombie?**
+
+</section>

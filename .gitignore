@@ -1,0 +1,16 @@
+.DS_Store
+node_modules/
+.env
+.env.*
+!.env.example
+.next/
+out/
+analysis/
+playwright-report/
+test-results/
+*.tsbuildinfo
+*.sqlite
+*.sqlite3
+*.ipa
+__pycache__/
+*.pyc

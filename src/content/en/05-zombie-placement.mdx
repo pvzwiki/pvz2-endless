@@ -1,0 +1,130 @@
+import { Note } from '@/components/evidence-notes';
+import { Link } from '@/i18n/navigation';
+import { MechanismLab } from '@/components/mechanism-lab';
+
+<div className="article-lead">
+The row first drawn for a zombie can differ from the row where it becomes visible. An ordinary action creates its batch, applies spacing, emits the base placement event, and then lets subclass placement continue. Row history records the earlier draw; later movement does not rewrite it.
+</div>
+
+<section id="spatial-queue" className="prose-section">
+
+## A batch becomes a spatial queue
+
+The ordinary jittered action creates its instructions in order, then performs a spacing pass over the created entities. For common right-side entry on the five-row Board,
+
+$$
+\begin{aligned}
+X&=820+x_{\mathrm{stage}}+\operatorname{HitRect.mWidth}\\
+ &\quad+80k+J,\\
+Y&=222+76r,\qquad J\in\{0,\ldots,29\}.
+\end{aligned}
+$$
+
+Here $r$ is the zero-based row, $x_{\mathrm{stage}}$ is the stage’s entry offset, and $k$ counts earlier entities assigned to that row in the same action. Each action starts fresh counters, so the separate flag action does not continue the ordinary roster’s spacing count.
+
+This creates horizontal distance rather than releasing one instruction on a fixed timer. Width can even reverse the expected spatial order. With stage offset zero, a first `air_missile_launcher` of width 270 starts at X 1090–1119; a following `skycity` of width 42 in that row starts at X 942–971 after its 80-unit increment. The later instruction is closer to the lawn before any movement.<Note id="positions" />
+
+Dark can instead use a qualifying gravestone shortcut’s X minus 50 as the stage entry, then add width and jitter. The ordinary declaration starts with no gravestones and leaves its declared gravestone designers inactive; the conditional shortcut must actually exist for that branch to apply. All coordinates here are game coordinates.
+
+</section>
+
+<section id="eligible-rows" className="prose-section">
+
+## Eligibility supplies the base rows
+
+Instruction `Row = 5` requests the random selector; `Row = 6` reuses the preceding row. Fixed row values 0–4 take another branch. The following gates belong to random selection, not every possible later placement:
+
+1. The row is within `Board.rowCount` and enabled.
+2. The anchor satisfies `GridExtents.mY - 1 <= row`.
+3. The stage’s gate accepts that row and exact zombie type.
+
+The property constructor defaults `GridExtents` to `(1, 1)`. Larger Y extents restrict the anchor row; they do not directly define a hitbox or damage coverage.
+
+| Context / type | Player-facing rows with positive eligibility |
+| --- | --- |
+| Pirate basic walkers | 2, 4 |
+| Pirate `seagull`, `swashbuckler` | 1, 3, 5 |
+| Pirate `cannon` | 1–5 |
+| Future `disco_mech` | 2–4 |
+| Sky City `invisible_plane`, extent Y = 3 | 3–5 |
+| Sky City `skycity_twinsplane`, extent Y = 2 | 2–5 |
+
+Pirate’s ordinary planks are declared at zero-based rows `[1, 3]`. Its stage gate checks names, so these rules cannot be generalized to every apparent flying type. Future excludes `disco_mech` from the outer rows. The other standard stage gates accept all rows at this stage, while the common Board and extent gates still apply.<Note id="rowGates" />
+
+</section>
+
+<section id="row-history" className="prose-section">
+
+## Base weights, then choice history
+
+For a row’s saved timestamp $t_r$, let $d=t-t_r$. Its base weight is
+
+$$
+u_r=\begin{cases}
+0,&\text{ineligible},\\
+0.01,&0<d<5,\\
+d/45,&5\le d<45,\\
+1,&d\le0\;\lor\;d\ge45.
+\end{cases}
+$$
+
+The timestamp begins at `FLT_MAX`, so a fresh Board takes the weight-1 branch for eligible rows. The traced mower write requires `WaveGeneratorModule`; ordinary Endless lists `WaveManagerModuleProperties`. This timestamp is not reset by each ordinary spawn.
+
+Normalize $p_r=u_r/\sum_j u_j$. Let $a_r,b_r$ be the counters since the latest and previous choices. For $p_r\ge10^{-6}$, the history adjustment is algebraically
+
+$$
+\begin{aligned}
+f_r&=p_r(1.5a_r+0.25b_r+1.75)-1,\\
+\widetilde p_r&=p_r\operatorname{clamp}(f_r,\;0.01,\;100).
+\end{aligned}
+$$
+
+Smaller $p_r$ gives zero adjusted weight. The next draw’s nominal share is $\widetilde p_r/\sum_j\widetilde p_j$. Both counters start at zero. After choosing a row, the update is:
+
+- Increment both counters for every row with positive base weight.
+- For the chosen row, copy its incremented $a_r$ into $b_r$, then set $a_r=0$.
+
+Thus an eligible unchosen row changes from $(a,b)$ to $(a+1,b+1)$, while the chosen row changes to $(0,a+1)$. The counters advance by selections, not seconds.<Note id="rowHistory" />
+
+With five equally eligible rows, the first two draws have equal row weights. Before the third draw, two different previous rows have shares 5.88% each while untouched rows have 29.41% each; two repeated choices give that row 4.76% and each other row 23.81%. The view lets you reconstruct these states and compare terrain restrictions.
+
+<MechanismLab kind="placement" />
+
+Zero weight does not remove a record. The sampler uses `draw <= cumulative weight`, so an exact-zero draw can accept its first record even when that record is ineligible. The controlled native endpoint check and its scope are retained in the row-gate note.
+
+</section>
+
+<section id="placement-hooks" className="prose-section">
+
+## The base event runs before the subclass finishes
+
+By the time jitter is applied, the whole batch is already in the Board zombie list. Setting an entity’s position is followed by its placement hook. The base hook synchronously emits `OnZombieAddedToBoard`; subclass code can continue afterward.
+
+An active Animnuts Ghost Horse circle can move an eligible newcomer to $(744,374,0)$, player column 9 and row 3. It reacts to newly added events, not by repeatedly pulling every existing zombie in a radius. Its destination is fixed rather than taken from the horse’s position.
+
+The callback admits runtime small/mid sizes and has state, flag, Zomboss, elite, and elite-immunity exclusions. Runtime size is the relevant value, not apparent sprite size. The ordinary leader condition is distinct from elite status and is not directly tested by this callback.<Note id="circle" />
+
+King and Fisherman then perform their own same-class occupancy scans. They see other members of the newly created batch at their current positions, including positions not yet finalized.
+
+| Newcomer | Same-class rows removed from candidates | Consequence of self handling |
+| --- | --- | --- |
+| `dark_king` | All matching Board-list objects, including itself | Its own valid current row is removed |
+| `beach_fisherman` | Other matching objects, explicitly excluding itself | Keep its current row when no other matching object occupies it |
+
+If the current row is unavailable, the helper shuffles the remaining candidates and chooses one. Successful placement uses the last column, X 744. The scan has no living-only filter: a dead or removal-pending object can occupy a row until Board-list erasure.
+
+When no row remains, the newcomer is rejected. The normal King path enters `ZS_Die`; Fisherman dispatches removal immediately. Neither selects an older victim, creates a retry, nor refunds the generated instruction. Both still reach ordinary loot checks, and their rejection occurs before the <Link href="/timing/#wave-health">initial wave-health snapshot</Link>.<Note id="specialRows" />
+
+</section>
+
+<section id="circle-lifetime" className="prose-section">
+
+## The circle has one shared lifetime
+
+The Board keeps a shared circle, rather than one circle per horse. First creation fixes the destination and whether the costume auxiliary effect exists. With that effect, accepted newcomers also receive a stun request and have their references retained; this does not bypass the normal condition-immunity machinery.
+
+The supplied sequence is a start animation, a 15-second loop, and an end animation. A repeat activation restarts the loop with a fresh 15 seconds; it does not add time to the old remainder. Reuse preserves the captured references and does not change the first creation’s costume effect.
+
+Cleanup clears the tracked stun condition, but stores no original coordinates and restores no positions. It also does not move a captured zombie back to the circle continuously. In particular, a later successful King/Fisherman placement can supersede the circle’s position while the original sampled row remains in the history records.<Note id="circleLifetime" />
+
+</section>

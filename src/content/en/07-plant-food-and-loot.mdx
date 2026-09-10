@@ -1,0 +1,157 @@
+import { Note } from '@/components/evidence-notes';
+import { Link } from '@/i18n/navigation';
+import { MechanismLab } from '@/components/mechanism-lab';
+
+<div className="article-lead">
+Two allocation systems feed the later loot event. Plant food begins as a per-wave quota and requests carriers in instruction order. General loot begins as a saved per-entry schedule and assigns tags by individual wave cost. Neither a planned count nor an accepted marker is already a collected reward.
+</div>
+
+<section id="planned-quota" className="prose-section">
+
+## What “eligible setup row” means
+
+A setup row is eligible when its `MinLevel` is at most the displayed level $L$. The generator chooses one row from **all** eligible `FlagWaveSetupList` rows. Its `FlagCount` gives the number of plant-food count draws, not the number or spacing of waves in the newer wave-layout formula.
+
+| `MinLevel` | `FlagCount` |
+| --- | ---: |
+| 1 | 1 |
+| 5 | 1 |
+| 15 | 1 |
+| 30 | 1 |
+| 40 | 2 |
+| 50 | 2 |
+
+The separate `PlantfoodSetupList` supplies the draw bounds. Its bundled rows are:
+
+| `MinLevel` | `MinPlantfoodPerFlagWave` | `MaxPlantfoodPerFlagWave` |
+| --- | ---: | ---: |
+| 1 | 1 | 1 |
+| 5 | 2 | 2 |
+| 15 | 2 | 2 |
+| 30 | 1 | 1 |
+| 50 | 1 | 1 |
+| 55 | 0 | 0 |
+
+For eligible food rows $I(L)$, both bounds are reduced with a minimum operation:
+
+$$
+\begin{aligned}
+a(L)&=\min_{i\in I(L)}\operatorname{MinPlantfoodPerFlagWave}_i,\\
+b(L)&=\min_{i\in I(L)}\operatorname{MaxPlantfoodPerFlagWave}_i.
+\end{aligned}
+$$
+
+With $k$ equal to the selected `FlagCount`, total planned count is
+
+$$
+Q=\sum_{j=1}^{k}\left(a+u_j\bmod(b-a+1)\right).
+$$
+
+The rows declaring 2 do not displace the earlier row declaring 1. Both effective bounds remain 1 until the level-55 row makes them zero. At level 49, four eligible flag rows request one draw and one row requests two, so $Q$ is 1 or 2 depending on the chosen row.
+
+Allocation visits **regular flag boundaries in order**, giving each one unit while any remain. Only afterward does it place remaining units on randomly chosen waves, with repeats possible. A short final wave is not inserted into the regular-boundary pass merely because it is final. At level 49, the 15-wave plan has boundaries 5, 10, and 15: one unit goes to wave 5, and a possible second goes to wave 10.
+
+Each wave’s allocation is copied to its ordinary action’s `AdditionalPlantfood`. This is an action quota; the independent flag-zombie action has its own default-zero quota. The generator leaves `DynamicPlantfood` and `SpawnPlantName` empty.<Note id="foodPlan" />
+
+</section>
+
+<section id="carrier-requests" className="prose-section">
+
+## A request can consume quota and still fail
+
+The creator scans the ordinary instructions in order. While quota remains, `CanSpawnPlantFood: true` consumes one unit and requests a carrier marker on the new entity. A false property skips the instruction without consuming a unit. There is no extra random carrier-selection pass.
+
+The marker then applies its profile and mode gates. In DangerRoom, `IsA(ZombieGargantuar)` rejects a true request, including subclasses. This is a runtime class test, distinct from the high-cost test in roster selection. The request was already consumed; the caller has no success result, refund, or retry branch.<Note id="foodMarker" />
+
+| Input order with quota 1 | Quota scan | Accepted carrier |
+| --- | --- | --- |
+| `eighties_gargantuar_danger`, `eighties` | Giant declares false; request reaches the basic zombie | `eighties` |
+| `cowboy_gargantuar_danger`, `cowboy` | Giant declares true, consumes the request, then fails the class gate | None |
+| `cowboy`, `cowboy_gargantuar_danger` | Basic zombie consumes the request first | `cowboy` |
+
+Jam replacement precedes this scan. It keeps the numeric quota but changes the types and order that receive requests; no pre-Jam entity marker exists to preserve. A quota left after the action ends is not transferred by this loop to another action. Portal children use a separate emitter.
+
+Requests also precede <Link href="/placement/#placement-hooks">placement hooks</Link>. A King or Fisherman rejected there may already have an accepted marker. Both rejection routes can reach ordinary loot handling, despite their different death/removal behavior.
+
+</section>
+
+<section id="food-pickup" className="prose-section">
+
+## The later event requests the pickup
+
+The base Zombie loot method emits its Board event before setting the processed-loot flag. The listener requires an unprocessed event, `m_canDropLoot`, the `hasplantfood` condition, and the applicable mode permissions.
+
+For the ordinary empty-`SpawnPlantName` branch, the listener clears the carrier condition and requests a `plantfood` pickup. A nonempty name takes a packet branch instead. Base removal also reaches the loot dispatcher; removal is not intrinsically a no-loot operation.<Note id="foodDrop" />
+
+The carrier view separates the property check, consumed request, accepted marker, and pickup event. Reordering the same two instructions changes the result without changing the original quota.
+
+<MechanismLab kind="loot" />
+
+</section>
+
+<section id="loot-schedule" className="prose-section">
+
+## General loot advances saved per-entry schedules
+
+Wave installation runs the general-loot pass after world postprocessing and before the runtime WaveManager reseed. Its configuration must exist, be enabled, and have a positive collected total wave cost. With `LevelLength = -1`, it estimates a planning length from $N$ installed waves:
+
+$$
+\lambda(N)=\frac{N-10}{3}+4.
+$$
+
+The arithmetic uses float32 before widening to double. An explicit `LevelLength` can replace that estimate. These are planning units, not time spent fighting.
+
+Eligible loot-table rows must pass their `World` and `EnabledAfter` checks. The world tag comes from an exact world-map level-node lookup, not simply the stage’s world name. The inspected map set has no matching DangerRoom node, leaving an empty tag; world-restricted rows do not match it. The seven unrestricted fallback rows still require `tutorial4` progress:
+
+| `UniqueId` | `Type` | `Min`–`Max` | `Period` |
+| --- | --- | ---: | ---: |
+| `Silver1` | `SilverCoin` | 1–3 | 1 |
+| `Gold1` | `GoldCoin` | 1–1 | 20 |
+| `Gold2` | `GoldCoin` | 1–1 | 20 |
+| `Gold3` | `GoldCoin` | 1–3 | 30 |
+| `Gold4` | `GoldCoin` | 1–3 | 30 |
+| `Diamond1` | `Diamond` | 1–1 | 30 |
+| `Diamond2` | `Diamond` | 1–1 | 40 |
+
+Each eligible row owns a saved record keyed by `UniqueId`. Two gold rows therefore keep separate histories even when their type and period agree. Write $C$ for `LevelLengthsPlayed`, $D$ for `NextDropTime`, and $S$ for `NextScheduleTime`. A fresh record starts at $C=0$, $D=\infty$, $S=0$, where $\infty$ denotes the no-pending-drop sentinel.
+
+For each planning call:
+
+1. Add $\lambda$ to $C$.
+2. If $D<C$, draw an inclusive count from `Min`–`Max`, append that many loot codes, and reset $D$ to the sentinel.
+3. If $S<C$, choose a phase inside `Period`, set $D$ to the **old** $S$ plus that phase, then add `Period` to $S$.
+4. Repeat the drop/schedule processing while another scheduling pass was needed.
+
+Both comparisons are strict. A newly scheduled drop can already be due within the same planning call and is handled on the next pass. Equality waits for later accumulated length. Phase/count draws consume the global RNG, and the manager requests saving the updated records.<Note id="lootSchedule" />
+
+This is why the current level and one generation seed cannot determine the planned list: effective table entries, profile eligibility, saved histories, and earlier global draws all participate.
+
+</section>
+
+<section id="loot-assignment" className="prose-section">
+
+## Cost weights individual instructions
+
+The pass gathers type vectors from ordinary and independent flag spawners and creates parallel, initially zero-filled loot arrays. Portal children do not yet exist in these spawner vectors and are not entries in this pass.
+
+For each nonzero loot code, an untagged instruction $i$ with cost $c_i$ occupies the following nominal share of the bag:
+
+$$
+\frac{c_i}{\sum_{j\in U}c_j},
+$$
+
+where $U$ is the remaining untagged set. A cumulative-cost draw selects one instruction, assigns its tag, and removes its cost from later draws. Assignment is without replacement and stops when no remaining candidate can be selected. It uses `WavePointCost`, not `Weight`, HP, entity level, or leader health.<Note id="lootAssignment" />
+
+Because the pass follows Jam, it uses replacement costs. The annotation array leaves instruction order, row, level, leader fields, and plant-food quota unchanged. During creation, the tag at each instruction’s index is copied to its entity.
+
+The base loot dispatcher later maps stored codes to requested pickup aliases, subject to its loot/state guards:
+
+| Code | Registered enum | Requested pickup |
+| --- | --- | --- |
+| 1 | `SilverCoin` | `coin_silver` |
+| 2 | `GoldCoin` | `coin_gold` |
+| 3 | `Diamond` | `coin_gold` |
+
+Codes 4–13 create no pickup in this dispatcher. The code-3 enum name therefore cannot be used by itself to infer either the spawned alias or eventual inventory credit.<Note id="lootDispatch" />
+
+</section>

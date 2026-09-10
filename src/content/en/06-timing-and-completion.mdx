@@ -1,0 +1,174 @@
+import { Note } from '@/components/evidence-notes';
+import { Link } from '@/i18n/navigation';
+import { MechanismLab } from '@/components/mechanism-lab';
+
+<div className="article-lead">
+The wave clock asks whether to advance the schedule. Victory asks whether every registered completion condition passes. The loss module asks whether a qualifying zombie crossed its boundary. These questions inspect different state, so the same survivor can be irrelevant to the next-wave health threshold and still prevent victory.
+</div>
+
+<section id="wave-health" className="prose-section">
+
+## Record health after the actions finish
+
+At wave start, `WaveManager` invokes every action before recording `m_currentWaveTotalHealth`. The query filters entities by `m_spawnedFromWave` and a virtual state predicate. Its base health implementation returns body plus helmet HP when entity flag mask `0x2` is set, and zero otherwise.
+
+Let $H_0$ be this initial current-wave total. For a sampled fraction $q$, the stored integer threshold is
+
+$$
+\begin{aligned}
+T&=\operatorname{trunc}\!\left(F_{32}\!\left(F_{32}(H_0)q\right)\right),\\
+q&\in[0.7,0.85]
+\end{aligned}
+$$
+
+for the constructor baseline. Later checks query remaining health $H(t)$ again. Neither point cost nor accumulated player damage substitutes for that query.<Note id="waveHealth" />
+
+| Entity or change | Effect on this wave’s health calculation |
+| --- | --- |
+| Jam replacement and a successfully created leader | Their resulting health is present before the initial snapshot |
+| Separate flag action | Its entity contributes if it passes the same wave/state filters |
+| King/Fisherman rejected in the placement pass | Normally already excluded before $H_0$ is recorded |
+| A counted entity dies or becomes excluded later | Can reduce $H(t)$ without rewriting $H_0$ or $T$ |
+| Earlier-wave survivor | Different wave marker; excluded from this total |
+| Portal child | Marker $-5$; excluded from this ordinary wave total |
+| Zombie transported through a Steam pipe | Original wave marker retained; transport state is not excluded by the base filter |
+
+For example, 8,000 eligible HP plus a 2,000-HP newcomer rejected during placement gives $H_0=8000$, and $q=0.8$ gives $T=6400$. It does not first record 10,000 HP and then credit rejection as 2,000 damage. If a counted zombie disappears afterward, the later remaining-health total can fall even without a plant attack.
+
+<details className="mechanism-detail" id="health-states">
+<summary>The base current-wave state filter</summary>
+
+The base virtual predicate excludes these registered states. Subclasses can override the predicate. This filter is distinct from the victory scan below.
+
+| State ID | Registered state |
+| --- | --- |
+| 5 | `ZS_Die` |
+| 6 | `ZS_Electrocute` |
+| 7 | `ZS_Ash` |
+| 8 | `ZS_MowedDown` |
+| 9 | `ZS_FlickedOff` |
+| 15 | `ZS_Plantify` |
+| 31 | `ZS_CthulhuRevive` |
+| 35 | `ZS_Annihilation` |
+
+</details>
+
+</section>
+
+<section id="wave-clock" className="prose-section">
+
+## The deadline can move forward
+
+Let $t_0$ be the last-wave time, $I$ the selected interval, and initially $D=t_0+I$. The ordinary interval is 20 plus a floating draw in 0–5 game seconds, or 35 seconds when the following wave is large.
+
+When the remaining-health test succeeds, the normal path updates the deadline as
+
+$$
+H(t)\le T\quad\Longrightarrow\quad D\leftarrow\min(D,t).
+$$
+
+Subject to the normal state/mode guards, its advance test then requires
+
+$$
+t\ge D\quad\land\quad t-t_0\ge4.
+$$
+
+Reaching the health threshold early therefore makes the deadline due, but does not remove this path’s four-second minimum. Even $H_0=T=0$ still passes through its timing guards.
+
+If the next wave is large, the normal path first enters the announcement state and adds `HugeWaveDelay` to the existing deadline. The constructor delay is 5 seconds. It does not start an unrelated five-second timer from the announcement entry time. With $t_0=0$ and health reaching the threshold at $t=1$, the first normal gate opens at 4, but the shifted deadline is $1+5=6$. With no early health trigger, the 35-second deadline becomes 40.<Note id="waveClock" />
+
+Startup has its own countdown: constructor values are 12 seconds normally and 5 for conveyor mode. A level/perk helper can modify the normal startup value. These are game-clock quantities, separate from the later intervals and from zombie movement pace.
+
+</section>
+
+<section id="automatic-next" className="prose-section">
+
+## Automatic next-wave uses a direct request
+
+`HasSkipNextWave` reacts when requested button visibility changes from false to true. The normal timed state requests visibility when
+
+$$
+t\ge D-I/2.
+$$
+
+A health-triggered earlier $D$ can therefore make the button available early. If the preference and boundary guards allow it, the Board sends the same request as a manual next-wave action. The ordinary request calls the advance function directly; it does not rerun the normal deadline, health, or four-second test.
+
+For a current player-facing wave number $w$, regular flag spacing $s$, and a wave already started, the automatic boundary guard is
+
+$$
+w\bmod s=s-1.
+$$
+
+The handler also suppresses requests before the first wave. Its boundary expression does not independently inspect the final-wave marker. With $s=5$, current wave 4 is guarded; current wave 12 before a short final wave 13 is not guarded by this expression.
+
+Turning the option off leaves normal progression active. Turning it on adds these manual-style requests. Because the trigger is a visibility transition, changing the preference while requested visibility remains true is not itself another such event.<Note id="skipOption" />
+
+<MechanismLab kind="timing" />
+
+</section>
+
+<section id="initial-rush" className="prose-section">
+
+## Initial approach speed is a separate option
+
+`HasStartRushOnScreen` is checked during creation together with the type’s `HastyOnStart`, spawn-wave marker, and mode gates. An accepted request applies a condition that doubles movement pace before later adjustments. It clears at game-coordinate $X\le792$.
+
+`HastyOnStart` defaults to true. The current Endless and portal catalog explicitly sets it false for `cannon`, `swashbuckler`, `west_bull`, and `lostcity_relichunter`. Portal marker $-5$ also fails the creation path’s wave-marker gate. Later knockback does not, by this path, reapply the initial condition.<Note id="rushOption" />
+
+This affects how soon eligible entities reach the lawn and how waves overlap. It does not reroll the pool, alter the point budget, or speed up the global game clock.
+
+</section>
+
+<section id="victory" className="prose-section">
+
+## Completion is an AND over its registered predicates
+
+For registered callbacks $c_1,\ldots,c_m$,
+
+$$
+C=(m>0)\;\land\;\bigwedge_{j=1}^{m}c_j.
+$$
+
+The manager rejects an empty callback vector and stops on the first false result. Two required checks here are the finished `WaveManager` and `ZombiesDeadWinCon`. The former becomes finished when advancement reaches the end of the installed wave vector; merely starting the final wave is not that transition.
+
+`ZombiesDeadWinCon` first scans qualifying Board zombie pointers, without restricting them to the current wave. It then scans the relevant grid-item collection for objects whose blocking predicate returns true. Hence earlier survivors, portal children, and the portal itself can still matter after current-wave health has reached its threshold.<Note id="completion" />
+
+<details className="mechanism-detail">
+<summary>Which zombie exceptions does the clear scan apply?</summary>
+
+After its entity-flag gate, the native scan has these explicit exceptions. There is no general positive-body-HP requirement replacing them.
+
+| Exception | When the zombie is skipped |
+| --- | --- |
+| Exact names `renai_toxicwater`, `witch` | Skipped by this scan |
+| `ZombiePirateBarrel`, `ZombieStatue`, or conditions `stoneblocked`, `icecubed`, `present_boxed` | Skipped when outside columns 0–8 or rows 0–4 |
+| Conditions `squidified`, `devouring`, and unresolved condition `0xa0` | Skipped without that grid-position test |
+| Zombie flag `0x1000` | Additional skip when body HP is at most zero and Y is strictly below $-300$ |
+
+Other qualifying zombies can block victory while off the lawn. A death transition, removal dispatch, and erasure from the Board list are also different moments.
+
+</details>
+
+A Modern portal’s blocker returns true while its reference resolves. Its final emission leaves another scheduled check; that check requests closure, and the close-animation callback removes the portal. An empty queue therefore does not immediately clear that blocker. Surviving children remain independent blockers after the portal disappears.<Note id="portalClose" />
+
+The <Link href="/worlds/?lab=portals#extra-actions">portal view</Link> shows this sequence separately from ordinary wave advancement.
+
+</section>
+
+<section id="continuation" className="prose-section">
+
+## Loss and continuation inspect different state again
+
+The ordinary loss module requires `CanTriggerZombieWin` and its own state/type/flag gates. In the unshifted branch, its declared `ZombieWinPositionX = -80` means
+
+$$
+X-200\le-80\quad\Longleftrightarrow\quad X\le120.
+$$
+
+A Board flag can shift the threshold by 30, and another mode can add a Y check. A negative spawn-wave marker alone is not an exemption.<Note id="loss" />
+
+After victory, the client sends the end-level request and processes the returned progress record before continuing. It does not simply increment local progress and assume success. The ordinary continuation route loads the next file only when the returned stored progress plus one is below 150. With the bundled Boss interval of 5, the sequence through 1–149 includes 120 ordinary levels and 29 Boss boundaries.<Note id="progression" />
+
+That record is not a saved battlefield. The ordinary definitions declare `CanSaveGameState: false`; neither progression nor the separate <Link href="/drops/#loot-schedule">saved loot schedules</Link> establishes restoration of a previous wave, its entities, or its row history.
+
+</section>

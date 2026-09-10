@@ -1,0 +1,174 @@
+import { Note } from '@/components/evidence-notes';
+import { Link } from '@/i18n/navigation';
+import { MechanismLab } from '@/components/mechanism-lab';
+
+<div className="article-lead">
+波次时钟判断是否推进计划；胜利判断所有已注册完成条件是否都通过；失败模块判断符合条件的僵尸是否越过边界。这些问题检查不同状态，因此同一个幸存者可以与下一波的生命值阈值无关，却仍阻止胜利。
+</div>
+
+<section id="wave-health" className="prose-section">
+
+## 动作完成之后记录生命值
+
+波次开始时，`WaveManager` 先调用所有动作，再记录 `m_currentWaveTotalHealth`。查询按 `m_spawnedFromWave` 与一个虚拟状态谓词筛选实体。基础生命值实现在实体标记掩码 `0x2` 被设置时返回本体加头盔 HP，否则返回零。
+
+令 $H_0$ 为这个初始当前波次总量。对于抽取比例 $q$，保存的整数阈值为
+
+$$
+\begin{aligned}
+T&=\operatorname{trunc}\!\left(F_{32}\!\left(F_{32}(H_0)q\right)\right),\\
+q&\in[0.7,0.85]
+\end{aligned}
+$$
+
+这里使用构造器基线。之后的检查重新查询剩余生命值 $H(t)$，点数成本与玩家累计伤害都不能替代该查询。<Note id="waveHealth" />
+
+| 实体或变化 | 对本波生命值计算的影响 |
+| --- | --- |
+| Jam 替换与成功创建的首领 | 最终生命值在初始快照之前已经确定 |
+| 独立旗帜动作 | 实体通过同样的波次／状态筛选时计入 |
+| 在位置处理期间被拒绝的国王／渔夫 | 通常在记录 $H_0$ 前已被排除 |
+| 被计入的实体之后死亡或进入排除状态 | 可以减少 $H(t)$，不重写 $H_0$ 或 $T$ |
+| 较早波次的幸存者 | 波次标记不同，不计入这个总量 |
+| 传送门子僵尸 | 标记为 $-5$，不计入这个普通波次总量 |
+| 经过蒸汽管道运输的僵尸 | 保留原波次标记；基础筛选不排除运输状态 |
+
+例如，8,000 合格 HP 加上一个在放置时被拒绝的 2,000 HP 新实体，会得到 $H_0=8000$；$q=0.8$ 时得到 $T=6400$。系统不会先记录 10,000 HP，再把拒绝记为 2,000 伤害。如果已计入的僵尸之后消失，即使没有植物攻击，后续剩余生命值总量仍可下降。
+
+<details className="mechanism-detail" id="health-states">
+<summary>基础当前波次状态筛选</summary>
+
+基础虚拟谓词排除以下注册状态。子类可以覆盖该谓词。此筛选与下方胜利扫描不同。
+
+| 状态 ID | 注册状态 |
+| --- | --- |
+| 5 | `ZS_Die` |
+| 6 | `ZS_Electrocute` |
+| 7 | `ZS_Ash` |
+| 8 | `ZS_MowedDown` |
+| 9 | `ZS_FlickedOff` |
+| 15 | `ZS_Plantify` |
+| 31 | `ZS_CthulhuRevive` |
+| 35 | `ZS_Annihilation` |
+
+</details>
+
+</section>
+
+<section id="wave-clock" className="prose-section">
+
+## 截止时间可以提前
+
+令 $t_0$ 为上一波时间，$I$ 为选定间隔，初始 $D=t_0+I$。普通间隔为 20 加上在 0–5 游戏秒中抽取的浮点值；下一波为大波时，则为 35 秒。
+
+剩余生命值检查通过时，普通路径按下式更新截止时间：
+
+$$
+H(t)\le T\quad\Longrightarrow\quad D\leftarrow\min(D,t).
+$$
+
+在满足普通状态／模式条件的前提下，推进检查随后要求
+
+$$
+t\ge D\quad\land\quad t-t_0\ge4.
+$$
+
+因此，提前达到生命值阈值会使截止时间到期，却不会消除这条路径的四秒最小间隔。即使 $H_0=T=0$，也仍经过时间条件。
+
+如果下一波是大波，普通路径先进入提示状态，并在已有截止时间上加上 `HugeWaveDelay`。构造器延迟为 5 秒。它不是从进入提示的时刻重新启动独立的五秒计时器。当 $t_0=0$，并在 $t=1$ 达到生命值阈值时，普通路径的第一个推进条件在 4 时成立，但偏移后的截止时间是 $1+5=6$。没有提前生命值触发时，35 秒的截止时间变为 40。<Note id="waveClock" />
+
+启动有自己的倒计时：构造器值为普通模式 12 秒、传送带模式 5 秒。关卡／特权辅助函数可以修改普通启动值。这些是游戏时钟数值，与之后的波次间隔和僵尸移动速度分别处理。
+
+</section>
+
+<section id="automatic-next" className="prose-section">
+
+## 自动下一波使用直接请求
+
+`HasSkipNextWave` 在请求的按钮可见性从假变为真时响应。普通计时状态在下列条件下请求显示：
+
+$$
+t\ge D-I/2.
+$$
+
+因此，由生命值触发的较早 $D$ 可以让按钮更早可用。若偏好设置与边界条件允许，Board 就发出与手动下一波相同的请求。普通请求直接调用推进函数，不重新执行普通截止时间、生命值或四秒检查。
+
+对于当前玩家视角波号 $w$、常规旗帜间隔 $s$，在已经开始一波之后，自动边界保护条件为
+
+$$
+w\bmod s=s-1.
+$$
+
+处理器还会在第一波之前抑制请求。这个边界表达式不独立检查最终波标记。当 $s=5$ 时，当前第 4 波受到保护；较短分组的最终第 13 波之前，当前第 12 波不受该表达式保护。
+
+关闭选项后，普通推进仍然有效；开启选项，则增加这些手动式请求。由于触发点是可见性转换，在请求可见性持续为真时修改偏好设置，本身并不是又一次转换事件。<Note id="skipOption" />
+
+<MechanismLab kind="timing" />
+
+</section>
+
+<section id="initial-rush" className="prose-section">
+
+## 初始接近速度是另一个选项
+
+`HasStartRushOnScreen` 在创建时与类型的 `HastyOnStart`、生成波次标记及模式条件一起检查。接受的请求施加一个在后续调整前将移动速度翻倍的状态。它在游戏坐标 $X\le792$ 时清除。
+
+`HastyOnStart` 默认为真。当前无尽与传送门目录明确将 `cannon`、`swashbuckler`、`west_bull` 和 `lostcity_relichunter` 设为假。传送门标记 $-5$ 也不能通过创建路径的波次标记条件。之后被击退，并不会由这条路径重新施加初始状态。<Note id="rushOption" />
+
+这影响符合条件的实体多快抵达草坪，以及波次如何重叠，不会重新抽取类型池、改变点数预算或加速全局游戏时钟。
+
+</section>
+
+<section id="victory" className="prose-section">
+
+## 完成是注册谓词之间的逻辑与
+
+对于注册回调 $c_1,\ldots,c_m$，
+
+$$
+C=(m>0)\;\land\;\bigwedge_{j=1}^{m}c_j.
+$$
+
+管理器拒绝空回调向量，并在第一个假结果处停止。这里两个必要检查是 `WaveManager` 已结束，以及 `ZombiesDeadWinCon`。前者在推进到已安装波次向量末尾时才结束；仅仅开始最终波，并不是这个转换。
+
+`ZombiesDeadWinCon` 先扫描符合条件的 Board 僵尸指针，不将它们限制为当前波次。随后，它扫描相关网格物件集合，检查是否有物件的阻塞谓词返回真。因此，即使当前波次生命值已经达到阈值，较早幸存者、传送门子僵尸与传送门自身仍然可以产生影响。<Note id="completion" />
+
+<details className="mechanism-detail">
+<summary>清空扫描对哪些僵尸应用例外？</summary>
+
+实体标记检查之后，原生扫描有以下明确例外，并不存在一个通用的“本体 HP 为正”要求来替代它们。
+
+| 例外 | 何时跳过该僵尸 |
+| --- | --- |
+| 精确名称 `renai_toxicwater`、`witch` | 此扫描跳过 |
+| `ZombiePirateBarrel`、`ZombieStatue`，或状态 `stoneblocked`、`icecubed`、`present_boxed` | 位于列 0–8 或行 0–4 之外时跳过 |
+| 状态 `squidified`、`devouring`，以及尚未解析名称的状态 `0xa0` | 不经过上述网格位置检查就跳过 |
+| 僵尸标记 `0x1000` | 本体 HP 不大于零且 Y 严格小于 $-300$ 时，另行跳过 |
+
+其他符合条件的僵尸即使在草坪之外，也可以阻止胜利。死亡转换、移除请求，以及从 Board 列表中删除，也是不同时点。
+
+</details>
+
+只要摩登世界传送门引用仍可解析，其阻塞函数就返回真。最后一次释放之后仍保留下一次计划检查；该检查请求关闭，再由关闭动画回调移除传送门。因此，空队列不会立即清除该阻塞。传送门消失后，存活的子僵尸仍是独立阻塞因素。<Note id="portalClose" />
+
+<Link href="/worlds/?lab=portals#extra-actions">传送门视图</Link>单独展示这一顺序，与普通波次推进区分。
+
+</section>
+
+<section id="continuation" className="prose-section">
+
+## 失败与继续关卡还会检查另外的状态
+
+普通失败模块要求 `CanTriggerZombieWin`，并检查自己的状态／类型／标记条件。在未偏移分支中，声明的 `ZombieWinPositionX = -80` 意味着
+
+$$
+X-200\le-80\quad\Longleftrightarrow\quad X\le120.
+$$
+
+某个 Board 标记可以将阈值偏移 30，另一种模式还可以增加 Y 检查。负的生成波次标记本身并不是豁免条件。<Note id="loss" />
+
+胜利后，客户端发送结束关卡请求，先处理返回的进度记录，再继续。它不会简单地递增本地进度并假定成功。普通继续路径只在返回的已存进度加一小于 150 时加载下一份文件。随包 Boss 间隔为 5，因此 1–149 的序列包含 120 个普通关卡与 29 个 Boss 边界。<Note id="progression" />
+
+这个记录不是已保存的战场。普通定义声明 `CanSaveGameState: false`；无论进度，还是独立的<Link href="/drops/#loot-schedule">已保存掉落计划</Link>，都不能证明会恢复之前的波次、实体或行历史。
+
+</section>
