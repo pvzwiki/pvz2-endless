@@ -9,6 +9,21 @@ source = parser.parse_args().source.resolve()
 root = Path(__file__).resolve().parents[1]
 worlds = json.loads((source / 'catalog/endless/worlds.json').read_text())['worlds']
 shared = json.loads((source / 'catalog/endless/shared-declared-config.json').read_text())['objdata']
+reported = json.loads((source / 'catalog/zombies/reported-level-multipliers.json').read_text())['modes']['endless']
+packages = source / 'analysis/decoded/full/config/PACKAGES'
+properties = json.loads((packages / 'PROPERTYSHEETS.json').read_text())['objects']
+rift = json.loads((packages / 'RIFT_EVENT_CONFIG.json').read_text())['objects']
+other_strength_tables = []
+for id, alias, objects in [('rift', 'RiftBaseConfigKey', rift),
+                           ('main', 'ZombieMummyDefault', properties),
+                           ('newPvp', 'DefaultNewPVPProps', properties),
+                           ('legacy', 'ZombiePVPImpDefault', properties),
+                           ('local', 'LocalDiyZombieStatsDefault', properties)]:
+    matches = [obj for obj in objects if alias in obj.get('aliases', [])]
+    assert len(matches) == 1, f'Review ambiguous strength table: {alias}'
+    rows = [{key: row[key] for key in ['HitPointsLevel', 'AttackLevel']}
+            for row in matches[0]['objdata']['ZombieLevelStats']]
+    other_strength_tables.append({'id': id, 'alias': alias, 'rows': rows})
 portals = json.loads((source / 'catalog/endless/modern-portals.json').read_text())['portals']
 modules = json.loads((source / 'analysis/decoded/full/config/PACKAGES/LEVELMODULES.json').read_text())['objects']
 loot = next(row['objdata']['Entries'] for row in modules if 'DefaultLootTable' in row.get('aliases', []))
@@ -33,6 +48,9 @@ for record in reference:
 inputs = {'worlds':world_view,'portals':portal_view,'types':types,
           'flagRows':shared['FlagWaveSetupList'],'foodRows':shared['PlantfoodSetupList'],
           'strengthRows':shared['ZombieLevelStats'],'leaderRate':shared['LeaderStrengthenRate'],
+          'reportedStrength':{'kind':'reported-gameplay-reference', 'runtimeCaptured':False,
+                              'health':reported['health'], 'attack':reported['attack']},
+          'otherStrengthTables':other_strength_tables,
           'leaderProbability':shared['LeaderProbability'],'leaderMinCost':shared['LeaderMinWaveCost'],
           'lootEntries':[row for row in loot if not row.get('World')]}
 (root / 'src/data/mechanism-inputs.json').write_text(json.dumps(inputs,ensure_ascii=False,indent=2)+'\n')

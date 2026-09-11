@@ -41,17 +41,22 @@ export function levelRequest(level: number) {
             .length,
   };
 }
-/** Shared-table health and the neutral base bite, without subclass attack dispatch. */
+/** Reported Endless health by default; native bite is only calculated from bundled fields. */
 export function entityStrength(
   id: string,
   level: number,
   leader: boolean,
   pace = 1,
+  basis: 'reported' | 'bundled' = 'reported',
 ) {
   const type = typeRecord(id),
     row = inputs.strengthRows[level - 1];
-  const healthMultiplier = row?.HitPointsLevel ?? 1,
-    attackMultiplier = row?.AttackLevel ?? 1;
+  const reportedHealth = inputs.reportedStrength.health[level - 1];
+  const healthMultiplier = basis === 'reported' ? reportedHealth : row?.HitPointsLevel ?? 1,
+    attackMultiplier = basis === 'bundled' ? row?.AttackLevel ?? 1 : null;
+  // Missing reported data cannot establish the native missing-row fallback.
+  if (healthMultiplier === undefined || healthMultiplier === null)
+    throw new RangeError(`No reported health reference for level ${level}`);
   const body = f32(
     f32(typeNumber(id, "Hitpoints") * f32(healthMultiplier)) *
     f32(leader ? inputs.leaderRate : 1),
@@ -62,7 +67,7 @@ export function entityStrength(
     f32(leader ? inputs.leaderRate : 1),
   );
   const levelFactor = f32(1 + f32(0.2) * f32(level - 1));
-  const bite = f32(
+  const bite = attackMultiplier === null ? null : f32(
     f32(f32(typeNumber(id, "EatDPS") * attackMultiplier) * pace) * levelFactor,
   );
   return {
@@ -71,8 +76,9 @@ export function entityStrength(
     bite,
     healthMultiplier,
     attackMultiplier,
+    reportedAttack: basis === 'reported' ? inputs.reportedStrength.attack[level - 1] ?? null : null,
     levelFactor,
-    missingRow: !row,
+    missingRow: basis === 'bundled' && !row,
   };
 }
 export type Interpolation = {

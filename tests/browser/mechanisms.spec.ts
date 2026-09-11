@@ -279,6 +279,10 @@ test("requested levels, table fallback, and leader health remain separate in the
   await dialog
     .getByRole("button", { name: "Level-5 conehead example", exact: true })
     .click();
+  await expect(output(dialog, "Body HP")).toHaveText("4,050");
+  await expect(output(dialog, "Reported attack / level 1")).toHaveText("×2");
+  await expect(output(dialog, "Base bite damage / game second")).toHaveCount(0);
+  await dialog.getByRole('combobox', { name: 'Multiplier source', exact: true }).selectOption('1');
   const body = await output(dialog, "Body HP").textContent();
   const bite = await output(dialog, "Base bite damage / game second").textContent();
   await dialog.getByRole("checkbox", { name: "Apply the leader marker once" }).check();
@@ -290,6 +294,9 @@ test("requested levels, table fallback, and leader health remain separate in the
   await expect(dialog.locator(".lab-note")).toContainText(
     "lookup returns multiplier 1",
   );
+  await dialog.getByRole('combobox', { name: 'Multiplier source', exact: true }).selectOption('0');
+  await expect(dialog.locator('.lab-note')).toHaveCount(0);
+  await expect(output(dialog, "Body HP")).toHaveText("27,000");
 });
 
 test("placement hooks retain or replace the provisional position", async ({

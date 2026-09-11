@@ -123,7 +123,9 @@
     "chapterLabel": "CHAPTER {number}",
     "chapterNavigation": "Previous and next chapters",
     "scrollableFormula": "Scrollable formula; use the left and right arrow keys",
-    "scrollFormulaHint": "Scroll horizontally to read the full formula"
+    "scrollFormulaHint": "Scroll horizontally to read the full formula",
+    "zombies": "Zombies",
+    "plants": "Plants"
   },
   "roster": {
     "chapter": "CHAPTER 02",
@@ -250,9 +252,11 @@
     "introDescription": "Scope, research method, and a note from the author.",
     "reference": "The resource atlas",
     "referenceDescription": "A shared reference of zombie definitions, costs, weights, health, and geometry.",
-    "openReference": "Browse the reference",
+    "openReference": "Browse zombies",
     "example": "An ordinary wave plan · L 149",
-    "documentTitle": "Endless, explained"
+    "documentTitle": "Endless, explained",
+    "openPlants": "Browse plants",
+    "plantDescription": "Plant definitions, sun costs, base health, recharge times, and selected type fields."
   },
   "chapters": {
     "wave-plan": {
@@ -323,7 +327,7 @@
       "health": "Reported ordinary-action HP",
       "flagExtra": "{n} independent flag instruction",
       "entityLevel": "Entity level {n}",
-      "entitiesCaption": "Each instruction uses its own sampled level. The HP subtotal assumes neutral creation modifiers and successful placement for these ordinary-action entities.",
+      "entitiesCaption": "Each instruction uses its sampled level and the adopted Endless health reference. The HP subtotal assumes neutral creation modifiers and successful placement; the effective runtime table has not been captured.",
       "instructionsCaption": "Each tile is one spawn instruction. Its cost is an input to construction, not its health.",
       "typesCaption": "The basic type and four chosen pool entries become the filler’s active types.",
       "stages": {
@@ -346,7 +350,7 @@
         "extra": "One level-wide chance can assign a leader to one wave. Its type is drawn by weight from selected types costing more than 100. Its cost is outside the ordinary budget.",
         "world": "Egypt has no extra world designer here. Other worlds can now replace instructions or append independent actions; Chapter 3 follows those changes.",
         "flag": "A flag/final wave receives a separate flag-zombie action unless suppressed. It has its own placement spacing and is outside the ordinary budget.",
-        "entities": "Each instruction has a sampled level. This neutral calculation reads the shared health table and applies the leader multiplier separately.",
+        "entities": "Each instruction has a sampled level. This calculation uses the adopted ten-level Endless health reference and applies the leader multiplier separately.",
         "placement": "This view assumes successful placement for the generated Egypt roster. Chapter 5 lets you supply occupied rows and inspect rejection or relocation.",
         "snapshot": "This is the ordinary action’s calculated HP subtotal under the stated assumptions. The game samples all eligible current-wave entities after every action returns, including an eligible flag entity."
       },
@@ -559,7 +563,7 @@
       "helmet": "Helmet HP",
       "bite": "Base bite damage / game second",
       "missingDetail": "The bundled table has no row 6–10. Its lookup returns multiplier 1 for a missing row. This control shows that lookup; an effective server-supplied table can contain other rows.",
-      "leaderDetail": "Combined health changes from {before} to {after}. These types use fixed EatDPS, so leader marking does not multiply their bite rate. EatDPSRatio types have a separate indirect health-to-damage path. Each control change compares fresh entity setups.",
+      "leaderDetail": "Combined health changes from {before} to {after}. Leader marking does not directly change the attack multiplier. These types use fixed EatDPS; EatDPSRatio types have a separate indirect health-to-damage path. Each control change compares fresh entity setups.",
       "table": "Inspect the shared multiplier lookup",
       "healthMultiplier": "Health multiplier",
       "attackMultiplier": "Attack multiplier",
@@ -567,7 +571,14 @@
       "declared": "Bundled row",
       "fallback": "Missing row → 1",
       "reportedHealth": "Reported wave-health contribution",
-      "reportedDetail": "Base getter: float32 body + helmet, then signed int32 conversion. This reporting step leaves the stored HP unchanged."
+      "reportedDetail": "Health uses the adopted ten-level Endless reference. These reported values have not been captured from the runtime configuration or found as complete sequences in the package.",
+      "healthReportDetail": "Base getter: float32 body + helmet, then signed int32 conversion. This reporting step leaves the stored HP unchanged.",
+      "basis": "Multiplier source",
+      "reported": "Endless gameplay reference",
+      "bundled": "Bundled DangerRoom table",
+      "bundledDetail": "This comparison uses the five bundled DangerRoom rows and the native bite formula, with neutral modifiers. It is not a current gameplay stat claim.",
+      "reportedAttack": "Reported attack / level 1",
+      "attackUnmapped": "Native AttackLevel binding is unconfirmed; no bite rate is inferred."
     },
     "placement": {
       "title": "Rows, history, and final placement",
@@ -800,5 +811,31 @@
       "completionBoundary": "For the final wave, victory also requires the entity-clear predicate. A retained warning state needs another normal update after the finalization attempt; no extra scheduled wave is created.",
       "scope": "All times are game-clock inputs. At an exact boundary this comparison evaluates the timed update before the tap; it does not infer live input ordering or animation duration."
     }
+  },
+  "plants": {
+    "title": "The plant reference.",
+    "metadataTitle": "Plant reference",
+    "description": "Search plant definitions and compare their declared sun costs, base health, recharge times, and Rare values.",
+    "placeholder": "sunflower, peashooter, 向日葵…",
+    "cost": "Sun cost",
+    "cooldown": "Recharge (s)",
+    "rare": "Rare",
+    "close": "Close plant record",
+    "scopeNote": "These are package declarations. A listed plant is not necessarily available in an Endless run; ownership and current inventory are separate.",
+    "fieldNote": "Rare is a declared integer, separate from the Quality string. An omitted Enabled field does not mean false. Recharge and HP are base declarations; upgrades and runtime modifiers may change them.",
+    "repeated": "Repeated declarations agree"
+  },
+  "strengthReference": {
+    "level": "Effective level",
+    "health": "Health",
+    "reportedAttack": "Reported attack / level 1",
+    "compare": "Compare the package tables",
+    "packageNote": "These are declared HitPointsLevel and AttackLevel fields, in level order. Additional rows do not establish that those levels are reached during gameplay.",
+    "dangerRoom": "Endless: bundled shared table",
+    "rift": "Penny’s Pursuit: Rift configuration",
+    "main": "Main-level comparison: Mummy properties",
+    "newPvp": "NewPVP: mode identity unresolved",
+    "legacy": "Legacy PvP comparison: Imp properties",
+    "local": "Local DIY configuration"
   }
 }

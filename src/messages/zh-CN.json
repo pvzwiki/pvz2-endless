@@ -123,7 +123,9 @@
     "chapterLabel": "第 {number} 篇",
     "chapterNavigation": "上一篇与下一篇",
     "scrollableFormula": "可滚动的公式，可使用左右方向键",
-    "scrollFormulaHint": "横向滚动以查看完整公式"
+    "scrollFormulaHint": "横向滚动以查看完整公式",
+    "zombies": "僵尸资料",
+    "plants": "植物资料"
   },
   "roster": {
     "chapter": "第 02 篇",
@@ -250,9 +252,11 @@
     "introDescription": "范围、研究方法，以及作者的话。",
     "reference": "资源图谱",
     "referenceDescription": "共用的僵尸定义、成本、权重、生命值与几何数据参考。",
-    "openReference": "浏览资料库",
+    "openReference": "浏览僵尸资料",
     "example": "一个普通波次方案 · L 149",
-    "documentTitle": "无尽解读"
+    "documentTitle": "无尽解读",
+    "openPlants": "浏览植物资料",
+    "plantDescription": "植物定义、阳光消耗、基础生命值、冷却时间与精选类型字段。"
   },
   "chapters": {
     "wave-plan": {
@@ -323,7 +327,7 @@
       "health": "普通动作报告的 HP",
       "flagExtra": "独立旗帜指令：{n} 条",
       "entityLevel": "实体等级 {n}",
-      "entitiesCaption": "每条指令使用单独抽取的等级。HP 小计假设这些普通动作实体采用中性的创建修正，且均成功放置。",
+      "entitiesCaption": "每条指令使用单独抽取的等级和已采用的无尽生命值参考。HP 小计假设创建修正为中性，且均成功放置；有效运行时表尚未捕获。",
       "instructionsCaption": "每张卡片是一条生成指令。成本是构建输入，并不是生命值。",
       "typesCaption": "基础类型与四个选中的池条目成为填充器的活动类型。",
       "stages": {
@@ -346,7 +350,7 @@
         "extra": "每关一次的概率尝试可将首领分配给某一波。其种类从成本大于 100 的已选种类中按权重抽取，成本不从普通预算中扣除。",
         "world": "古埃及在这里没有额外世界设计器。其他世界此时可以替换指令或追加独立动作；第 3 章继续追踪这些变化。",
         "flag": "旗帜波／最终波会获得独立旗帜僵尸动作，除非被抑制。它有自己的位置间距，不属于普通预算。",
-        "entities": "每条指令都有抽取的等级。中性条件下的计算读取共享生命值表，并单独应用首领倍率。",
+        "entities": "每条指令都有抽取的等级。此计算使用已采用的十级无尽生命值参考，并单独应用首领倍率。",
         "placement": "这个视图假设生成的埃及名单均成功放置。第 5 章可以输入已占用行，检查拒绝或重新定位。",
         "snapshot": "这里是在所述假设下计算的普通动作 HP 小计。游戏在所有动作返回后，对当前波所有符合条件的实体采样，其中也包括符合条件的旗帜实体。"
       },
@@ -559,7 +563,7 @@
       "helmet": "头盔生命值",
       "bite": "基础啃咬伤害／游戏秒",
       "missingDetail": "随包表没有第 6–10 行。缺失行的查询返回倍率 1。此控件展示该查询；服务器提供的有效表可以包含其他行。",
-      "leaderDetail": "合计生命值从 {before} 变为 {after}。这些类型使用固定 EatDPS，因此首领标记不会乘算它们的啃咬速率。使用 EatDPSRatio 的类型另有从生命值间接影响伤害的路径。 每次修改控件，比较的都是全新实体设置。",
+      "leaderDetail": "合计生命值从 {before} 变为 {after}。首领标记不直接改变攻击倍率。这些类型使用固定 EatDPS；EatDPSRatio 类型另有由生命值间接影响伤害的路径。每次控件变化都比较全新实体的创建结果。",
       "table": "检查共享倍率查询",
       "healthMultiplier": "生命值倍率",
       "attackMultiplier": "攻击倍率",
@@ -567,7 +571,14 @@
       "declared": "随包行",
       "fallback": "缺失行 → 1",
       "reportedHealth": "向波次报告的生命值贡献",
-      "reportedDetail": "基础读取函数：以 float32 相加本体与头盔 HP，再转换为有符号 int32。此报告步骤不改变保存的 HP。"
+      "reportedDetail": "生命值采用十级无尽实战参考。这些反馈值尚未从运行时配置中捕获，也未在包内找到完整序列。",
+      "healthReportDetail": "基础读取函数：以 float32 相加本体与头盔 HP，再转换为有符号 int32。此报告步骤不改变保存的 HP。",
+      "basis": "倍率来源",
+      "reported": "无尽实战参考",
+      "bundled": "包内 DangerRoom 表",
+      "bundledDetail": "这一对比使用包内 DangerRoom 的五行数据与原生啃咬公式，并令其他修正为中性。它不代表当前实战数值。",
+      "reportedAttack": "反馈攻击 / 1 级",
+      "attackUnmapped": "尚未确认其对应原生 AttackLevel，因此不据此推算啃咬速率。"
     },
     "placement": {
       "title": "行、历史与最终位置",
@@ -800,5 +811,31 @@
       "completionBoundary": "对于最终波，胜利还要求实体清空谓词通过。保留提示状态时，在结束尝试之后还需一次普通更新；不会创建额外的计划波次。",
       "scope": "所有时刻都是游戏时钟输入。恰好处在边界时，此比较先处理计时更新，再处理点击；不据此推断实际输入顺序或动画时长。"
     }
+  },
+  "plants": {
+    "title": "植物资料库。",
+    "metadataTitle": "植物资料库",
+    "description": "搜索植物定义，对比声明的阳光消耗、基础生命值、冷却时间与 Rare 数值。",
+    "placeholder": "向日葵、豌豆射手、sunflower…",
+    "cost": "阳光消耗",
+    "cooldown": "冷却（秒）",
+    "rare": "Rare",
+    "close": "关闭植物记录",
+    "scopeNote": "这里列出的是包内声明。收录某种植物，并不表示它在某次无尽挑战中可用；拥有情况与当前库存另行决定。",
+    "fieldNote": "Rare 是声明的整数，与 Quality 字符串不同。Enabled 字段未声明，不代表其值为 false。冷却时间与 HP 是基础声明，升级与运行时修正可能改变它们。",
+    "repeated": "重复声明的数值一致"
+  },
+  "strengthReference": {
+    "level": "有效等级",
+    "health": "生命值",
+    "reportedAttack": "反馈攻击 / 1 级",
+    "compare": "对比包内的各张表",
+    "packageNote": "以下为声明的 HitPointsLevel 与 AttackLevel 字段，按等级排列。存在额外行，并不证明实际游玩会达到这些等级。",
+    "dangerRoom": "无尽：包内共享表",
+    "rift": "潘妮的追击：Rift 配置",
+    "main": "主线关卡对照：木乃伊属性",
+    "newPvp": "NewPVP：模式对应关系未确定",
+    "legacy": "旧版 PvP 对照：小鬼属性",
+    "local": "本地 DIY 配置"
   }
 }

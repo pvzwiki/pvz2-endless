@@ -157,6 +157,25 @@ test('the reference retains duplicate aliases and distinguishes omitted fields',
   await expect(page.getByRole('button', { name: 'Inspect Mummy', exact: true })).toHaveCount(0);
 });
 
+test('the plant reference preserves missing fields and bilingual search state', async ({ page }) => {
+  await page.goto('/en/plants/');
+  await page.getByRole('searchbox').fill('sunflower');
+  await page.getByRole('combobox', { name: 'Rare', exact: true }).selectOption('0');
+  const record = page.getByRole('button', { name: 'Inspect Sunflower', exact: true });
+  await record.click();
+  const dialog = page.getByRole('dialog', { name: 'Sunflower', exact: true });
+  await expect(dialog.locator('.record-fields > div').filter({ hasText: 'type.Enabled' }).locator('dd')).toHaveText('—');
+  await page.keyboard.press('Escape');
+  await expect(record).toBeFocused();
+  await page.getByRole('combobox', { name: 'Rare', exact: true }).selectOption('missing');
+  await expect(record).toHaveCount(0);
+  await page.getByRole('combobox', { name: 'Rare', exact: true }).selectOption('0');
+  await page.getByRole('link', { name: '中文', exact: true }).click();
+  await expect(page.getByRole('searchbox')).toHaveValue('sunflower');
+  await expect(page.getByRole('combobox', { name: 'Rare', exact: true })).toHaveValue('0');
+  await expect(page.getByRole('button', { name: '查看 向日葵', exact: true })).toBeVisible();
+});
+
 test('mobile article and reference controls remain usable without WebGL', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.addInitScript(() => {
@@ -181,4 +200,8 @@ test('mobile article and reference controls remain usable without WebGL', async 
   expect(await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth)).toBeLessThan(2);
   await page.getByRole('searchbox').fill('木乃伊');
   await expect(page.locator('.catalog-table tbody tr').first()).toBeVisible();
+  await page.locator('.reference-tabs').getByRole('link', { name: '植物资料', exact: true }).click();
+  await page.getByRole('searchbox').fill('向日葵');
+  await expect(page.locator('.catalog-table tbody tr').first()).toBeVisible();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth)).toBeLessThan(2);
 });

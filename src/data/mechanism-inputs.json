@@ -8205,6 +8205,262 @@
     }
   ],
   "leaderRate": 2,
+  "reportedStrength": {
+    "kind": "reported-gameplay-reference",
+    "runtimeCaptured": false,
+    "health": [
+      1,
+      2,
+      3,
+      5,
+      15,
+      50,
+      250,
+      1000,
+      5000,
+      100000
+    ],
+    "attack": [
+      1,
+      1.2,
+      1.4,
+      1.6,
+      2,
+      3,
+      5,
+      10,
+      30,
+      100
+    ]
+  },
+  "otherStrengthTables": [
+    {
+      "id": "rift",
+      "alias": "RiftBaseConfigKey",
+      "rows": [
+        {
+          "HitPointsLevel": 1,
+          "AttackLevel": 1
+        },
+        {
+          "HitPointsLevel": 2,
+          "AttackLevel": 2
+        },
+        {
+          "HitPointsLevel": 3,
+          "AttackLevel": 3
+        },
+        {
+          "HitPointsLevel": 4.5,
+          "AttackLevel": 4.5
+        },
+        {
+          "HitPointsLevel": 5,
+          "AttackLevel": 5
+        },
+        {
+          "HitPointsLevel": 8,
+          "AttackLevel": 8
+        },
+        {
+          "HitPointsLevel": 9,
+          "AttackLevel": 9
+        },
+        {
+          "HitPointsLevel": 10,
+          "AttackLevel": 10
+        },
+        {
+          "HitPointsLevel": 11,
+          "AttackLevel": 11
+        },
+        {
+          "HitPointsLevel": 12,
+          "AttackLevel": 12
+        },
+        {
+          "HitPointsLevel": 13,
+          "AttackLevel": 13
+        },
+        {
+          "HitPointsLevel": 14,
+          "AttackLevel": 14
+        },
+        {
+          "HitPointsLevel": 15,
+          "AttackLevel": 15
+        },
+        {
+          "HitPointsLevel": 16,
+          "AttackLevel": 16
+        },
+        {
+          "HitPointsLevel": 17,
+          "AttackLevel": 17
+        },
+        {
+          "HitPointsLevel": 18,
+          "AttackLevel": 18
+        },
+        {
+          "HitPointsLevel": 19,
+          "AttackLevel": 19
+        },
+        {
+          "HitPointsLevel": 20,
+          "AttackLevel": 20
+        },
+        {
+          "HitPointsLevel": 21,
+          "AttackLevel": 21
+        }
+      ]
+    },
+    {
+      "id": "main",
+      "alias": "ZombieMummyDefault",
+      "rows": [
+        {
+          "HitPointsLevel": 1,
+          "AttackLevel": 1
+        },
+        {
+          "HitPointsLevel": 2,
+          "AttackLevel": 2
+        },
+        {
+          "HitPointsLevel": 3,
+          "AttackLevel": 3
+        },
+        {
+          "HitPointsLevel": 4.5,
+          "AttackLevel": 4.5
+        },
+        {
+          "HitPointsLevel": 5,
+          "AttackLevel": 5
+        }
+      ]
+    },
+    {
+      "id": "newPvp",
+      "alias": "DefaultNewPVPProps",
+      "rows": [
+        {
+          "HitPointsLevel": 1,
+          "AttackLevel": 1
+        },
+        {
+          "HitPointsLevel": 2,
+          "AttackLevel": 2
+        },
+        {
+          "HitPointsLevel": 3,
+          "AttackLevel": 3
+        },
+        {
+          "HitPointsLevel": 4,
+          "AttackLevel": 4
+        },
+        {
+          "HitPointsLevel": 5,
+          "AttackLevel": 5
+        },
+        {
+          "HitPointsLevel": 6,
+          "AttackLevel": 6
+        },
+        {
+          "HitPointsLevel": 7,
+          "AttackLevel": 7
+        },
+        {
+          "HitPointsLevel": 8,
+          "AttackLevel": 8
+        },
+        {
+          "HitPointsLevel": 10,
+          "AttackLevel": 10
+        },
+        {
+          "HitPointsLevel": 20,
+          "AttackLevel": 20
+        }
+      ]
+    },
+    {
+      "id": "legacy",
+      "alias": "ZombiePVPImpDefault",
+      "rows": [
+        {
+          "HitPointsLevel": 1,
+          "AttackLevel": 1
+        },
+        {
+          "HitPointsLevel": 1.5,
+          "AttackLevel": 1.5
+        },
+        {
+          "HitPointsLevel": 2,
+          "AttackLevel": 2
+        },
+        {
+          "HitPointsLevel": 2.5,
+          "AttackLevel": 2.5
+        },
+        {
+          "HitPointsLevel": 5,
+          "AttackLevel": 5
+        }
+      ]
+    },
+    {
+      "id": "local",
+      "alias": "LocalDiyZombieStatsDefault",
+      "rows": [
+        {
+          "HitPointsLevel": 1,
+          "AttackLevel": 1
+        },
+        {
+          "HitPointsLevel": 2,
+          "AttackLevel": 2
+        },
+        {
+          "HitPointsLevel": 3,
+          "AttackLevel": 3
+        },
+        {
+          "HitPointsLevel": 4.5,
+          "AttackLevel": 4.5
+        },
+        {
+          "HitPointsLevel": 5,
+          "AttackLevel": 5
+        },
+        {
+          "HitPointsLevel": 8,
+          "AttackLevel": 8
+        },
+        {
+          "HitPointsLevel": 9,
+          "AttackLevel": 9
+        },
+        {
+          "HitPointsLevel": 10,
+          "AttackLevel": 10
+        },
+        {
+          "HitPointsLevel": 11,
+          "AttackLevel": 11
+        },
+        {
+          "HitPointsLevel": 12,
+          "AttackLevel": 12
+        }
+      ]
+    }
+  ],
   "leaderProbability": 0.4,
   "leaderMinCost": 100,
   "lootEntries": [

@@ -7,7 +7,7 @@ npm ci
 npm run dev -- --hostname 127.0.0.1 --port 4173
 ```
 
-Open `/en/` or `/zh-CN/` for the homepage. The introduction starts a seven-chapter reading sequence; `/zombies/` contains the shared reference. Every route has an English and Simplified Chinese version.
+Open `/en/` or `/zh-CN/` for the homepage. The introduction starts a seven-chapter reading sequence; `/zombies/` and `/plants/` contain separate searchable references. Every route has an English and Simplified Chinese version.
 
 Articles live in `src/content/`; interface translations in `src/messages/`. Calculations and state transitions in `src/lib/` are independent of React and rendering. Optional views live in `src/components/labs/`. `src/data/` contains selected website inputs, not the private research database.
 
@@ -26,10 +26,15 @@ The portal replay advances a queue through opening, due updates, and a separate 
 
 Health reporting includes per-entity integer conversion, sequential float32 accumulation, and signed int32 saturation. The timing view compares taps before and during a pre-spawn warning, including the retained announcement state and final-wave completion delay. The deployment workflow only publishes from the canonical public repository.
 
+Health examples default to the adopted ten-level Endless gameplay reference. The strength view also offers the five-row bundled DangerRoom table and its native fallback. Reported attack is kept separate from `AttackLevel`; the site calculates a native bite rate only in the bundled comparison. Chapter 04 includes the other selected package tables, without assuming that every declared level is reachable.
+
+The plant exporter publishes an explicit selection of scalar game fields and localized names. It excludes full source objects, source paths, database identifiers, and research provenance. Missing fields stay missing; repeated field declarations are labeled when they agree. Unresolved or conflicting definitions stop export for review. The reference does not infer ownership or availability in an Endless run.
+
 To regenerate the selected website inputs from the local research checkout:
 
 ```sh
 python3 scripts/export-wave-data.py --source ../analyze
 python3 scripts/export-zombie-data.py --source ../analyze
+python3 scripts/export-plant-data.py --source ../analyze
 python3 scripts/export-mechanism-data.py --source ../analyze
 ```

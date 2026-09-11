@@ -22,13 +22,14 @@ export default function StrengthLab() {
     locale = useLocale();
   const [state, set] = useParameters(
     "strength",
-    { level: 36, residue: 0, override: 0, type: 1, leader: 0 },
+    { level: 36, residue: 0, override: 0, type: 1, leader: 0, basis: 0 },
     {
       level: [1, 149],
       residue: [0, 99],
       override: [0, 10],
       type: [0, 2],
       leader: [0, 1],
+      basis: [0, 1],
     },
   );
   const level = state.level % 5 === 0 ? state.level + 1 : state.level,
@@ -36,9 +37,10 @@ export default function StrengthLab() {
     chosen = state.residue < request.threshold ? request.upper : request.lower,
     effective = state.override || chosen,
     id = types[state.type];
-  const result = entityStrength(id, effective, !!state.leader),
-    base = entityStrength(id, 1, false),
-    normal = entityStrength(id, effective, false);
+  const basis = state.basis === 1 ? 'bundled' : 'reported';
+  const result = entityStrength(id, effective, !!state.leader, 1, basis),
+    base = entityStrength(id, 1, false, 1, basis),
+    normal = entityStrength(id, effective, false, 1, basis);
   const [ref, width] = useCanvasWidth(),
     x = (level: number) => 35 + ((level - 1) / 148) * (width - 53),
     y = (value: number) => 190 - ((value - 1) / 9) * 162;
@@ -172,6 +174,13 @@ export default function StrengthLab() {
       </div>
       <div className="lab-controls">
         <label>
+          {t('basis')}
+          <select value={state.basis} onChange={(event) => set({ basis: Number(event.target.value) })}>
+            <option value={0}>{t('reported')}</option>
+            <option value={1}>{t('bundled')}</option>
+          </select>
+        </label>
+        <label>
           {t("type")}
           <select
             value={state.type}
@@ -193,8 +202,9 @@ export default function StrengthLab() {
         <button onClick={() => set({ type: 1, override: 5, leader: 0 })}>
           {t("conehead")}
         </button>
-        <button onClick={() => set({ override: 6 })}>{t("missing")}</button>
+        <button onClick={() => set({ override: 6, basis: 1 })}>{t("missing")}</button>
       </div>
+      <p className="lab-caption">{basis === 'reported' ? t('reportedDetail') : t('bundledDetail')}</p>
       <div className="lab-stage">
         {[
           { label: t("base"), value: base },
@@ -227,14 +237,18 @@ export default function StrengthLab() {
           label={t("helmet")}
           value={result.helmet.toLocaleString(locale)}
         />
-        <Stat
+        {result.bite === null ? <Stat
+          label={t('reportedAttack')}
+          value={result.reportedAttack === null ? '—' : `×${result.reportedAttack}`}
+          detail={t('attackUnmapped')}
+        /> : <Stat
           label={t("bite")}
           value={Math.round(result.bite * 1000) / 1000}
           detail={`E × ${result.attackMultiplier} × ${result.levelFactor.toFixed(1)}`}
-        />
+        />}
         <Stat label={t("reportedHealth")}
           value={entityHealthReport(result.body, result.helmet).toLocaleString(locale)}
-          detail={t("reportedDetail")} />
+          detail={t("healthReportDetail")} />
       </div>
       {result.missingRow && (
         <div className="lab-note">{t("missingDetail")}</div>
@@ -254,7 +268,7 @@ export default function StrengthLab() {
             <tr>
               <th>ℓ</th>
               <th>{t("healthMultiplier")}</th>
-              <th>{t("attackMultiplier")}</th>
+              <th>{basis === 'reported' ? t('reportedAttack') : 'AttackLevel'}</th>
               <th>{t("lookup")}</th>
             </tr>
           </thead>
@@ -262,9 +276,9 @@ export default function StrengthLab() {
             {Array.from({ length: 10 }, (_, i) => (
               <tr key={i} className={effective === i + 1 ? "selected" : ""}>
                 <td>{i + 1}</td>
-                <td>{mechanismInputs.strengthRows[i]?.HitPointsLevel ?? 1}</td>
-                <td>{mechanismInputs.strengthRows[i]?.AttackLevel ?? 1}</td>
-                <td>{i < 5 ? t("declared") : t("fallback")}</td>
+                <td>{basis === 'reported' ? mechanismInputs.reportedStrength.health[i] : mechanismInputs.strengthRows[i]?.HitPointsLevel ?? 1}</td>
+                <td>{basis === 'reported' ? mechanismInputs.reportedStrength.attack[i] : mechanismInputs.strengthRows[i]?.AttackLevel ?? 1}</td>
+                <td>{basis === 'reported' ? t('reported') : i < mechanismInputs.strengthRows.length ? t("declared") : t("fallback")}</td>
               </tr>
             ))}
           </tbody>

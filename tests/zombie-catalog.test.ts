@@ -30,6 +30,6 @@ test('website inputs exclude local paths and private database fields', () => {
   const directory = new URL('../src/data/', import.meta.url);
   for (const file of readdirSync(directory).filter((name) => name.endsWith('.json'))) {
     assert.doesNotMatch(readFileSync(new URL(file, directory), 'utf8'),
-      /\/Users\/|\/home\/|source_json|type_object_id|object_id|file:\/\//, file);
+      /\/Users\/|\/home\/|source_json|type_object_id|object_id|file:\/\/|researchRevision/, file);
   }
 });

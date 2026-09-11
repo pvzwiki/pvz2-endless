@@ -104,15 +104,17 @@ export const evidence = {
     "addresses": [
       "0x1019938a0",
       "0x101993af8",
-      "0x101d6db00"
+      "0x101d6db00",
+      "0x100fd8a10",
+      "0x10067f50c"
     ],
     "en": {
       "title": "Shared table lookup and missing rows",
-      "text": "The non-Zomboss DangerRoom lookup uses the shared ZombieLevelStats vector at effective entity level minus one. A missing row returns multiplier 1. The supplied vector has five rows; the neccd.zls response replaces the ordered attack/health pairs. The level-module ZombieMaxLevel default is -1, and the ordinary definitions omit an override."
+      "text": "The non-Zomboss DangerRoom lookup uses the shared ZombieLevelStats vector at effective entity level minus one. The bundled vector has five rows and a missing row returns multiplier 1; neccd.zls can replace the ordered pairs. The adopted ten-level Endless reference is reported gameplay data: neither complete sequence was found in the inspected package, and the runtime table is uncaptured. Rift and NewPVP have separate table-selection branches; NewPVP's player-facing identity is unresolved. The level-module ZombieMaxLevel default is -1, and the ordinary definitions omit an override."
     },
     "zh-CN": {
       "title": "共享表查询与缺失行",
-      "text": "非 Zomboss 的 DangerRoom 查询使用共享 ZombieLevelStats 向量，以实体有效等级减一作为索引。缺失行返回倍率 1。随包向量有五行；neccd.zls 响应会替换有序的攻击／生命值对。等级模块的 ZombieMaxLevel 默认为 -1，普通定义未声明覆盖值。"
+      "text": "非 Zomboss 的 DangerRoom 查询使用共享 ZombieLevelStats 向量，以实体有效等级减一作为索引。包内向量有五行，缺失行返回倍率 1；neccd.zls 可以替换有序数值对。采用的十级无尽参考来自实战反馈：所检查的包内未找到任何一条完整序列，运行时表也尚未捕获。Rift 与 NewPVP 有独立的选表分支；NewPVP 对应的玩家可见模式未确定。等级模块的 ZombieMaxLevel 默认为 -1，普通定义未声明覆盖值。"
     }
   },
   "bite": {

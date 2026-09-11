@@ -601,3 +601,33 @@
   .math-scroll-note { font-size:11px; color:#586e4b; }
 }
 @media(max-width:720px) { .article-prose th code { font-size:10px; } }
+
+/* Shared reference pages: compact headings and readable data. */
+.reference-main { padding-top: 44px; }
+.reference-heading { padding-bottom: 24px; }
+.reference-heading h1 { font-size: clamp(2rem, 4vw, 3rem); margin: 18px 0; }
+.reference-heading p { font-size: 1rem; max-width: 680px; color: #60744e; }
+.reference-heading > svg { width: 84px; height: 84px; top: 22px; }
+.reference-tabs { display: flex; gap: 24px; margin-top: 24px; font-size: .875rem; color: #60744e; }
+.reference-tabs a { padding: 8px 0; border-bottom: 2px solid transparent; }
+.reference-tabs a[aria-current] { color: #354e27; border-color: currentColor; }
+.catalog-filters label, .catalog-filters input, .catalog-filters select,
+.catalog-table thead button, .catalog-table tbody th, .catalog-table td,
+.catalog-name strong, .catalog-name .identifier-name, .catalog-pagination { font-size: .875rem; }
+.catalog-summary { font-size: .8125rem; }
+.catalog-context { font-size: .875rem; line-height: 1.7; color: #60744e; margin: 0 0 18px; max-width: 850px; }
+.catalog-name code, .reference-badge, .record-identifier, .record-core code { font-size: .75rem; }
+.record-core span, .record-content h3, .record-fields, .record-fields dt,
+.record-fields dd, .candidate-select, .candidate-select select { font-size: .875rem; }
+.home-reference-entry + .home-reference-entry { border-top: 1px solid #cbd7be; margin-top: 30px; }
+.strength-comparison { margin: 24px 0; border-block: 1px solid var(--line); padding: 18px 0; }
+.strength-comparison summary { cursor: pointer; font-family: var(--sans); font-size: 1rem; }
+.strength-comparison > div { margin-top: 28px; }
+.strength-comparison code { overflow-wrap: anywhere; }
+#strength-table table, #strength-table th { font-size: .875rem; }
+#strength-table table th:not(:first-child), #strength-table table td:not(:first-child) { text-align: right; }
+@media (max-width: 620px) {
+  .catalog-table { min-width: 640px; }
+  .catalog-table th:first-child { width: 170px; }
+  .catalog-name { max-width: 160px; }
+}

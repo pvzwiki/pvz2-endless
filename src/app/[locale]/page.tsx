@@ -8,6 +8,7 @@ import { FallbackSculpture } from '@/components/wave-visual';
 import { createWavePlan } from '@/lib/wave-model';
 import { chapters, chapterPath } from '@/content/chapters';
 import catalog from '@/data/reference-catalog.json';
+import plants from '@/data/plant-catalog.json';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params; if (!isLocale(locale)) notFound();
@@ -25,6 +26,9 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
     <div className="home-index"><section id="chapters" className="home-chapters"><span className="eyebrow">{t('series')}</span>
       <Link href="/introduction/" className="intro-entry"><span>00</span><div><strong>{t('introduction')}</strong><p>{t('introDescription')}</p></div><span aria-hidden="true">↗</span></Link>
       <ol>{chapters.map((chapter) => <li key={chapter.id}><span>{String(chapter.number).padStart(2,'0')}</span>{chapter.published ? <Link href={chapterPath(chapter.id)}>{c(`${chapter.id}.title`)}<span aria-hidden="true">↗</span></Link> : <div>{c(`${chapter.id}.title`)}<small>{s('planned')}</small></div>}</li>)}</ol>
-    </section><aside className="home-reference"><span className="eyebrow">{t('reference')}</span><strong>{new Intl.NumberFormat(locale).format(catalog.types.length)}</strong><p>{t('referenceDescription')}</p><Link href="/zombies/" className="text-link">{t('openReference')} ↗</Link></aside></div>
+    </section><aside className="home-reference"><span className="eyebrow">{t('reference')}</span>
+      <div className="home-reference-entry"><strong>{new Intl.NumberFormat(locale).format(catalog.types.length)}</strong><p>{t('referenceDescription')}</p><Link href="/zombies/" className="text-link">{t('openReference')} ↗</Link></div>
+      <div className="home-reference-entry"><strong>{new Intl.NumberFormat(locale).format(plants.types.length)}</strong><p>{t('plantDescription')}</p><Link href="/plants/" className="text-link">{t('openPlants')} ↗</Link></div>
+    </aside></div>
   </main><footer className="site-footer"><p>{s('footer')}</p></footer></div>;
 }

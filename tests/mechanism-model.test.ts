@@ -100,15 +100,26 @@ test("loot scheduling uses strict boundaries and can service multiple due period
   const c = advanceLootSchedule(initial, 11, 4, 2, 1);
   assert.equal(c.emitted, 3);
 });
-test("leader health leaves fixed-EatDPS biting unchanged and absent rows use base health", () => {
+test("reported health stays separate from native attack and bundled missing-row behavior", () => {
   const normal = entityStrength("mummy_armor1", 5, false);
   const leader = entityStrength("mummy_armor1", 5, true);
   assert.ok(leader.body > normal.body && leader.helmet > normal.helmet);
+  assert.equal(normal.bite, null);
+  assert.equal(normal.attackMultiplier, null);
+  assert.equal(normal.reportedAttack, 2);
+  assert.equal(normal.body, 4050);
+  assert.equal(entityStrength("mummy", 10, false).body, 27_000_000);
+  const bundled = entityStrength("mummy_armor1", 5, false, 1, 'bundled');
+  assert.equal(bundled.bite, 900);
+  assert.equal(entityStrength("mummy_armor1", 5, true, 1, 'bundled').bite, bundled.bite);
   assert.equal(leader.bite, normal.bite);
-  const missing = entityStrength("mummy_armor1", 6, false);
+  const missing = entityStrength("mummy_armor1", 6, false, 1, 'bundled');
   const base = entityStrength("mummy_armor1", 1, false);
   assert.equal(missing.body, base.body);
   assert.equal(missing.helmet, base.helmet);
+  assert.equal(missing.missingRow, true);
+  assert.equal(entityStrength("mummy_armor1", 6, false).missingRow, false);
+  assert.throws(() => entityStrength("mummy", 11, false), /No reported health/);
 });
 
 test("large-wave announcement shifts the old deadline, and an allowed automatic event runs first", () => {

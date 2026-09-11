@@ -1,6 +1,7 @@
 import { Note } from '@/components/evidence-notes';
 import { Link } from '@/i18n/navigation';
 import { MechanismLab } from '@/components/mechanism-lab';
+import { EndlessStrengthTable, PackagedStrengthTables } from '@/components/strength-tables';
 
 <div className="article-lead">
 Point cost buys an instruction; it does not specify that zombie’s health. Strength is resolved through three distinct inputs: the instruction’s requested level, the entity’s effective level after creation modifiers, and the shared health/attack table. Leader marking is another operation afterward.
@@ -39,25 +40,36 @@ This residue test belongs to ordinary spawn instructions. <Link href="/worlds/#e
 
 <section id="strength-table" className="prose-section">
 
-## Resolve the entity level, then look up its row
+## Resolve the entity level, then select the mode’s table
 
 Creation can apply level-module modifiers before storing the effective level $\ell$. `ZombieMaxLevel` defaults to $-1$, so its clamp is inactive unless overridden. The ordinary definitions do not impose a five-level cap.
 
-For a non-Zomboss entity in DangerRoom, both multipliers come from the shared `ZombieLevelStats` vector. The type’s own level-stat vector is not the table used by this path. The lookup uses index $\ell-1$:
+For a non-Zomboss entity in DangerRoom, both multipliers come from the shared `ZombieLevelStats` vector, using index $\ell-1$. This path does not read the type’s own level-stat vector. Penny’s Pursuit uses a separate Rift configuration; `NewPVP` has another shared-table branch.
 
-| Effective level $\ell$ | Health $h_\ell$ | Attack $a_\ell$ |
-| --- | ---: | ---: |
-| 1 | 1 | 1 |
-| 2 | 2 | 2 |
-| 3 | 3 | 3 |
-| 4 | 4.5 | 4.5 |
-| 5 | 5 | 5 |
+### The Endless gameplay reference
 
-Those are the five bundled rows. A missing index returns multiplier 1; it neither repeats the last row nor extrapolates a growth formula. The generator’s request range of 1–10 and this table’s length are independent inputs.<Note id="strengthTable" />
+This guide adopts the following reported values for Endless. Health examples, including the wave-construction view, use this reference by default. Neither complete Endless sequence was found in the inspected package, and the effective runtime configuration has not been captured. These are gameplay reference values, separate from the package declarations.
+
+<EndlessStrengthTable />
+
+Both columns are relative to level 1. The reported attack column has not been independently identified as the native `AttackLevel` field. Keep it separate from $a_\ell$ in the bite formula below: if it already describes a final damage ratio, applying the additional level factor would count that factor twice.
+
+### What the package and code establish
+
+The bundled `DefaultDangerRoomProps` contains five rows: both `HitPointsLevel` and `AttackLevel` are 1, 2, 3, 4.5, and 5. A missing index returns multiplier 1; it neither repeats the last row nor extrapolates a growth formula. The generator’s request range of 1–10 and this table’s length are independent inputs. This fallback describes the bundled-table scenario, not the adopted gameplay reference.<Note id="strengthTable" />
 
 `neccd.zls` can replace the entire ordered vector with attack/health pairs. Row order determines which effective level reads each pair. Replacing the table does not require changing the level curve, and a module-level override does not create a missing table row.
 
-A hypothetical level-10 health multiplier of 100,000 can be supplied through this table, but the current online value has not been established here. Stored body and helmet HP are also distinct from the signed 32-bit value reported to wave scheduling: <Link href="/timing/#hp-saturation">that reporting path can saturate</Link>.
+Other package tables help explain why a single multiplier list cannot describe every mode:
+
+- Penny’s Pursuit has a separately traced Rift path. Its table matches the eight supplied values and continues to 19 rows, with levels 9–19 declaring 11–21 in both fields.
+- The main-level five-row sequence appears in 902 of 1,027 declarations. It is common, but other per-type declarations differ.
+- `NewPVP` matches the reported Battlez values through level 8, then declares 10 and 20 at levels 9–10. Its player-facing mode identity remains unresolved; the numerical match does not establish Chao-Z League.
+- The legacy PvP comparison matches through level 4 but includes a fifth row of 5. `LocalDiyZombieStatsDefault` shares Rift’s first eight values and adds 11 and 12. Matching numbers do not establish matching mode selection or reachable levels.
+
+<PackagedStrengthTables />
+
+The reported level-10 health multiplier of 100,000 is representable through the replacement path. Stored body and helmet HP remain distinct from the signed 32-bit value reported to wave scheduling: <Link href="/timing/#hp-saturation">that reporting path can saturate</Link>.
 
 </section>
 
@@ -81,7 +93,7 @@ The chewing-rate getter chooses its base rate $E$ in this priority order:
 3. Otherwise, positive instance `m_baseEatDPS`.
 4. Otherwise, the property `EatDPS`.
 
-For the base bite implementation, with other target/type modifiers neutral,
+For the base bite implementation, let $a_\ell$ denote the native `AttackLevel` field. With other target/type modifiers neutral,
 
 $$
 \Delta H_{\mathrm{plant}}=\max\!\left(0,\;E\,a_\ell\,v_{\mathrm{attack}}\,\Delta t\,[1+0.2(\ell-1)]\right).
@@ -89,7 +101,9 @@ $$
 
 Here $v_{\mathrm{attack}}$ is the condition-dependent attack-pace factor and $\Delta t$ is game-clock delta. The table’s attack multiplier is therefore only one factor; a fixed `EatDPS` is not the complete final bite rate. Specialized subclass attacks can use other implementations.<Note id="bite" />
 
-For a neutral level-5 `mummy_armor1`, declared body/helmet HP 270/370 becomes 1350/1850. Its `EatDPS = 100`, attack multiplier 5, and level factor 1.8 produce 900 damage per game second at attack pace 1. The interactive calculation keeps requested level, effective level, and table lookup separate.
+For a neutral level-5 `mummy_armor1`, declared body/helmet HP 270/370 becomes 4050/5550 with the reported health multiplier 15. Reported attack is 2 relative to level 1; this does not determine the native bite rate.
+
+For comparison, the bundled row gives 1350/1850 HP. Its `EatDPS = 100`, native attack multiplier 5, and level factor 1.8 produce 900 damage per game second at attack pace 1. The view lets you switch between the adopted reference and this bundled-table calculation.
 
 <MechanismLab kind="strength" />
 
@@ -101,7 +115,7 @@ For a neutral level-5 `mummy_armor1`, declared body/helmet HP 270/370 becomes 13
 
 On the first true leader mark, current body HP is multiplied by `LeaderStrengthenRate` and the result becomes maximum body HP. The baseline rate is 2. A present helmet is strengthened separately with its existing armor-health reduction factor reapplied and a nonnegative clamp; its resulting current HP also becomes its maximum.
 
-Repeating the true mark does not multiply again, and a false call does not undo the earlier operation. This path changes neither $\ell$ nor the cached attack-table multiplier. For the fixed-`EatDPS` conehead above, the neutral leader result is 2700/3700 HP while the bite rate remains 900. A type using `EatDPSRatio` can instead gain bite damage indirectly through its larger maximum body HP.
+Repeating the true mark does not multiply again, and a false call does not undo the earlier operation. This path changes neither $\ell$ nor the cached attack-table multiplier. For the fixed-`EatDPS` conehead above, the adopted health reference gives a neutral leader result of 8100/11100 HP. In the bundled-table comparison, the result is 2700/3700 HP while the calculated bite rate remains 900. A type using `EatDPSRatio` can instead gain bite damage indirectly through its larger maximum body HP.
 
 The leader update changes its overlay as combined body/helmet health falls through approximately 67% and 33% of the combined maximum. Those transitions do not heal it. A qualifying leader at $X<232$ in the ordinary five-row layout enters a retreat path, starts a 2.3-game-second countdown, and requests removal when it expires.<Note id="leaders" />
 
