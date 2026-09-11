@@ -200,7 +200,8 @@ test('mobile article and reference controls remain usable without WebGL', async 
   expect(await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth)).toBeLessThan(2);
   await page.getByRole('searchbox').fill('木乃伊');
   await expect(page.locator('.catalog-table tbody tr').first()).toBeVisible();
-  await page.locator('.reference-tabs').getByRole('link', { name: '植物资料', exact: true }).click();
+  await page.locator('.mobile-nav summary').click();
+  await page.locator('.mobile-nav').getByRole('link', { name: '植物资料', exact: true }).click();
   await page.getByRole('searchbox').fill('向日葵');
   await expect(page.locator('.catalog-table tbody tr').first()).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth)).toBeLessThan(2);

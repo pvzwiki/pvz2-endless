@@ -608,9 +608,6 @@
 .reference-heading h1 { font-size: clamp(2rem, 4vw, 3rem); margin: 18px 0; }
 .reference-heading p { font-size: 1rem; max-width: 680px; color: #60744e; }
 .reference-heading > svg { width: 84px; height: 84px; top: 22px; }
-.reference-tabs { display: flex; gap: 24px; margin-top: 24px; font-size: .875rem; color: #60744e; }
-.reference-tabs a { padding: 8px 0; border-bottom: 2px solid transparent; }
-.reference-tabs a[aria-current] { color: #354e27; border-color: currentColor; }
 .catalog-filters label, .catalog-filters input, .catalog-filters select,
 .catalog-table thead button, .catalog-table tbody th, .catalog-table td,
 .catalog-name strong, .catalog-name .identifier-name, .catalog-pagination { font-size: .875rem; }
