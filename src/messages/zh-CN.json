@@ -320,7 +320,7 @@
       "spent": "预留与填充消耗的点数",
       "left": "剩余 {n} 点",
       "count": "普通动作的指令数",
-      "health": "普通动作的 HP 小计",
+      "health": "普通动作报告的 HP",
       "flagExtra": "独立旗帜指令：{n} 条",
       "entityLevel": "实体等级 {n}",
       "entitiesCaption": "每条指令使用单独抽取的等级。HP 小计假设这些普通动作实体采用中性的创建修正，且均成功放置。",
@@ -355,7 +355,7 @@
       "leaderOutcome": "本关只进行一次首领抽取：100 中抽到 {roll}，小于 {threshold} 时成功。分配波次：{wave}。",
       "separateFlag": "独立旗帜动作：{name}。其实体等级和生命值另行确定，不计入这个小计。",
       "reservationDetail": "最终波为此前付费名单中尚未出现的 {n} 个种类进行了预留。",
-      "subtotalDetail": "不包括独立旗帜动作"
+      "subtotalDetail": "逐实体转换并以 float32 累加；不含独立旗帜动作"
     },
     "reservation": {
       "title": "最终波的补入过程",
@@ -565,7 +565,9 @@
       "attackMultiplier": "攻击倍率",
       "lookup": "查询结果",
       "declared": "随包行",
-      "fallback": "缺失行 → 1"
+      "fallback": "缺失行 → 1",
+      "reportedHealth": "向波次报告的生命值贡献",
+      "reportedDetail": "基础读取函数：以 float32 相加本体与头盔 HP，再转换为有符号 int32。此报告步骤不改变保存的 HP。"
     },
     "placement": {
       "title": "行、历史与最终位置",
@@ -637,11 +639,11 @@
     },
     "timing": {
       "title": "什么让下一波开始？",
-      "description": "改变生命值阈值，比较计时路径与自动请求路径。",
-      "views": "波次与完成视图",
+      "description": "比较有上限的 HP 报告值、普通计时，以及提示期间的手动点击。",
+      "views": "波次生命值、提示与完成视图",
       "advancement": "推进一波",
       "completion": "完成战斗",
-      "intro": "输入符合条件的新实体 HP，以及可在采样前被拒绝的可选新实体 HP，再设置稍后的生命值损失事件，比较计时与自动推进路径。这些是情景输入，独立于关卡的点数预算。",
+      "intro": "输入当前波其他合格实体的 HP 累加值，以及可在采样前被拒绝的可选新实体 HP。稍后的减少事件先改变累加值，再将其转换为报告的整数。这些是可编辑的规则输入，独立于点数预算。",
       "trackedWave": "跟踪的当前波次",
       "automatic": "自动下一波选项",
       "reject": "在 H₀ 之前拒绝可选新实体",
@@ -649,7 +651,7 @@
       "lossAt": "生命值减少时刻（秒）",
       "beforeFlag": "常规旗帜第 5 波之前",
       "shortFinal": "较短分组的最终第 13 波之前",
-      "snapshotDetail": "全部动作与位置钩子之后",
+      "snapshotDetail": "转换前的累加值：{raw}",
       "timeline": "生命值事件与不同的波次推进时间线",
       "healthEvent": "选定的生命值减少事件",
       "normalPath": "普通计时路径",
@@ -666,7 +668,7 @@
       "withAnnouncement": "包含提示阶段截止时间",
       "guardFormula": "对于当前第 {wave} 波：{wave} mod {spacing} = {result}。常规边界保护将其与 {boundary} 比较，并不会独立保护每个最终波。",
       "announcementDetail": "普通路径在 {gate}s 达到首次推进条件，再为提示阶段把截止时间从 {old}s 移到 {next}s。",
-      "trackedDetail": "图表跟踪离去的一波及其后第一波。它使用选定的生命值事件、中性模式条件与构造器时间输入，不继续模拟更后的波次。",
+      "trackedDetail": "此选项卡跟踪当前波直到首次推进，使用输入的累加值与一次生命值减少事件。构建视图另行计算逐实体截断和按顺序进行的 float32 累加。提示选项卡则跟踪手动点击留下的状态。",
       "completionIntro": "完成由多个独立条件共同决定。直接改变条件，查看为何空草坪、已结束的波次计划与空传送门队列可能得到不同结果。",
       "emptyLawn": "草坪为空，仍有后续波次",
       "closingPortal": "最后一个子僵尸已消失，传送门正在关闭",
@@ -681,9 +683,12 @@
       "victory": "完成检查通过",
       "blocked": "完成检查仍被阻止",
       "completionDetail": "此面板给出所列谓词的结果。实体清空谓词使用正文描述的精确例外，不会用本体 HP > 0 替代原生筛选条件。",
-      "eligibleHp": "其他符合条件的新实体：HP",
+      "eligibleHp": "其他合格 HP（转换为整数前）",
       "newcomerHp": "可选新实体：HP",
-      "intervalInput": "普通间隔（秒）"
+      "intervalInput": "普通间隔（秒）",
+      "announcement": "在提示期间点击",
+      "largeHpExample": "10,000,000,000 HP 示例",
+      "saturationDetail": "H₀ 的上限为 {cap}。H(t) 使用相同转换，因此超过上限的剩余生命值仍报告为上限，不能满足更小的阈值。生命值减少输入作用于转换前的累加值。"
     },
     "loot": {
       "title": "从计划数量到实际携带者",
@@ -759,6 +764,41 @@
       "schedule": "安排",
       "drop": "产生"
     },
-    "loading": "正在准备视图…"
+    "loading": "正在准备视图…",
+    "announcement": {
+      "intro": "比较旗帜波或最终波之前的两次状态转换。控件提供当前截止时间、可选点击、下一段间隔，以及新一波清空的时刻。此比较关闭自动下一波选项。",
+      "wave": "即将到来的大波",
+      "flagWave": "旗帜第 {n} 波",
+      "finalWave": "最终第 {n} 波",
+      "deadlineInput": "HP 检查后的当前截止时间（秒）",
+      "tapInput": "手动点击时刻（秒）",
+      "intervalInput": "生成后的间隔（秒）",
+      "clearInput": "新一波在生成后多久清空（秒）",
+      "wait": "等待提示结束",
+      "before": "在提示之前点击",
+      "during": "在提示期间点击",
+      "window": "按钮从 {visible}s 起可用。若没有更早的点击，生成前的提示从 {from}s 持续到 {to}s。",
+      "unavailable": "输入的点击时刻不在按钮可用区间内，因此不会生效。",
+      "timeline": "普通提示到期与手动请求：提示、波次开始、清空及后续转换",
+      "normal": "等待提示结束",
+      "selected": "选定的点击行为",
+      "legend": "金色表示生成前的提示。下方色条从波次生成时开始：绿色使用普通计时，紫色保留提示状态。虚线标记是输入的清空时刻，色条终点是下一次推进或管理器结束尝试。",
+      "spawn": "大波开始",
+      "spawnDetail": "创建第 {n} 波",
+      "state": "生成后的状态",
+      "retained": "2 — 保留提示状态",
+      "timed": "1 — 普通计时状态",
+      "freshDeadline": "新的截止时间",
+      "intervalDetail": "生成时刻加 {n}s",
+      "following": "后续波次开始",
+      "followingDetail": "第 {n} 波；恢复普通计时",
+      "finish": "管理器结束尝试",
+      "finishDetail": "进入结束状态；另行检查实体清空",
+      "anotherUpdate": "随后还需一次普通更新；未指定其时长",
+      "retainedEffect": "本波在 {clear}s 清空。状态 2 中，清空不会提前 {deadline}s 这一新的截止时间，也不会执行普通的按钮显示逻辑。计时器仍决定下一次转换。",
+      "timedEffect": "状态 1 执行普通的生命值与按钮检查。清空可以提前截止时间，但仍受四秒最小间隔约束。",
+      "completionBoundary": "对于最终波，胜利还要求实体清空谓词通过。保留提示状态时，在结束尝试之后还需一次普通更新；不会创建额外的计划波次。",
+      "scope": "所有时刻都是游戏时钟输入。恰好处在边界时，此比较先处理计时更新，再处理点击；不据此推断实际输入顺序或动画时长。"
+    }
   }
 }

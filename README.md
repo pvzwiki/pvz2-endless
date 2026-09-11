@@ -24,6 +24,8 @@ The construction and music views generate ordinary rosters for Egypt and Eightie
 
 The portal replay advances a queue through opening, due updates, and a separate removal callback. Placement draws from the computed remaining rows. Steam damage keeps its accumulator between updates; changing the next delta does not reset history. Timing, carrier, and saved-loot views keep explicit editable scenario inputs and calculate the resulting rules.
 
+Health reporting includes per-entity integer conversion, sequential float32 accumulation, and signed int32 saturation. The timing view compares taps before and during a pre-spawn warning, including the retained announcement state and final-wave completion delay. The deployment workflow only publishes from the canonical public repository.
+
 To regenerate the selected website inputs from the local research checkout:
 
 ```sh

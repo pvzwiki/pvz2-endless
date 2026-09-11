@@ -13,8 +13,8 @@ const views = [
   ["timing", "timing"],
   ["drops", "loot"],
 ] as const;
-async function open(page: Page, chapter: string, kind: string, query = "") {
-  await page.goto(`/en/${chapter}/?lab=${kind}${query}`);
+async function open(page: Page, chapter: string, kind: string, query = "", locale = "en") {
+  await page.goto(`/${locale}/${chapter}/?lab=${kind}${query}`);
   const dialog = page.locator(`dialog[data-lab="${kind}"]`);
   await expect(dialog).toBeVisible();
   await expect(dialog.locator(".lab-intro,.lab-tabs").first()).toBeVisible();
@@ -88,12 +88,43 @@ test('changing the next Steam delta preserves damage history', async ({ page }) 
 
 test('a rejected newcomer cannot delay the zero-health automatic path', async ({ page }) => {
   const dialog = await open(page, 'timing', 'timing');
-  await dialog.getByRole('spinbutton', { name: 'Other eligible newcomers: HP', exact: true }).fill('0');
+  await dialog.getByRole('spinbutton', { name: en.labs.timing.eligibleHp, exact: true }).fill('0');
   await dialog.getByRole('checkbox', { name: 'Automatic next-wave option', exact: true }).check();
   await expect(output(dialog, 'First wave advance')).toHaveText('0s');
   await dialog.getByRole('checkbox', { name: 'Reject the optional newcomer before H₀', exact: true }).uncheck();
   await expect(output(dialog, 'First wave advance')).toHaveText('1s');
 });
+
+for (const locale of ["en", "zh-CN"] as const) {
+  const messages = locale === "en" ? en : zh;
+  test(`${locale}: HP saturation delays the health trigger while the timer remains active`, async ({ page }) => {
+    const dialog = await open(page, "timing", "timing", "&timing.mode=0", locale);
+    const t = messages.labs.timing;
+    await dialog.getByRole("button", { name: t.largeHpExample, exact: true }).click();
+    await expect(output(dialog, "H₀")).toHaveText((2_147_483_647).toLocaleString(locale));
+    await expect(output(dialog, "T")).toHaveText((1_717_986_944).toLocaleString(locale));
+    await expect(dialog.getByTestId("health-saturation")).toBeVisible();
+    await expect(output(dialog, t.firstAdvance)).toHaveText("24s");
+    await dialog.getByRole("spinbutton", { name: t.healthLoss, exact: true }).fill("8500000000");
+    await expect(output(dialog, t.firstAdvance)).toHaveText("4s");
+  });
+
+  test(`${locale}: warning-time taps retain state 2 and finalization needs another update`, async ({ page }) => {
+    const dialog = await open(page, "timing", "timing", "&timing.mode=2", locale);
+    const t = messages.labs.announcement;
+    await expect(output(dialog, t.spawn)).toHaveText("31s");
+    await expect(output(dialog, t.state)).toHaveText("2");
+    await expect(output(dialog, t.freshDeadline)).toHaveText("53.5s");
+    await expect(output(dialog, t.following)).toHaveText("53.5s");
+    await dialog.getByRole("spinbutton", { name: t.tapInput, exact: true }).fill("20");
+    await expect(output(dialog, t.state)).toHaveText("1");
+    await expect(output(dialog, t.following)).toHaveText("25s");
+    await dialog.getByRole("spinbutton", { name: t.tapInput, exact: true }).fill("31");
+    await dialog.getByRole("combobox", { name: t.wave, exact: true }).selectOption("15");
+    await expect(output(dialog, t.finish)).toHaveText("53.5s +");
+    await expect(dialog.getByText(t.anotherUpdate, { exact: true })).toBeVisible();
+  });
+}
 
 test("all mechanism views and tabs work in both languages on mobile", async ({
   page,

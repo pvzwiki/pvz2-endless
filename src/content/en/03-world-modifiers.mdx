@@ -76,6 +76,8 @@ The event name is appended to `NotificationEvents`. At runtime, the action creat
 
 `AdditionalPlantfood` stays unchanged. Its carrier requests are assigned later from the modified order and types. General-loot assignment also runs afterward and sees replacement costs. Finally, the <Link href="/timing/#wave-health">wave-health snapshot</Link> measures the resulting eligible entities after placement. These are three different downstream consequences of the same replacement pass.
 
+The reported snapshot also has <Link href="/timing/#hp-saturation">an integer limit</Link>. Replacement can change the actual eligible HP while a saturated report stays unchanged.
+
 </section>
 
 <section id="dinosaurs" className="prose-section">

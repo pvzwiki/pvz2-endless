@@ -2,6 +2,7 @@
 import { useLocale, useTranslations } from "next-intl";
 import { useMemo } from "react";
 import { generateOrdinaryRosters } from "@/lib/roster-simulation";
+import { waveHealth } from "@/lib/wave-health";
 import {
   entityStrength,
   typeRecord,
@@ -38,10 +39,9 @@ export default function PipelineLab() {
   const { plan, types: selected, leaderAttempt } = generated;
   const wave = generated.waves[Math.min(state.wave, plan.count) - 1];
   const roster = state.step >= 4 ? wave.instructions : wave.paid;
-  const health = roster.reduce((sum, row) => {
-    const stats = entityStrength(row.zombie, row.level, row.leader);
-    return sum + stats.body + stats.helmet;
-  }, 0);
+  const health = waveHealth(roster.map((row) =>
+    entityStrength(row.zombie, row.level, row.leader),
+  )).reported;
   return (
     <div>
       <p className="lab-intro">{t("intro")}</p>

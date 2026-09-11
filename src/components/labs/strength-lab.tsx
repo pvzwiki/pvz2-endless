@@ -7,6 +7,7 @@ import {
   typeRecord,
 } from "@/lib/mechanism-model";
 import { ordinaryLevels } from "@/lib/wave-model";
+import { entityHealthReport } from "@/lib/wave-health";
 import {
   LevelControl,
   Stat,
@@ -216,7 +217,7 @@ export default function StrengthLab() {
         ))}
         <p className="lab-caption">{t("barLegend")}</p>
       </div>
-      <div className="lab-stat-grid">
+      <div className="lab-stat-grid health-report-grid">
         <Stat
           label={t("body")}
           value={result.body.toLocaleString(locale)}
@@ -231,6 +232,9 @@ export default function StrengthLab() {
           value={Math.round(result.bite * 1000) / 1000}
           detail={`E × ${result.attackMultiplier} × ${result.levelFactor.toFixed(1)}`}
         />
+        <Stat label={t("reportedHealth")}
+          value={entityHealthReport(result.body, result.helmet).toLocaleString(locale)}
+          detail={t("reportedDetail")} />
       </div>
       {result.missingRow && (
         <div className="lab-note">{t("missingDetail")}</div>

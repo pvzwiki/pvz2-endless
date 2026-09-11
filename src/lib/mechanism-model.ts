@@ -1,6 +1,7 @@
 import inputs from "@/data/mechanism-inputs.json";
 import { randomSource, type RandomSource } from "./example-rng";
 import { createWavePlan } from "./wave-model";
+import { healthThreshold } from "./wave-health";
 
 export const mechanismInputs = inputs;
 export const f32 = Math.fround;
@@ -51,15 +52,15 @@ export function entityStrength(
     row = inputs.strengthRows[level - 1];
   const healthMultiplier = row?.HitPointsLevel ?? 1,
     attackMultiplier = row?.AttackLevel ?? 1;
-  const body =
-    typeNumber(id, "Hitpoints") *
-    healthMultiplier *
-    (leader ? inputs.leaderRate : 1);
+  const body = f32(
+    f32(typeNumber(id, "Hitpoints") * f32(healthMultiplier)) *
+    f32(leader ? inputs.leaderRate : 1),
+  );
   // This lab chooses types with no helmet or a declared helmet, and neutral reduction factors.
-  const helmet =
-    (type.values.HelmHitpoints ?? 0) *
-    healthMultiplier *
-    (leader ? inputs.leaderRate : 1);
+  const helmet = f32(
+    f32((type.values.HelmHitpoints ?? 0) * f32(healthMultiplier)) *
+    f32(leader ? inputs.leaderRate : 1),
+  );
   const levelFactor = f32(1 + f32(0.2) * f32(level - 1));
   const bite = f32(
     f32(f32(typeNumber(id, "EatDPS") * attackMultiplier) * pace) * levelFactor,
@@ -393,7 +394,7 @@ export function assignLoot(ids: string[], count: number, random: number | Random
   return steps;
 }
 export function waveThreshold(health: number, fraction: number) {
-  return Math.trunc(f32(f32(health) * f32(fraction)));
+  return healthThreshold(health, fraction);
 }
 export function deadlineScenario(
   interval: number,

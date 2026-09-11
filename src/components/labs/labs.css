@@ -1,4 +1,36 @@
 @layer components {
+  .lab-stat-grid.health-report-grid {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+  }
+  .health-report-grid .lab-stat > output {
+    font-size: clamp(1.4rem, 2.2vw, 1.9rem);
+    overflow-wrap: anywhere;
+  }
+  .health-report-grid .lab-stat > span,
+  .health-report-grid .lab-stat > small,
+  .timing-lab .lab-stat > span,
+  .timing-lab .lab-stat > small {
+    font-size: 0.875rem;
+    line-height: 1.6;
+  }
+  .timing-lab .lab-intro,
+  .timing-lab .lab-note,
+  .timing-lab .lab-caption {
+    font-size: 1rem;
+    line-height: 1.7;
+  }
+  .timing-lab .lab-controls label,
+  .timing-lab .lab-controls button,
+  .timing-lab .lab-tabs button {
+    max-width: 100%;
+    font-size: 0.875rem;
+  }
+  .timing-lab .lab-controls input[type="number"] {
+    width: 13.5rem;
+  }
+  .timing-lab .lab-stage .lab-axis-label {
+    font-size: 14px;
+  }
   .mechanism-lab-launch {
     margin: 32px 0;
     border-block: 1px solid #c4d1b8;

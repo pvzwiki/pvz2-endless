@@ -1,7 +1,9 @@
 "use client";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { deadlineScenario, waveThreshold } from "@/lib/mechanism-model";
+import { entityHealthReport, INT32_MAX, reportedHealth } from "@/lib/wave-health";
 import { createWavePlan } from "@/lib/wave-model";
+import AnnouncementLab from "./announcement-lab";
 import {
   LevelControl,
   Stat,
@@ -17,7 +19,7 @@ const conditionKeys = [
   "portalGone",
 ] as const;
 export default function TimingLab() {
-  const t = useTranslations("labs.timing");
+  const t = useTranslations("labs.timing"), locale = useLocale();
   const [state, set] = useParameters(
     "timing",
     {
@@ -40,16 +42,16 @@ export default function TimingLab() {
       portalGone: 0,
     },
     {
-      mode: [0, 1],
+      mode: [0, 2],
       level: [1, 149],
       wave: [1, 14],
       fraction: [0.7, 0.85, 0.01],
-      damage: [0, 200000],
+      damage: [0, 1_000_000_000_000],
       at: [0, 35, 0.1],
       time: [0, 40, 0.1],
       automatic: [0, 1],
       rejected: [0, 1],
-      eligibleHp: [0, 100000],
+      eligibleHp: [0, 100_000_000_000],
       newcomerHp: [0, 100000],
       normalInterval: [20, 25, 0.1],
       finished: [0, 1],
@@ -66,9 +68,11 @@ export default function TimingLab() {
     large = next.flag || next.final,
     interval = large ? 35 : state.normalInterval,
     guarded = wave % plan.spacing === plan.spacing - 1;
-  const initial = state.eligibleHp + (state.rejected ? 0 : state.newcomerHp),
+  const initialAccumulator = Math.fround(Math.fround(state.eligibleHp)
+      + Math.fround(state.rejected ? 0 : entityHealthReport(state.newcomerHp))),
+    initial = reportedHealth(initialAccumulator),
     threshold = waveThreshold(initial, state.fraction),
-    after = Math.max(0, initial - state.damage),
+    after = reportedHealth(Math.fround(Math.max(0, initialAccumulator - state.damage))),
     crossing = initial <= threshold ? 0 : after <= threshold ? state.at : null,
     scenario = deadlineScenario(
       interval,
@@ -86,7 +90,7 @@ export default function TimingLab() {
     x = (time: number) => 35 + (time / 40) * (width - 60),
     win = conditionKeys.every((key) => !!state[key]);
   return (
-    <div>
+    <div className="timing-lab">
       <div className="lab-tabs" role="tablist" aria-label={t("views")}>
         <button
           role="tab"
@@ -94,6 +98,13 @@ export default function TimingLab() {
           onClick={() => set({ mode: 0 })}
         >
           {t("advancement")}
+        </button>
+        <button
+          role="tab"
+          aria-selected={state.mode === 2}
+          onClick={() => set({ mode: 2 })}
+        >
+          {t("announcement")}
         </button>
         <button
           role="tab"
@@ -128,7 +139,7 @@ export default function TimingLab() {
             </label>
             <label>
               {t("eligibleHp")}
-              <input type="number" min={0} max={100000} value={state.eligibleHp}
+              <input type="number" min={0} max={100_000_000_000} value={state.eligibleHp}
                 onChange={(event) => set({ eligibleHp: Number(event.target.value) })} />
             </label>
             <label>
@@ -179,7 +190,7 @@ export default function TimingLab() {
               <input
                 type="number"
                 min={0}
-                max={initial}
+                max={initialAccumulator}
                 value={state.damage}
                 onChange={(event) =>
                   set({ damage: Number(event.target.value) })
@@ -198,8 +209,16 @@ export default function TimingLab() {
               />
             </label>
             <button
+              onClick={() => set({ level: 36, wave: 2, fraction: 0.8, normalInterval: 24,
+                eligibleHp: 10_000_000_000, newcomerHp: 0,
+                rejected: 1, damage: 2_000_000_000, at: 1, time: 0, automatic: 0 })}
+            >
+              {t("largeHpExample")}
+            </button>
+            <button
               onClick={() =>
-                set({ level: 81, wave: 4, at: 1, damage: 2000, time: 0 })
+                set({ level: 81, wave: 4, at: 1, damage: 2000, time: 0,
+                  eligibleHp: 8000, newcomerHp: 2000, rejected: 1, fraction: 0.8 })
               }
             >
               {t("beforeFlag")}
@@ -212,6 +231,10 @@ export default function TimingLab() {
                   automatic: 1,
                   at: 1,
                   damage: 2000,
+                  eligibleHp: 8000,
+                  newcomerHp: 2000,
+                  rejected: 1,
+                  fraction: 0.8,
                   time: 0,
                 })
               }
@@ -219,23 +242,26 @@ export default function TimingLab() {
               {t("shortFinal")}
             </button>
           </div>
-          <div className="lab-stat-grid">
+          <div className="lab-stat-grid health-report-grid">
             <Stat
               label="H₀"
-              value={initial.toLocaleString()}
-              detail={t("snapshotDetail")}
+              value={initial.toLocaleString(locale)}
+              detail={t("snapshotDetail", { raw: initialAccumulator.toLocaleString(locale) })}
             />
             <Stat
               label="T"
-              value={threshold.toLocaleString()}
+              value={threshold.toLocaleString(locale)}
               detail={`${state.fraction} × ${initial}`}
             />
             <Stat
               label="H(t)"
-              value={health.toLocaleString()}
+              value={health.toLocaleString(locale)}
               detail={health <= threshold ? "H(t) ≤ T" : "H(t) > T"}
             />
           </div>
+          {initialAccumulator > INT32_MAX && <p className="lab-note" data-testid="health-saturation">
+            {t("saturationDetail", { cap: INT32_MAX.toLocaleString(locale) })}
+          </p>}
           <div className="lab-stage" ref={ref}>
             <svg
               viewBox={`0 0 ${width} 235`}
@@ -380,7 +406,7 @@ export default function TimingLab() {
           </div>
           <p className="lab-caption">{t("trackedDetail")}</p>
         </>
-      ) : (
+      ) : state.mode === 2 ? <AnnouncementLab /> : (
         <>
           <p className="lab-intro">{t("completionIntro")}</p>
           <div className="lab-controls">

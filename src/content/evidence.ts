@@ -248,8 +248,25 @@ export const evidence = {
       "text": "波次开始时先调用所有动作回调，再查询符合条件的当前波次生命值并保存到 m_currentWaveTotalHealth。查询筛选生成波次标记与排除状态，并取得虚拟生命值。之后的检查将重新查询的生命值与保存的整数阈值比较。位置拒绝早于初始查询；查询之后的死亡可以降低剩余生命值，而不重写快照。"
     }
   },
-  "waveClock": {
+  "hpSaturation": {
     "number": "02",
+    "addresses": [
+      "0x10199dfc8",
+      "0x102082abc",
+      "0x101ce76d8",
+      "0x101ce7298"
+    ],
+    "en": {
+      "title": "Float32 accumulation and signed int32 reporting",
+      "text": "The base getter converts the float32 body-plus-helmet sum with FCVTZS W0. The wave query converts each signed contribution to float32, adds it to a float32 accumulator, and converts the final sum with FCVTZS W0. Positive out-of-range conversion saturates at 2147483647 under non-trapping FP behavior. The threshold uses the capped initial report. ARM64 arithmetic checks cover conversion boundaries, sequential rounding, and fractions 0.7, 0.8, and 0.85."
+    },
+    "zh-CN": {
+      "title": "Float32 累加与有符号 int32 报告",
+      "text": "基础读取函数使用 FCVTZS W0 转换 float32 的本体与头盔之和。波次查询将每个有符号贡献转换为 float32，加入 float32 累加器，再用 FCVTZS W0 转换最终和。非陷阱 FP 行为下，超范围的正数转换饱和到 2147483647。阈值使用截顶后的初始报告值。ARM64 算术检查覆盖转换边界、顺序舍入，以及 0.7、0.8、0.85 比例。"
+    }
+  },
+  "waveClock": {
+    "number": "03",
     "addresses": [
       "0x101ce7380",
       "0x101ce7ce0",
@@ -265,7 +282,7 @@ export const evidence = {
     }
   },
   "skipOption": {
-    "number": "03",
+    "number": "04",
     "addresses": [
       "0x101581d5c",
       "0x101ce7094",
@@ -280,8 +297,27 @@ export const evidence = {
       "text": "下一波可见性从假变为真的事件检查 HasSkipNextWave 与边界条件，再调用手动请求处理器。普通 WaveManager 分支直接调用推进函数。普通可见性条件使用 nextWaveTime 减去生成间隔的一半。自动保护条件使用常规 FlagWaveInterval；此处没有独立检查最终波标记。"
     }
   },
+  "waveAnnouncement": {
+    "number": "05",
+    "addresses": [
+      "0x101fde6b4",
+      "0x101581c90",
+      "0x101ce6e8c",
+      "0x101ce6008",
+      "0x101ce7528",
+      "0x101583bf8"
+    ],
+    "en": {
+      "title": "Manual advancement omits the announcement-state reset",
+      "text": "The ordinary button release reaches a request that rejects only finished state 8 and advances directly. The state-2 timeout additionally calls the reset helper, while the manual path omits it. Wave start writes a fresh deadline without resetting state 2. That state updates actions and progress but omits normal HP acceleration and button visibility. The final-wave-start message is separate. Controlled original-instruction checks cover manual and timed flag/final transitions; external services and event listeners are stubbed."
+    },
+    "zh-CN": {
+      "title": "手动推进省略提示状态重置",
+      "text": "普通按钮释放到达的请求只拒绝已结束的状态 8，随后直接推进。状态 2 的到期路径还会调用重置辅助函数，而手动路径省略此步。波次开始时写入新的截止时间，却不重置状态 2。该状态更新动作与进度，但省略普通 HP 提前触发与按钮可见性逻辑。最终波开始消息另行发出。受控的原始指令检查覆盖手动与计时的旗帜／最终波转换；外部服务与事件监听器使用桩处理。"
+    }
+  },
   "rushOption": {
-    "number": "04",
+    "number": "06",
     "addresses": [
       "0x1015946a8",
       "0x1019853a8",
@@ -297,7 +333,7 @@ export const evidence = {
     }
   },
   "completion": {
-    "number": "05",
+    "number": "07",
     "addresses": [
       "0x101555514",
       "0x101ce4250",
@@ -313,7 +349,7 @@ export const evidence = {
     }
   },
   "portalClose": {
-    "number": "06",
+    "number": "08",
     "addresses": [
       "0x100122734",
       "0x100121a00",
@@ -329,7 +365,7 @@ export const evidence = {
     }
   },
   "loss": {
-    "number": "07",
+    "number": "09",
     "addresses": [
       "0x10153839c",
       "0x1015386b4"
@@ -344,7 +380,7 @@ export const evidence = {
     }
   },
   "progression": {
-    "number": "08",
+    "number": "10",
     "addresses": [
       "0x101ffc3e0",
       "0x101d6cf7c",

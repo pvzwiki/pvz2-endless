@@ -10,13 +10,13 @@ The wave clock asks whether to advance the schedule. Victory asks whether every 
 
 ## Record health after the actions finish
 
-At wave start, `WaveManager` invokes every action before recording `m_currentWaveTotalHealth`. The query filters entities by `m_spawnedFromWave` and a virtual state predicate. Its base health implementation returns body plus helmet HP when entity flag mask `0x2` is set, and zero otherwise.
+At wave start, `WaveManager` invokes every action before recording `m_currentWaveTotalHealth`. The query filters entities by `m_spawnedFromWave` and a virtual state predicate. Its base health implementation converts body plus helmet HP to an integer when entity flag mask `0x2` is set, and returns zero otherwise.
 
-Let $H_0$ be this initial current-wave total. For a sampled fraction $q$, the stored integer threshold is
+Let $H_0$ be this initial reported current-wave total, and $C_{32}$ the signed 32-bit conversion detailed below. For a sampled fraction $q$, the stored integer threshold is
 
 $$
 \begin{aligned}
-T&=\operatorname{trunc}\!\left(F_{32}\!\left(F_{32}(H_0)q\right)\right),\\
+T&=C_{32}\!\left(F_{32}\!\left(F_{32}(H_0)F_{32}(q)\right)\right),\\
 q&\in[0.7,0.85]
 \end{aligned}
 $$
@@ -52,6 +52,32 @@ The base virtual predicate excludes these registered states. Subclasses can over
 | 35 | `ZS_Annihilation` |
 
 </details>
+
+</section>
+
+<section id="hp-saturation" className="prose-section">
+
+## A large HP report can reach its integer limit
+
+The executable is ARM64, but this path combines `float32` arithmetic with signed 32-bit integer reports. The base getter adds body and helmet HP, then converts that sum to an integer. The wave query converts each reported contribution back to `float32`, adds the contributions in order, and converts the accumulator to an integer again.
+
+For positive HP, $C_{32}$ truncates toward zero within range and saturates at $2^{31}-1=2,147,483,647$ above it. The conversion does not wrap a large positive report into a negative value. This describes the inspected non-trapping conversion behavior; the health fields themselves remain separate.<Note id="hpSaturation" />
+
+Once the initial query saturates, the stored baseline stops growing with the uncapped accumulator. These thresholds include the native float32 rounding:
+
+| Sampled fraction | Threshold after the initial report saturates |
+| --- | ---: |
+| 0.7 | 1,503,238,528 |
+| 0.8 | 1,717,986,944 |
+| 0.85 | 1,825,361,152 |
+
+For a constructed starting accumulator of 10,000,000,000 HP and $q=0.8$, the remaining report must fall to about 1,717,986,944. That represents roughly 82.82% of the starting amount disappearing, rather than 20%. While the remaining report is also saturated, it is still above the smaller threshold. The ordinary timer can advance the wave earlier; saturation does not disable that timer.
+
+The progress calculation also uses the reported current/initial health ratio. While both reports are saturated, the ratio remains 1 and the health-derived part of within-wave progress remains zero. If a single base getter reaches the same limit, only its reported contribution is capped; this query does not reduce its stored body or helmet HP.
+
+Rounding can matter before saturation. A constructed sequence of 79 contributions of 27,000,000 produces 2,133,002,496 in the checked float32 accumulation. With 80 such contributions, the accumulator is 2,160,002,560 and the returned total is 2,147,483,647. The construction view now follows these reporting conversions for its eligible ordinary-action subtotal.
+
+A level-10 multiplier of 100,000 is a possible <Link href="/strength/#strength-table">server-supplied table input</Link>, not an established live value here. Under that explicit assumption, base HP 270 becomes 27,000,000. A wave’s point budget alone still does not establish its HP, and the final scheduled wave has no additional ordinary batch after it.
 
 </section>
 
@@ -107,6 +133,30 @@ Turning the option off leaves normal progression active. Turning it on adds thes
 
 </section>
 
+<section id="manual-warning" className="prose-section">
+
+## A tap during the warning leaves a different state behind
+
+The pre-spawn huge-wave warning can precede a regular flag wave or the final wave. The ordinary timed update has already requested the next-wave button before it enters announcement state 2, and entering that state does not hide the button. A successful tap reaches the direct advance handler, which rejects only finished state 8. It starts the announced wave immediately and hides the button.
+
+That warning is separate from the final-wave-start message. The latter is emitted when the final wave actually starts, after advance has requested the button hidden. Seeing a banner alone therefore does not establish that the button is still available.
+
+| Action | State after the announced wave starts | What governs its next transition |
+| --- | --- | --- |
+| Let the warning expire | Normal timed state 1 | Ordinary health, deadline, and button checks |
+| Tap before the warning starts | Normal timed state 1 | Ordinary health, deadline, and button checks |
+| Tap during the warning | Announcement state 2 remains | Fresh deadline; normal HP acceleration and button-show logic are omitted |
+
+The difference is a missing reset on the manual path. The announcement timeout advances the wave and then restores normal timing. A manual request calls advance directly and omits that reset. Starting the new wave still replaces its last-wave time and deadline, so the old warning deadline no longer governs it.<Note id="waveAnnouncement" />
+
+For a controlled example, wave 4 is active and the warning deadline is 35. A tap at 31 starts wave 5. With an entered next interval of 22.5, its fresh deadline is 53.5. Even if the new wave clears at 36, state 2 does not run the usual HP acceleration. At 53.5, wave 6 starts and normal state 1 resumes. Letting the original warning expire instead starts wave 5 at 35 and restores state 1 immediately.
+
+For the final wave, retaining state 2 can likewise postpone completion after the required enemies have cleared. At the fresh deadline, exhausting the wave vector writes finished state 8, but the announcement caller then resets it to state 1. A further normal update leaves it finished. There is no extra scheduled wave, and <Link href="/timing/#victory">the entity-clear predicate</Link> must also pass. The extra update has no fixed duration established by these checks.
+
+The warning tab in the interactive view compares these paths using editable times and a chosen clearance event. It keeps the automatic-next-wave preference off so the manual request can be examined separately. The preference’s regular-boundary guard does not reject a player’s tap.
+
+</section>
+
 <section id="initial-rush" className="prose-section">
 
 ## Initial approach speed is a separate option
@@ -132,6 +182,8 @@ $$
 The manager rejects an empty callback vector and stops on the first false result. Two required checks here are the finished `WaveManager` and `ZombiesDeadWinCon`. The former becomes finished when advancement reaches the end of the installed wave vector; merely starting the final wave is not that transition.
 
 `ZombiesDeadWinCon` first scans qualifying Board zombie pointers, without restricting them to the current wave. It then scans the relevant grid-item collection for objects whose blocking predicate returns true. Hence earlier survivors, portal children, and the portal itself can still matter after current-wave health has reached its threshold.<Note id="completion" />
+
+A <Link href="/timing/#manual-warning">manual tap during the final pre-spawn warning</Link> can leave the manager waiting for its fresh deadline even after entity clearance. Clearing the lawn alone does not reset the retained announcement state.
 
 <details className="mechanism-detail">
 <summary>Which zombie exceptions does the clear scan apply?</summary>

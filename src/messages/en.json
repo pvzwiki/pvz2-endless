@@ -320,7 +320,7 @@
       "spent": "Spent by reservation and filling",
       "left": "{n} points unspent",
       "count": "Ordinary-action instructions",
-      "health": "Ordinary-action HP subtotal",
+      "health": "Reported ordinary-action HP",
       "flagExtra": "{n} independent flag instruction",
       "entityLevel": "Entity level {n}",
       "entitiesCaption": "Each instruction uses its own sampled level. The HP subtotal assumes neutral creation modifiers and successful placement for these ordinary-action entities.",
@@ -355,7 +355,7 @@
       "leaderOutcome": "One leader roll for this level: {roll} out of 100, successful below {threshold}. Assigned wave: {wave}.",
       "separateFlag": "Separate flag action: {name}. Its entity level and health are resolved separately and are not included in this subtotal.",
       "reservationDetail": "The final pass reserved {n} types that had not appeared in earlier budget-paid rosters.",
-      "subtotalDetail": "Excludes the separate flag action"
+      "subtotalDetail": "Per-entity conversion and float32 sum; separate flag action excluded"
     },
     "reservation": {
       "title": "The final-wave inclusion pass",
@@ -565,7 +565,9 @@
       "attackMultiplier": "Attack multiplier",
       "lookup": "Lookup result",
       "declared": "Bundled row",
-      "fallback": "Missing row → 1"
+      "fallback": "Missing row → 1",
+      "reportedHealth": "Reported wave-health contribution",
+      "reportedDetail": "Base getter: float32 body + helmet, then signed int32 conversion. This reporting step leaves the stored HP unchanged."
     },
     "placement": {
       "title": "Rows, history, and final placement",
@@ -637,11 +639,11 @@
     },
     "timing": {
       "title": "What makes the next wave start?",
-      "description": "Move the health threshold and compare the timed and automatic paths.",
-      "views": "Wave and completion views",
+      "description": "Compare capped HP reports, normal timing, and manual taps during a wave warning.",
+      "views": "Wave health, warning, and completion views",
       "advancement": "Advance a wave",
       "completion": "Complete the battle",
-      "intro": "Supply the HP of eligible newcomers and an optional newcomer that can be rejected before the snapshot. Set a later health-loss event to compare the timed and automatic paths. These are scenario inputs, independent of the level’s point budget.",
+      "intro": "Enter the HP accumulator for other eligible current-wave entities, plus an optional newcomer that can be rejected before the snapshot. A later decrease changes that accumulator before it is converted to the reported integer. These are editable rule inputs, independent of the point budget.",
       "trackedWave": "Tracked current wave",
       "automatic": "Automatic next-wave option",
       "reject": "Reject the optional newcomer before H₀",
@@ -649,7 +651,7 @@
       "lossAt": "Health-loss time (seconds)",
       "beforeFlag": "Before regular flag wave 5",
       "shortFinal": "Before short final wave 13",
-      "snapshotDetail": "After every action and placement hook",
+      "snapshotDetail": "Accumulator before conversion: {raw}",
       "timeline": "Health event and alternative wave-advance timelines",
       "healthEvent": "The selected health-loss event",
       "normalPath": "Normal timed path",
@@ -666,7 +668,7 @@
       "withAnnouncement": "Includes the announcement deadline",
       "guardFormula": "For current wave {wave}: {wave} mod {spacing} = {result}. The regular-boundary guard compares this with {boundary}; it does not independently guard every final wave.",
       "announcementDetail": "The normal path reaches its first gate at {gate}s, then shifts deadline {old}s to {next}s for the announcement.",
-      "trackedDetail": "The chart follows one departing wave and the first following wave. It uses the selected health event, neutral mode guards, and constructor timing inputs; further waves are not simulated.",
+      "trackedDetail": "This tab follows the current wave through its first advance. It uses entered accumulator values and one health-loss event. The construction view separately calculates per-entity truncation and sequential float32 summation. The warning tab follows the state left by a manual tap.",
       "completionIntro": "Completion combines several independent conditions. Change them directly to see why an empty lawn, a finished schedule, and an empty portal queue can produce different answers.",
       "emptyLawn": "Empty lawn, future waves remain",
       "closingPortal": "Last child gone, portal is closing",
@@ -681,9 +683,12 @@
       "victory": "Completion passes",
       "blocked": "Completion is still blocked",
       "completionDetail": "This panel supplies the listed predicate outcomes. The entity-clear predicate applies the exact exceptions described in the article; it does not substitute body HP > 0 for its native filters.",
-      "eligibleHp": "Other eligible newcomers: HP",
+      "eligibleHp": "Other eligible HP before integer conversion",
       "newcomerHp": "Optional newcomer: HP",
-      "intervalInput": "Ordinary interval (seconds)"
+      "intervalInput": "Ordinary interval (seconds)",
+      "announcement": "Tap during the warning",
+      "largeHpExample": "10,000,000,000 HP example",
+      "saturationDetail": "H₀ is capped at {cap}. H(t) uses the same conversion, so remaining health above this cap still reports the cap and cannot meet the smaller threshold. The health-loss input changes the entered accumulator before conversion."
     },
     "loot": {
       "title": "From planned counts to actual carriers",
@@ -759,6 +764,41 @@
       "schedule": "schedule",
       "drop": "emit"
     },
-    "loading": "Preparing the view…"
+    "loading": "Preparing the view…",
+    "announcement": {
+      "intro": "Compare two transitions before a flag or final wave. The controls supply a current deadline, an optional tap, the next interval, and a time when the new wave clears. Automatic next-wave is off in this comparison.",
+      "wave": "Upcoming large wave",
+      "flagWave": "Flag wave {n}",
+      "finalWave": "Final wave {n}",
+      "deadlineInput": "Current deadline after the HP check (seconds)",
+      "tapInput": "Manual tap time (seconds)",
+      "intervalInput": "Interval after spawning (seconds)",
+      "clearInput": "New wave clears after spawning (seconds)",
+      "wait": "Let the warning finish",
+      "before": "Tap before the warning",
+      "during": "Tap during the warning",
+      "window": "The button is available from {visible}s. Without an earlier tap, the pre-spawn warning runs from {from}s to {to}s.",
+      "unavailable": "The entered tap falls outside the button’s available interval, so it does not apply.",
+      "timeline": "Normal timeout and manual request, with warning, wave start, clearance, and following transition",
+      "normal": "Let the warning finish",
+      "selected": "Selected tap behavior",
+      "legend": "Gold shows the pre-spawn warning. The lower bar begins when the wave spawns: green uses normal timing, purple retains the warning state. The dashed marker is the entered clearance time. The bar ends at the next advance or manager-finalization attempt.",
+      "spawn": "Large wave starts",
+      "spawnDetail": "Wave {n} is created",
+      "state": "State after spawning",
+      "retained": "2 — announcement state retained",
+      "timed": "1 — normal timed state",
+      "freshDeadline": "Fresh deadline",
+      "intervalDetail": "Spawn time plus {n}s",
+      "following": "Following wave starts",
+      "followingDetail": "Wave {n}; normal timing resumes",
+      "finish": "Manager-finalization attempt",
+      "finishDetail": "Finished state; entity clearance is checked separately",
+      "anotherUpdate": "Then one more normal update; its duration is not specified",
+      "retainedEffect": "The wave clears at {clear}s. In state 2, clearing does not accelerate the fresh deadline at {deadline}s, and the normal button-show logic is omitted. The timer still governs the next transition.",
+      "timedEffect": "State 1 runs the normal health and button checks. Clearing can bring the deadline forward, subject to the four-second minimum.",
+      "completionBoundary": "For the final wave, victory also requires the entity-clear predicate. A retained warning state needs another normal update after the finalization attempt; no extra scheduled wave is created.",
+      "scope": "All times are game-clock inputs. At an exact boundary this comparison evaluates the timed update before the tap; it does not infer live input ordering or animation duration."
+    }
   }
 }

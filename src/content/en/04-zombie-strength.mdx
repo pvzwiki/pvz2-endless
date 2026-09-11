@@ -57,6 +57,8 @@ Those are the five bundled rows. A missing index returns multiplier 1; it neithe
 
 `neccd.zls` can replace the entire ordered vector with attack/health pairs. Row order determines which effective level reads each pair. Replacing the table does not require changing the level curve, and a module-level override does not create a missing table row.
 
+A hypothetical level-10 health multiplier of 100,000 can be supplied through this table, but the current online value has not been established here. Stored body and helmet HP are also distinct from the signed 32-bit value reported to wave scheduling: <Link href="/timing/#hp-saturation">that reporting path can saturate</Link>.
+
 </section>
 
 <section id="health-and-bite" className="prose-section">
