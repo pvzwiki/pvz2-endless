@@ -1,0 +1,59 @@
+import { Note } from '@/components/evidence-notes';
+import { Link } from '@/i18n/navigation';
+import { MechanismLab } from '@/components/mechanism-lab';
+
+<div className="article-lead">
+种子卡可以更早完成冷却，可以在使用后跳过冷却，也可以对应一株攻击更快的植物。这是不同的变化。加速时钟提供前两种效果；名字中的“加速”并不让它成为攻速挂件。
+</div>
+
+<section id="three-effects" className="prose-section">
+
+## 沿着效果类型看下去
+
+<Link href="/accessories/super_clock_15/">加速时钟</Link>声明了 `fast_plant`、`clear_planting`，以及更高等级的 `plant_sun_refund`，没有声明 `improved_atk_rate`。
+
+数值去向体现了这种区别。种植冷却修改种子卡因子，攻击速度修改植物的攻击间隔因子。单独名为 `fast_cooldown` 的效果又属于另一个类别，不应拿来替代前两者。<Note id="accessoryValues" />
+
+</section>
+
+<section id="recharge-factor" className="prose-section">
+
+## 加成进入分母
+
+令 $b$ 为种植冷却加成之和，$T$ 为基础间隔。冷却归约为
+
+$$
+f=\frac{1}{1+b},\qquad T'=Tf.
+$$
+
+时钟等级 5 的贡献为 0.37。其他贡献为零时，基础间隔 10 变为约 7.30。若直接从间隔减去 37%，则会得到 6.30，那是另一种计算。
+
+多个贡献先求和，再进行除法，并非把多个折扣逐个相乘。其他种子卡修正之后还可以改变因子。交互视图单独展示这一冷却归约，并明确列出参与求和的其他贡献。<Note id="clockRecharge" />
+
+<MechanismLab kind="clock" />
+
+</section>
+
+<section id="instant-reset" className="prose-section">
+
+## 重置是独立概率
+
+时钟的六个等级 0–5，重置值依次为 0.10、0.16、0.19、0.25、0.31、0.37。冷却贡献遵循相同阶梯，但数值相同并不意味着机制合并。
+
+符合条件的用卡路径中，处理器进行一次抽取，并与 `clear_planting` 严格比较。成功分支选择重置结果，另一分支选择普通冷却。更快的冷却因子本身不消耗随机抽取。
+
+因此，等级 5 的物品把 0.37 的重置概率与 0.37 的冷却贡献组合在一起。前者改变是否开始冷却，后者改变开始冷却后的时长。
+
+阳光返还条目是数值对。参考页保留两个值，不把它们转化成额外的冷却效果。
+
+</section>
+
+<section id="stale-descriptions" className="prose-section">
+
+## 描述可能落后于数据
+
+同族的小时钟在等级 4 有明确不一致：两个配置值都是 22%，描述却都写成 19%。返还条目正确升到了 13%。这种只更新一部分的结果，比笼统的翻译问题更具体。<Note id="accessoryText" />
+
+加速时钟的六条描述与自身数值阶梯一致。不一致属于<Link href="/accessories/super_clock_14/">小时钟</Link>，不能推广到整个家族。
+
+</section>

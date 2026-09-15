@@ -1,0 +1,7 @@
+node_modules/
+.next/
+out/
+public/pagefind/
+src/data/
+tests/fixtures/
+next-env.d.ts

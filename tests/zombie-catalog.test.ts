@@ -15,7 +15,8 @@ test('the Egypt article view agrees with the shared catalog', () => {
     assert.equal(type.cost, record.values.WavePointCost);
     assert.equal(type.weight, record.values.Weight);
     assert.deepEqual(type.name, record.name);
-    for (const [field, value] of Object.entries(type.properties)) assert.deepEqual(value, record.values[field]);
+    for (const [field, value] of Object.entries(type.properties))
+      assert.deepEqual(value, record.values[field]);
   }
 });
 test('catalog search accepts names and aliases, sorting leaves missing values last', () => {
@@ -24,12 +25,18 @@ test('catalog search accepts names and aliases, sorting leaves missing values la
   assert.ok(rows.some((row) => row.id === 'mummy_armor1'));
   const sorted = queryCatalog(catalog, '', 'all', '', 'Hitpoints', true);
   const firstMissing = sorted.findIndex((row) => typeof row.values.Hitpoints !== 'number');
-  assert.ok(firstMissing > 0 && sorted.slice(firstMissing).every((row) => typeof row.values.Hitpoints !== 'number'));
+  assert.ok(
+    firstMissing > 0 &&
+      sorted.slice(firstMissing).every((row) => typeof row.values.Hitpoints !== 'number'),
+  );
 });
 test('website inputs exclude local paths and private database fields', () => {
   const directory = new URL('../src/data/', import.meta.url);
   for (const file of readdirSync(directory).filter((name) => name.endsWith('.json'))) {
-    assert.doesNotMatch(readFileSync(new URL(file, directory), 'utf8'),
-      /\/Users\/|\/home\/|source_json|type_object_id|object_id|file:\/\/|researchRevision/, file);
+    assert.doesNotMatch(
+      readFileSync(new URL(file, directory), 'utf8'),
+      /\/Users\/|\/home\/|source_json|type_object_id|object_id|file:\/\/|researchRevision/,
+      file,
+    );
   }
 });

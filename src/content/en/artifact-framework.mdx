@@ -1,0 +1,81 @@
+import { Note } from '@/components/evidence-notes';
+import { Link } from '@/i18n/navigation';
+import { MechanismLab } from '@/components/mechanism-lab';
+
+<div className="article-lead">
+An artifact's level and rank feed arithmetic expressions stored as text. Those expressions supply descriptions and runtime values through separate paths. Understanding that distinction explains both ordinary progression and some surprisingly fragile behavior.
+</div>
+
+<section id="level-and-rank" className="prose-section">
+
+## Level and rank are separate inputs
+
+The formula variable `level` is the artifact's level. The variable `stage` is its cultivation rank. It is not the current world, wave, or Endless level.
+
+All 38 artifacts refer to the same cultivation table. Level upgrades run from 1 through 29, producing a maximum level of 30. Rank upgrades require levels 10, 20, and 30, respectively. Buying rank 4 unlocks no further level in that table.<Note id="artifactProgression" />
+
+| Rank transition | Required level | Cubes | Gold |
+| --- | ---: | ---: | ---: |
+| 1 → 2 | 10 | 10 | 50,000 |
+| 2 → 3 | 20 | 30 | 100,000 |
+| 3 → 4 | 30 | 50 | 200,000 |
+
+The rank requirements constrain which level/rank pairs normal progression produces. Evaluating a passive at an arbitrary lower level can produce a negative number even though that pair does not belong to the progression where the passive becomes available.
+
+</section>
+
+<section id="formula-strings" className="prose-section">
+
+## A decimal point changes the arithmetic
+
+The formula engine supports addition, subtraction, multiplication, division, and parentheses. It substitutes integer values for `level` and `stage`, then evaluates the expression.
+
+Its choice of numeric domain comes from the text: an expression without a decimal point uses signed integer arithmetic. With a decimal point, it uses floating-point arithmetic. Consequently, `2+level/10` and `2.0+level/10` can produce different values from the same level.<Note id="artifactFormula" />
+
+Bowling's `2+level/10` gives 2 at levels 1–9, 3 at 10–19, 4 at 20–29, and 5 at 30. This stepwise behavior comes from integer division. A visually small edit to the formula's punctuation can change its numerical meaning.
+
+<MechanismLab kind="formulas" />
+
+The variable-replacement helper replaces only the first occurrence of each variable. Repeating a variable would leave unsupported text for the parser. The shipped expressions avoid that case, but the evaluator has no structured way to report malformed input to its caller.
+
+</section>
+
+<section id="two-paths" className="prose-section">
+
+## Descriptions and runtime values take different routes
+
+The display helper selects an expression with an element bounds check. It evaluates the string and applies a special adjustment to the last `MainField` element: a value sufficiently close to zero becomes 1.
+
+The runtime helper selects an expression through another function, substitutes the artifact's variables, and reaches the same arithmetic engine. That selector does not have the display helper's element bounds check. Sharing arithmetic does not mean sharing all the surrounding validation.
+
+The last two `MainField` entries conventionally contain cooldown and uses. Runtime common-data setup reads those positions, converts the use count, applies its own minimum behavior, and then passes through further adjustments. Cooldown and use-count boosts act later.<Note id="artifactUses" />
+
+For `stage*1.0-1.0`, rank 1 gives a raw zero. The display adjustment turns it into 1; the runtime common-data path also turns zero into 1 before subsequent modifiers. The bare formula therefore does not support the claim that the description shows zero uses.
+
+This distinction matters when reading the reference: a formula value, a displayed value, and a final runtime value are different steps in a calculation.
+
+</section>
+
+<section id="shared-use-pool" className="prose-section">
+
+## Endless has another use counter
+
+A board holds one active artifact record. Ordinary Endless also has a use counter on its own manager. The getter reads a single integer, without an artifact id.
+
+The mode's rules describe active uses as a shared total across artifacts, with switching between levels and passives continuing after the active total is exhausted. That shared total is a different quantity from the common-data count attached to an individual artifact.
+
+A field named capacity can describe boost configuration rather than the number of artifacts on a board. Field names are useful navigation aids, but the type and reader establish what a value means.
+
+</section>
+
+<section id="read-the-fields" className="prose-section">
+
+## Follow a field to its consumer
+
+Evolution gives a useful example. Its `TargetablePlantTypes` list is read by passive-rate getters; its `plantBlackList` filters generated results. Neither name alone explains its role.
+
+An entry can also be parsed and then never used. Evolution stores two duration-named passive fields that its class does not subsequently read. Its rank-4 behavior instead uses a fixed rank check and an empty-cell scan. Changing an unused number does not change that behavior.<Note id="evolutionPassives" />
+
+The <Link href="/artifacts/">artifact reference</Link> keeps the formula fields and lists available for inspection. The <Link href="/evolution/">Evolution article</Link> follows the consumers through a complete active skill.
+
+</section>

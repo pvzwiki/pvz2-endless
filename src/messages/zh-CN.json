@@ -1,8 +1,8 @@
 {
   "site": {
-    "brand": "ENDLESS",
-    "brandSub": "无尽解读",
-    "series": "目录",
+    "brand": "PVZ2",
+    "brandSub": "机制详解",
+    "series": "文章",
     "explore": "交互探索",
     "about": "关于",
     "skip": "跳转到正文",
@@ -23,7 +23,7 @@
     "points": "点",
     "wavePlan": "一个关卡的形状",
     "heroCaption": "每根柱子代表一波。金色部分是旗帜波或最终波的额外预算。",
-    "contents": "本篇内容",
+    "contents": "本页内容",
     "inputs": "共同的规则",
     "count": "计算波次数",
     "budget": "构建预算",
@@ -125,7 +125,8 @@
     "scrollableFormula": "可滚动的公式，可使用左右方向键",
     "scrollFormulaHint": "横向滚动以查看完整公式",
     "zombies": "僵尸资料",
-    "plants": "植物资料"
+    "plants": "植物资料",
+    "search": "搜索"
   },
   "roster": {
     "chapter": "第 02 篇",
@@ -242,51 +243,21 @@
     "metadataTitle": "僵尸资料库"
   },
   "home": {
-    "eyebrow": "PVZ2 · 中国大陆 iOS",
-    "title": "走进",
-    "accent": "无尽。",
-    "description": "普通无尽挑战如何选择、创建并放出它的僵尸。",
-    "start": "从序言开始",
-    "series": "系列文章",
-    "introduction": "序言",
-    "introDescription": "范围、研究方法，以及作者的话。",
-    "reference": "资源图谱",
-    "referenceDescription": "共用的僵尸定义、成本、权重、生命值与几何数据参考。",
-    "openReference": "浏览僵尸资料",
-    "example": "一个普通波次方案 · L 149",
-    "documentTitle": "无尽解读",
-    "openPlants": "浏览植物资料",
-    "plantDescription": "植物定义、阳光消耗、基础生命值、冷却时间与精选类型字段。"
-  },
-  "chapters": {
-    "wave-plan": {
-      "title": "第一只僵尸出现之前",
-      "subtitle": "共用的波次数与预算模型。"
-    },
-    "roster": {
-      "title": "选择僵尸阵容",
-      "subtitle": "按索引选择、加权填充与最终波补入。"
-    },
-    "worlds": {
-      "title": "不同世界如何修改方案",
-      "subtitle": "替换、额外动作与世界特有的系统。"
-    },
-    "strength": {
-      "title": "从等级到强度",
-      "subtitle": "生成等级、生命值与攻击倍率，以及首领效果。"
-    },
-    "placement": {
-      "title": "僵尸出现在哪里",
-      "subtitle": "可选范围、选行历史与放置顺序。"
-    },
-    "timing": {
-      "title": "波次、胜利与关卡推进",
-      "subtitle": "推进波次、结束战斗与继续挑战的不同规则。"
-    },
-    "drops": {
-      "title": "能量豆与其他掉落",
-      "subtitle": "计划配额与掉落日程如何变成拾取物。"
-    }
+    "documentTitle": "PvZ2 机制详解",
+    "title": "草坪背后的",
+    "accent": "运行规则。",
+    "description": "从波次与能量豆，到神器与一次随机抽取的历史，探索《植物大战僵尸 2》如何运行。",
+    "eyebrow": "PVZ2 · 看得见的机制",
+    "start": "阅读引言",
+    "featured": "从一个问题开始",
+    "featureTitle": "你的植物能变成什么？",
+    "featureDescription": "跟随进化神器筛选候选植物，理解替换为何有时会停下来。",
+    "featureLink": "探索进化神器",
+    "series": "探索文章",
+    "reference": "随手查阅数值",
+    "referenceDescription": "查询机制背后的名称、数值与限制。",
+    "articlesTitle": "从好奇出发。",
+    "articlesDescription": "三条阅读路径，通向同一个游戏。可以从任何一篇开始，再沿着关联继续探索。"
   },
   "labs": {
     "open": "查看",
@@ -327,7 +298,7 @@
       "health": "普通动作报告的 HP",
       "flagExtra": "独立旗帜指令：{n} 条",
       "entityLevel": "实体等级 {n}",
-      "entitiesCaption": "每条指令使用单独抽取的等级和已采用的无尽生命值参考。HP 小计假设创建修正为中性，且均成功放置；有效运行时表尚未捕获。",
+      "entitiesCaption": "每条指令使用单独抽取的等级和无尽生命值参考。HP 小计假设创建修正为中性，且均成功放置。",
       "instructionsCaption": "每张卡片是一条生成指令。成本是构建输入，并不是生命值。",
       "typesCaption": "基础类型与四个选中的池条目成为填充器的活动类型。",
       "stages": {
@@ -450,7 +421,7 @@
       "blockedPortal": "传送门自身阻止完成，即使队列或草坪已经为空。",
       "blockedChildren": "传送门已经消失，但仍存活的子僵尸继续阻止完成。",
       "clear": "此时，这个传送门及其子僵尸都不再阻止完成；其他关卡谓词仍然适用。",
-      "orderDetail": "示例 RNG 打乱全部家族槽位，包括重复项。每个回放步骤向传送门状态提供一次更新或动画回调。时间控件提供开启完成时间、首次偏移和后续间隔；这里不模拟关闭动画的时长。",
+      "orderDetail": "库打乱从选定随机流位置开始排列全部家族槽位，包括重复项。每一步提供更新或动画回调，时间控件设置开启时刻、首次偏移与后续间隔。",
       "stages": {
         "copy": "复制全部四个家族槽位",
         "shuffle": "打乱完整列表",
@@ -469,10 +440,11 @@
         "closing": "下一次到期释放检查中，空队列分支请求关闭状态，并启动关闭动画。",
         "removed": "动画完成回调请求移除。直到此时，传送门自身可解析对象所形成的阻塞才消失。"
       },
-      "reshuffle": "下一次打乱",
+      "reshuffle": "推进随机流",
       "opening": "开启动画完成时间（秒）",
       "clock": "本次更新的时间",
-      "callbackTime": "关闭动画完成回调"
+      "callbackTime": "关闭动画完成回调",
+      "shufflePosition": "此前消耗的库引擎输出数"
     },
     "steam": {
       "title": "烟雾与管道时钟",
@@ -571,14 +543,14 @@
       "declared": "随包行",
       "fallback": "缺失行 → 1",
       "reportedHealth": "向波次报告的生命值贡献",
-      "reportedDetail": "生命值采用十级无尽实战参考。这些反馈值尚未从运行时配置中捕获，也未在包内找到完整序列。",
+      "reportedDetail": "生命值采用十级无尽参考。首领标记单独应用其生命值倍率。",
       "healthReportDetail": "基础读取函数：以 float32 相加本体与头盔 HP，再转换为有符号 int32。此报告步骤不改变保存的 HP。",
       "basis": "倍率来源",
       "reported": "无尽实战参考",
       "bundled": "包内 DangerRoom 表",
-      "bundledDetail": "这一对比使用包内 DangerRoom 的五行数据与原生啃咬公式，并令其他修正为中性。它不代表当前实战数值。",
+      "bundledDetail": "这一对比使用 DangerRoom 的五行表与原生啃咬公式，并令其他修正为中性。",
       "reportedAttack": "反馈攻击 / 1 级",
-      "attackUnmapped": "尚未确认其对应原生 AttackLevel，因此不据此推算啃咬速率。"
+      "attackUnmapped": "啃咬公式需要独立的 AttackLevel 输入。"
     },
     "placement": {
       "title": "行、历史与最终位置",
@@ -625,7 +597,7 @@
       "historyRow": "计入历史的行",
       "visibleRow": "当前可见行",
       "candidates": "扫描后剩余的行",
-      "chosenShuffle": "行抽取种子",
+      "chosenShuffle": "此前消耗的库引擎输出数",
       "hookStages": {
         "0": "抽取临时行",
         "1": "应用随机间距位置",
@@ -643,7 +615,7 @@
       "shuffledRow": "当前行不可用。从剩余候选行中抽取，将新实体放到第 {n} 行的最后一列。",
       "rejectedKing": "没有剩余候选。普通国王路径进入 ZS_Die，不会重试、退还指令或移除一个较早的国王。",
       "rejectedFisher": "没有剩余候选。普通渔夫路径立即发起移除。Board 列表删除另行发生，普通掉落路径仍然可达。",
-      "hookCaption": "临时行与抖动量是提供的输入。需要重新定位时，示例 RNG 从剩余候选行中抽取。原始行保留其历史记录贡献。",
+      "hookCaption": "初选行与抖动是输入。重新放置从选定库随机流位置开始打乱剩余行，原行保留历史贡献。",
       "ordinaryHook": "这种普通类型没有国王／渔夫的占用扫描，保留基础事件之后的位置。",
       "queueCount": "同一动作／行中此前的实体数",
       "jitter": "选定随机偏移 J（0–29）"
@@ -809,7 +781,253 @@
       "retainedEffect": "本波在 {clear}s 清空。状态 2 中，清空不会提前 {deadline}s 这一新的截止时间，也不会执行普通的按钮显示逻辑。计时器仍决定下一次转换。",
       "timedEffect": "状态 1 执行普通的生命值与按钮检查。清空可以提前截止时间，但仍受四秒最小间隔约束。",
       "completionBoundary": "对于最终波，胜利还要求实体清空谓词通过。保留提示状态时，在结束尝试之后还需一次普通更新；不会创建额外的计划波次。",
-      "scope": "所有时刻都是游戏时钟输入。恰好处在边界时，此比较先处理计时更新，再处理点击；不据此推断实际输入顺序或动画时长。"
+      "scope": "所有时刻都是游戏时钟输入。恰好处在边界时，此比较先处理计时更新，再处理点击。"
+    },
+    "evolution": {
+      "title": "跟随一次进化激活",
+      "description": "在 3×3 区域中，追踪实际候选选择、共享打乱消耗与延后替换。",
+      "preset": "战场示例",
+      "presets": ["混合目标", "单株目标", "四阶空格补入"],
+      "source": "中心植物",
+      "cost": "源植物有效成本",
+      "plantLevel": "植物等级",
+      "rank": "神器品阶",
+      "stage": "场景筛选",
+      "stageOff": "跳过场景条件",
+      "stages": ["古埃及", "巨浪沙滩", "月球", "蒸汽时代"],
+      "condition": "中心植物状态",
+      "normal": "正常",
+      "sheeped": "绵羊化",
+      "check": "中心格种植检查",
+      "checks": ["没有阻止原因", "两次检查均有原因 79", "两次检查均有原因 80", "选择后出现原因 80"],
+      "advanced": "随机流与检查输入",
+      "stream": "此前消耗的库引擎输出数",
+      "reverse": "反转输入的目标处理顺序",
+      "callback": "反转输入的回调顺序",
+      "lily": "睡莲场景虚函数返回真",
+      "inputNote": "网格显示植物锚点。目标顺序与种植检查结果是情境输入。所选场景应用基础场景规则；睡莲的独立虚函数结果另行输入。",
+      "phases": {
+        "start": "触发",
+        "targets": "收集目标",
+        "selection": "选择替换",
+        "bonus": "四阶扫描",
+        "effects": "执行特效",
+        "complete": "结果"
+      },
+      "board": "3×3 主动区域",
+      "cell": "第 {column} 列，第 {row} 行",
+      "empty": "空格",
+      "new": "新植物",
+      "pending": "特效已排队",
+      "old": "原植物",
+      "level": "等级 {level}",
+      "order": "目标 {number}",
+      "inspect": "选择格子以查看其选择过程",
+      "queue": "等待中的特效",
+      "noEffects": "没有排队特效",
+      "pool": "剩余候选",
+      "selected": "选中的替换类型",
+      "before": "打乱前",
+      "after": "打乱后",
+      "draws": "消耗的引擎输出数",
+      "position": "库随机流位置",
+      "cooldown": "冷却截止时间",
+      "notTriggered": "尚未触发",
+      "sourceCost": "源植物有效成本",
+      "baseCost": "结果植物基础成本",
+      "blocked": "阻止原因",
+      "noCandidate": "没有候选，该目标保留原状。",
+      "rejected": "最终检查拒绝了替换。",
+      "fullPool": "查看完整候选名单",
+      "funnel": "目录筛选摘要",
+      "funnelLabels": [
+        "启用状态",
+        "别名排除",
+        "类排除",
+        "英雄排除",
+        "平行类型排除",
+        "消耗型排除",
+        "结果黑名单"
+      ],
+      "checkNote": "选择时豁免原因 79，最终检查不豁免任何原因。这些示例中，其他候选的阻止原因集合为空。",
+      "selectionReasons": "选择检查输入原因",
+      "commitReasons": "最终检查输入原因",
+      "retained": "原等级被传递给替换植物。",
+      "bonusLevel": "额外植物等级的最小值从 1 开始，更高卡包等级无法提高它。",
+      "events": {
+        "ready": "输入战场已就绪",
+        "trigger": "开始冷却",
+        "collect": "收集重叠的植物",
+        "skip": "跳过此目标",
+        "pool": "筛选该目标的结果池",
+        "pick": "打乱并取第一个类型",
+        "queued": "排入 loop 特效",
+        "bonusStart": "开始四阶扫描",
+        "bonusOutside": "跳过战场外格子",
+        "bonusOccupied": "此格仍被占据",
+        "bonusPool": "建立成本最多为 100 的额外植物池",
+        "bonusPick": "在同一随机流上选择额外植物",
+        "bonusQueued": "排入 grownew 特效",
+        "callback": "送达排队的动画事件",
+        "remove": "将原植物生命值置零",
+        "check": "执行最终种植检查",
+        "added": "添加选中的植物",
+        "failed": "替换被拒绝",
+        "complete": "本次激活流程结束"
+      },
+      "eventText": {
+        "ready": "回放前可以改变中心植物、价格、状态与检查输入。",
+        "trigger": "基础触发先写入 时钟 + 冷却，再检查任何目标。",
+        "collect": "收集器检查矩形重叠，按输入顺序访问目标。",
+        "skip": "该分支不创建替换特效，也不消耗打乱输出。",
+        "pool": "候选保留输入顺序，通过类型、成本、场景、种植与黑名单条件。",
+        "pick": "执行完整前向打乱，第一项成为替换类型。",
+        "queued": "特效保存所选类型、格位置、原等级与旧植物引用。旧植物仍留在战场上。",
+        "bonusStart": "所有替换特效仍在等待，四阶扫描看到的是原战场。",
+        "bonusOutside": "额外植物流程逐格检查战场边界。",
+        "bonusOccupied": "等待中的替换尚未移除占据者，此格不会得到额外特效。",
+        "bonusPool": "额外植物选择采用自己的成本上限与种植检查，不使用源植物成本比较。",
+        "bonusPick": "额外植物打乱从此前打乱停止的位置继续。",
+        "bonusQueued": "grownew 事件添加植物，不移除旧植物。",
+        "callback": "输入的回调顺序决定哪个等待特效先执行，此处不再打乱。",
+        "remove": "loop 处理器先标记旧植物并将生命值置零，再检查替换。",
+        "check": "最终检查使用输入的阻止原因，不采用选择时的豁免。",
+        "added": "在保存的格位置，以保存的等级添加所选类型。",
+        "failed": "之后没有 AddPlant，已移除的源植物不会恢复。",
+        "complete": "战场显示已送达特效的结果，被跳过的目标保持原状。"
+      },
+      "reasons": {
+        "condition": "被排除的状态",
+        "consumable": "消耗型植物",
+        "alias": "明确别名排除",
+        "class": "被排除的植物类",
+        "hero": "英雄类型",
+        "parallel": "平行类型",
+        "emptyPool": "结果池为空",
+        "occupied": "格子被占据"
+      },
+      "filterCost": "价格排除",
+      "filterStage": "场景排除",
+      "filterTile": "种植检查排除",
+      "filterBlacklist": "结果黑名单排除",
+      "edit": "编辑战场输入",
+      "gridInputs": "活动植物锚点 · 种植检查结果来自所选输入情境。",
+      "showEveryEvent": "显示全部事件",
+      "guidedPlayback": "跟随主要阶段和一个待处理效果。点击任意格子可查看它的选择过程。",
+      "detailedPlayback": "逐步查看每个目标、额外生成格子和待处理效果。",
+      "summaries": {
+        "selection": "替换结果已选定",
+        "bonus": "四阶额外生成结果已选定"
+      },
+      "summaryText": {
+        "selection": "候选池非空的目标已从共享随机流中选定结果。效果保存这个选择，原植物仍在场上。候选池为空的目标保持不变。",
+        "bonus": "扫描继续消耗同一条随机流，为符合条件的空格排入额外生成效果。替换效果尚未移除任何原植物。"
+      }
+    },
+    "glove": {
+      "title": "一次击杀，多道条件",
+      "description": "比较两株植物各自的严格概率与截止时间检查。",
+      "accessoryLevel": "挂件等级",
+      "clock": "时钟时刻",
+      "deadline": "保存的截止时间",
+      "roll": "抽取值",
+      "plant": "植物",
+      "credit": "普通击杀功劳可用",
+      "allowed": "战场与模式允许奖励",
+      "chance": "产豆概率",
+      "result": "尝试结果",
+      "nextDeadline": "此次尝试后的截止时间",
+      "drop": "创建拾取物",
+      "cooldown": "尚未超过截止时间",
+      "mode": "模式或战场拒绝奖励",
+      "rollFail": "抽取值未低于概率",
+      "creditFail": "普通击杀功劳已消耗",
+      "strict": "两次比较都是严格的：抽取值 < 概率，截止时间 < 时钟。只有成功才设置新截止时间。",
+      "otherPlant": "植物 B 有自己的截止时间，植物 A 成功不会改变它。",
+      "useA": "植物 A",
+      "useB": "植物 B"
+    },
+    "clock": {
+      "title": "冷却与重置",
+      "description": "区分缩短间隔与跳过间隔的概率。",
+      "accessoryLevel": "挂件等级",
+      "base": "基础冷却间隔",
+      "other": "其他 fast_plant 贡献",
+      "contribution": "时钟贡献",
+      "factor": "冷却因子",
+      "interval": "最终间隔",
+      "chance": "重置概率",
+      "baseLabel": "基础间隔",
+      "modifiedLabel": "应用冷却贡献后",
+      "roll": "抽取值",
+      "resetResult": "选择重置",
+      "rechargeResult": "选择普通冷却",
+      "formula": "全部贡献先求和再相除，抽取单独改变重置结果。其他种子卡修正为中性。"
+    },
+    "formulas": {
+      "title": "读懂一条神器公式",
+      "description": "按成长要求改变等级与品阶。",
+      "artifact": "神器",
+      "artifactLevel": "神器等级",
+      "rank": "神器品阶",
+      "field": "公式条目",
+      "source": "表达式",
+      "substitution": "替换变量后",
+      "arithmetic": "算术方式",
+      "integer": "有符号整数",
+      "floating": "Float32",
+      "raw": "算术结果",
+      "display": "描述结果",
+      "guard": "MainField 最后一项具有把近零值改为一的显示保护。",
+      "noFormula": "这件神器的该字段没有非空表达式。",
+      "bounds": "等级与品阶控件遵循共享培养阶梯。"
+    },
+    "streams": {
+      "title": "两段独立的随机历史",
+      "description": "消耗一个值或重新播种一条随机流，比较接下来发生什么。",
+      "game": "游戏 MT19937 · 31 位输出",
+      "library": "库 MT19937 · 32 位输出",
+      "seed": "示例种子",
+      "advanceGame": "消耗一个游戏引擎值",
+      "advanceLibrary": "消耗一个库引擎值",
+      "reseed": "重新播种游戏随机流",
+      "restart": "重新开始两条随机流",
+      "position": "已消耗值数量",
+      "next": "接下来的引擎输出",
+      "caption": "游戏通道遵循 31 位原生生成器。库通道回放库检查中记录的种子 5489 引擎与拒绝采样打乱。两个计数器均统计原始引擎输出。",
+      "fixed": "库示例种子：5489",
+      "shuffle": "接下来对 0–7 的库打乱",
+      "runShuffle": "执行这次打乱",
+      "consumed": "这次排列消耗 {count} 个引擎输出。",
+      "reseedSource": "调用时钟播种的例程",
+      "clockSeed": "传给播种函数的现实时间秒数",
+      "checkpoint": "共享播种检查点",
+      "checkpointNote": "这些调用方重置同一个游戏生成器。此视图停在重新播种的边界；后续抽取由调用方与其他消耗者决定。库随机流独立。",
+      "discarded": "被丢弃的游戏随机流位置",
+      "caller": "调用方",
+      "beforeReset": "重新播种前",
+      "afterReset": "重新播种后",
+      "census": "研究找到植物、掉落与神器代码中共 30 处 time(NULL) 重新播种。",
+      "callers": {
+        "weightedLoot": "加权掉落选择器",
+        "coinSpring": "金币泉相关掉落",
+        "gashapon": "扭蛋神器抽取",
+        "zomboss": "僵王掉落——三份实现",
+        "gardenerFire": "地锯草攻击",
+        "gardenerCritical": "地锯草暴击"
+      }
+    },
+    "weights": {
+      "title": "只抽一次，还是每项都重新抽",
+      "description": "改变五项权重，比较所得分布。",
+      "entry": "条目",
+      "weight": "权重",
+      "single": "在累积权重中只抽一次",
+      "redraw": "每次比较都重新抽取",
+      "chance": "选择份额",
+      "equal": "等权",
+      "last": "最后一项的份额",
+      "caption": "这里显示输入权重对应的算法份额。动画展示份额变化，并非抽样频率。"
     }
   },
   "plants": {
@@ -821,7 +1039,7 @@
     "cooldown": "冷却（秒）",
     "rare": "Rare",
     "close": "关闭植物记录",
-    "scopeNote": "这里列出的是包内声明。收录某种植物，并不表示它在某次无尽挑战中可用；拥有情况与当前库存另行决定。",
+    "scopeNote": "在这里查阅植物的基础属性。拥有情况与当前库存决定一次无尽挑战中可选择的植物。",
     "fieldNote": "Rare 是声明的整数，与 Quality 字符串不同。Enabled 字段未声明，不代表其值为 false。冷却时间与 HP 是基础声明，升级与运行时修正可能改变它们。",
     "repeated": "重复声明的数值一致"
   },
@@ -829,13 +1047,155 @@
     "level": "有效等级",
     "health": "生命值",
     "reportedAttack": "反馈攻击 / 1 级",
-    "compare": "对比包内的各张表",
-    "packageNote": "以下为声明的 HitPointsLevel 与 AttackLevel 字段，按等级排列。存在额外行，并不证明实际游玩会达到这些等级。",
+    "compare": "对比各张配置表",
+    "packageNote": "HitPointsLevel 与 AttackLevel 按等级排列。等级选择与修正决定实体使用哪一行。",
     "dangerRoom": "无尽：包内共享表",
     "rift": "潘妮的追击：Rift 配置",
     "main": "主线关卡对照：木乃伊属性",
     "newPvp": "NewPVP：模式对应关系未确定",
     "legacy": "旧版 PvP 对照：小鬼属性",
     "local": "本地 DIY 配置"
+  },
+  "articles": {
+    "wave-plan": {
+      "title": "第一只僵尸出现之前",
+      "subtitle": "共用的波次数与预算模型。"
+    },
+    "roster": {
+      "title": "选择僵尸阵容",
+      "subtitle": "按索引选择、加权填充与最终波补入。"
+    },
+    "worlds": {
+      "title": "不同世界如何修改方案",
+      "subtitle": "替换、额外动作与世界特有的系统。"
+    },
+    "strength": {
+      "title": "从等级到强度",
+      "subtitle": "生成等级、生命值与攻击倍率，以及首领效果。"
+    },
+    "placement": {
+      "title": "僵尸出现在哪里",
+      "subtitle": "可选范围、选行历史与放置顺序。"
+    },
+    "timing": {
+      "title": "波次、胜利与关卡推进",
+      "subtitle": "推进波次、结束战斗与继续挑战的不同规则。"
+    },
+    "drops": {
+      "title": "能量豆与其他掉落",
+      "subtitle": "计划配额与掉落日程如何变成拾取物。"
+    },
+    "evolution": {
+      "title": "进化神器如何选择替换植物",
+      "subtitle": "不断缩小的候选池、两种不同的价格，以及延后发生的替换。"
+    },
+    "purple-glove": {
+      "title": "紫色手套：击杀功劳算给谁",
+      "subtitle": "从造成伤害到掉落能量豆，概率抽取只是其中一道条件。"
+    },
+    "speed-up-clock": {
+      "title": "三种不同的“更快”",
+      "subtitle": "种植冷却、立即重置与攻击速度，各自遵循不同的规则。"
+    },
+    "artifact-framework": {
+      "title": "神器数值从哪里来",
+      "subtitle": "等级、品阶、公式字符串，以及描述与战斗中的两条取值路径。"
+    },
+    "randomness": {
+      "title": "随机也有历史",
+      "subtitle": "共享随机流，让一次操作的结果与草坪上其他事件相连。"
+    },
+    "implementation-defects": {
+      "title": "当实现改变了规则",
+      "subtitle": "一次顺序错误、一份过时名单或一次多余抽取，如何成为游戏机制。"
+    }
+  },
+  "collections": {
+    "endless": {
+      "title": "普通无尽",
+      "description": "从最初的点数预算，到最后的通关检查，跟随一关的完整过程。"
+    },
+    "equipment": {
+      "title": "神器与挂件",
+      "description": "追踪物品背后的效果、条件与数值。"
+    },
+    "implementation": {
+      "title": "随机与实现",
+      "description": "影响结果的共享系统与编程方式。"
+    }
+  },
+  "reading": {
+    "minutes": "阅读约 {count} 分钟",
+    "contents": "本页内容",
+    "evidence": "全部证据注释",
+    "navigation": "本系列文章",
+    "previous": "上一篇",
+    "next": "下一篇",
+    "related": "继续探索",
+    "footer": "从机制理解《植物大战僵尸 2》。",
+    "method": "引言与研究方法"
+  },
+  "equipment": {
+    "artifacts": "神器",
+    "accessories": "挂件",
+    "artifactDescription": "{count} 件神器的公式字段、品阶成长与植物名单。",
+    "accessoryDescription": "{count} 件挂件的效果数值、升级要求与装备限制。",
+    "search": "搜索名称或内部别名",
+    "all": "全部品质",
+    "results": "{count} 条记录",
+    "open": "打开记录",
+    "back": "全部记录",
+    "alias": "内部别名",
+    "quality": "品质",
+    "effects": "效果数值",
+    "field": "字段",
+    "formula": "表达式",
+    "level": "等级",
+    "values": "数值",
+    "boost": "效果",
+    "restrictions": "植物限制",
+    "disabled": "装备排除名单",
+    "targetable": "植物限制集合",
+    "blacklist": "结果黑名单",
+    "upgrade": "升级要求",
+    "materials": "材料",
+    "rank": "品阶",
+    "requiredLevel": "所需等级",
+    "gold": "金币",
+    "levelUp": "等级提升",
+    "rankUp": "品阶提升",
+    "omitted": "未声明",
+    "empty": "空列表",
+    "base": "基础效果",
+    "maxLevel": "挂件最高等级",
+    "minPlantLevel": "植物最低等级",
+    "pieces": "所需碎片",
+    "related": "阅读机制文章",
+    "formulaHeading": "描述公式字段",
+    "formulaExplanation": "公式使用神器等级与培养品阶。各字段如何被使用，可在对应机制文章中继续阅读。",
+    "restrictionExplanation": "名单的作用由具体机制决定。进化神器用 TargetablePlantTypes 选择被动加成对象，用 plantBlackList 筛选生成结果。",
+    "noResults": "没有匹配的记录。",
+    "normal": "普通",
+    "magic": "魔法",
+    "epic": "史诗",
+    "unique": "稀有",
+    "legend": "传说",
+    "super": "超级",
+    "referenceTitle": "参考资料库",
+    "referenceDescription": "查一个名称，对比一个数值，再回到使用它的机制。"
+  },
+  "search": {
+    "title": "查找一个机制",
+    "description": "搜索文章与参考记录。",
+    "label": "搜索网站",
+    "placeholder": "进化、能量豆、冷却……",
+    "loading": "正在搜索……",
+    "empty": "没有找到结果，请换个关键词。",
+    "start": "搜索一种植物、一件物品或一个问题。",
+    "error": "搜索暂时不可用，可以先浏览下方文章。",
+    "results": "{count} 个结果",
+    "more": "显示更多结果",
+    "open": "搜索",
+    "close": "关闭搜索"
   }
 }

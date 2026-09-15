@@ -10,11 +10,13 @@ const withMDX = createMDX({
   },
 });
 
-export default withNextIntl(withMDX({
-  output: 'export',
-  agentRules: false,
-  devIndicators: false,
-  trailingSlash: true,
-  pageExtensions: ['js', 'jsx', 'md', 'mdx', 'ts', 'tsx'],
-  poweredByHeader: false,
-}));
+export default withNextIntl(
+  withMDX({
+    output: 'export',
+    agentRules: false,
+    devIndicators: false,
+    trailingSlash: true,
+    pageExtensions: ['js', 'jsx', 'md', 'mdx', 'ts', 'tsx'],
+    poweredByHeader: false,
+  }),
+);

@@ -24,9 +24,19 @@ test('invalid inputs cannot silently produce a misleading diagram', () => {
 test('wave counts follow ten-level steps, change flag groups, and cap at fifteen', () => {
   // Hand-checked edges of the count formula and the 7-/12-wave grouping thresholds.
   for (const [level, count, spacing] of [
-    [1, 5, 5], [9, 5, 5], [10, 6, 6], [19, 6, 6], [20, 7, 4],
-    [36, 8, 4], [49, 9, 5], [69, 11, 6], [70, 12, 4],
-    [99, 14, 5], [100, 15, 5], [101, 15, 5], [149, 15, 5],
+    [1, 5, 5],
+    [9, 5, 5],
+    [10, 6, 6],
+    [19, 6, 6],
+    [20, 7, 4],
+    [36, 8, 4],
+    [49, 9, 5],
+    [69, 11, 6],
+    [70, 12, 4],
+    [99, 14, 5],
+    [100, 15, 5],
+    [101, 15, 5],
+    [149, 15, 5],
   ]) {
     const plan = createWavePlan(level);
     assert.equal(plan.count, count, `level ${level}`);

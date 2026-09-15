@@ -19,12 +19,19 @@ test('weighted draws exclude unaffordable and zero-weight entries', () => {
 });
 
 test('filling spends only the budget and stops when no positive-weight type fits', () => {
-  const fill = fillBudget(550, [
-    { id: 'small', cost: 100, weight: 2 },
-    { id: 'large', cost: 300, weight: 1 },
-  ], 7);
+  const fill = fillBudget(
+    550,
+    [
+      { id: 'small', cost: 100, weight: 2 },
+      { id: 'large', cost: 300, weight: 1 },
+    ],
+    7,
+  );
   assert.equal(fill.remaining, 50);
-  assert.equal(fill.steps.reduce((sum, step) => sum + step.chosen.cost, 0), 500);
+  assert.equal(
+    fill.steps.reduce((sum, step) => sum + step.chosen.cost, 0),
+    500,
+  );
 });
 
 test('exact matches are allowed by filling but excluded by final reservation', () => {
@@ -36,6 +43,8 @@ test('the post-50 rule installs a high-cost type and preserves the basic type', 
   for (let seed = 1; seed < 40; seed++) {
     const selection = selectTypes(51, seed);
     assert.equal(selection.selected[0], egypt.basic);
-    assert.ok(selection.selected.some((id) => egypt.types.find((type) => type.id === id)!.cost >= 1500));
+    assert.ok(
+      selection.selected.some((id) => egypt.types.find((type) => type.id === id)!.cost >= 1500),
+    );
   }
 });

@@ -1,0 +1,59 @@
+import { Note } from '@/components/evidence-notes';
+import { Link } from '@/i18n/navigation';
+import { MechanismLab } from '@/components/mechanism-lab';
+
+<div className="article-lead">
+A seed packet can finish recharging sooner, skip its recharge after use, or belong to a plant that attacks faster. Those are different changes. The Speed-up Clock provides the first two; its name does not make it an attack-speed item.
+</div>
+
+<section id="three-effects" className="prose-section">
+
+## Follow the effect type
+
+The <Link href="/accessories/super_clock_15/">Speed-up Clock</Link> declares `fast_plant`, `clear_planting`, and, at higher levels, `plant_sun_refund`. It does not declare `improved_atk_rate`.
+
+The distinction is visible in where values go. Planting recharge modifies a seed-packet factor. Attack speed changes the plant's attack-interval factor. The separate effect named `fast_cooldown` belongs to another category again; it should not be substituted for either one.<Note id="accessoryValues" />
+
+</section>
+
+<section id="recharge-factor" className="prose-section">
+
+## A contribution goes into the denominator
+
+Let $b$ be the sum of planting-recharge contributions and $T$ a base interval. The recharge fold is
+
+$$
+f=\frac{1}{1+b},\qquad T'=Tf.
+$$
+
+At the Clock's level 5, its contribution is 0.37. With other contributions zero, a base interval of 10 becomes approximately 7.30. Subtracting 37% from the interval would instead give 6.30, which is a different calculation.
+
+Multiple contributions enter the sum before the division. They are not separately multiplied as a sequence of discounts. Other packet modifiers can subsequently change the factor. The explorer isolates this recharge fold and exposes other contributions to its sum.<Note id="clockRecharge" />
+
+<MechanismLab kind="clock" />
+
+</section>
+
+<section id="instant-reset" className="prose-section">
+
+## Reset is a separate chance
+
+The six Clock levels, 0–5, have reset values 0.10, 0.16, 0.19, 0.25, 0.31, and 0.37. The recharge contribution follows the same ladder, but equality of the values does not combine the mechanisms.
+
+On the eligible packet-use path, the handler takes a draw and compares it strictly with `clear_planting`. The successful branch selects the reset outcome; the other branch selects ordinary recharging. A faster recharge factor does not itself consume a random draw.
+
+At level 5, therefore, the item combines a 0.37 reset chance with a recharge contribution of 0.37. One changes whether the recharge starts; the other changes the duration when it does.
+
+The sun-refund entries are pairs. The reference preserves both values, without turning them into an extra recharge effect.
+
+</section>
+
+<section id="stale-descriptions" className="prose-section">
+
+## A tooltip can lag behind the data
+
+The related Small Clock has a concrete mismatch at level 4. Its two configured values are 22%, but the description says 19% for both. The refund clause advances to 13% correctly. The partial update makes this more specific than a general translation problem.<Note id="accessoryText" />
+
+The six Speed-up Clock descriptions agree with their own value ladder. The mismatch belongs to the <Link href="/accessories/super_clock_14/">Small Clock</Link>; extending it to the entire family would be inaccurate.
+
+</section>

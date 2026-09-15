@@ -25,7 +25,7 @@
     max-width: 100%;
     font-size: 0.875rem;
   }
-  .timing-lab .lab-controls input[type="number"] {
+  .timing-lab .lab-controls input[type='number'] {
     width: 13.5rem;
   }
   .timing-lab .lab-stage .lab-axis-label {
@@ -84,7 +84,7 @@
     font-size: 11px;
   }
   .lab-controls select,
-  .lab-controls input[type="number"] {
+  .lab-controls input[type='number'] {
     display: block;
     margin-top: 7px;
     padding: 10px 12px;
@@ -96,10 +96,10 @@
     min-width: 92px;
     max-width: 100%;
   }
-  .lab-controls input[type="number"] {
+  .lab-controls input[type='number'] {
     width: 110px;
   }
-  .lab-controls input[type="range"] {
+  .lab-controls input[type='range'] {
     display: block;
     min-width: 150px;
     accent-color: #547741;
@@ -113,8 +113,8 @@
     font-size: 11px;
     color: #36572b;
   }
-  .lab-controls button[aria-pressed="true"],
-  .lab-preset[aria-pressed="true"] {
+  .lab-controls button[aria-pressed='true'],
+  .lab-preset[aria-pressed='true'] {
     background: #274b2b;
     color: #f2f4e6;
   }
@@ -139,7 +139,7 @@
     background: #e4ecda;
     color: #526d40;
   }
-  .lab-tabs button[aria-selected="true"] {
+  .lab-tabs button[aria-selected='true'] {
     background: #25482a;
     color: #f2f5e6;
   }
@@ -398,7 +398,7 @@
     margin: 7px 0 2px;
     font-size: 10px;
   }
-  .lab-wave-strip button[aria-pressed="true"] {
+  .lab-wave-strip button[aria-pressed='true'] {
     outline: 2px solid #648344;
     outline-offset: 2px;
   }
@@ -718,12 +718,12 @@
     color: #37572c;
     border-color: #b8cba5;
   }
-  .pipeline-route button[aria-pressed="true"] {
+  .pipeline-route button[aria-pressed='true'] {
     background: #335631;
     color: #f2f6e3;
     box-shadow: 0 4px 12px #2942251c;
   }
-  .pipeline-route button[aria-pressed="true"] > span {
+  .pipeline-route button[aria-pressed='true'] > span {
     color: #b5d595;
   }
   .pipeline-instructions {
@@ -824,7 +824,7 @@
   .steam-time > label {
     flex: 1;
   }
-  .steam-time input[type="range"] {
+  .steam-time input[type='range'] {
     width: 100%;
   }
   .smoke-updates {

@@ -1,5 +1,5 @@
-import test from "node:test";
-import assert from "node:assert/strict";
+import test from 'node:test';
+import assert from 'node:assert/strict';
 import {
   levelRequest,
   applyJams,
@@ -12,9 +12,9 @@ import {
   deadlineScenario,
   advanceLootSchedule,
   entityStrength,
-} from "../src/lib/mechanism-model";
+} from '../src/lib/mechanism-model';
 
-test("level rounding preserves the fractional-residue boundary and cap", () => {
+test('level rounding preserves the fractional-residue boundary and cap', () => {
   const request = levelRequest(3);
   assert.deepEqual([request.lower, request.upper], [1, 2]);
   assert.ok(request.threshold > 10 && request.threshold < 11);
@@ -22,7 +22,7 @@ test("level rounding preserves the fractional-residue boundary and cap", () => {
   assert.deepEqual([levelRequest(91).lower, levelRequest(149).upper], [10, 10]);
 });
 
-test("music replaces instructions without changing count or levels or retaining leader fields", () => {
+test('music replaces instructions without changing count or levels or retaining leader fields', () => {
   const input = Array.from({ length: 15 }, () => [
     { zombie: 'eighties', level: 2, leader: true },
     { zombie: 'eighties_armor1', level: 4, leader: true },
@@ -40,56 +40,48 @@ test("music replaces instructions without changing count or levels or retaining 
   }
 });
 
-test("plant-food quotas conserve the draws and disappear at the level-55 boundary", () => {
+test('plant-food quotas conserve the draws and disappear at the level-55 boundary', () => {
   for (const level of [1, 54, 55, 149]) {
     const plan = foodPlan(level, 7);
-    assert.equal(plan.quotas.reduce((sum, n) => sum + n, 0), plan.draws.reduce((sum, n) => sum + n, 0));
+    assert.equal(
+      plan.quotas.reduce((sum, n) => sum + n, 0),
+      plan.draws.reduce((sum, n) => sum + n, 0),
+    );
     assert.ok(plan.quotas.every((n) => Number.isInteger(n) && n >= 0));
     assert.equal(plan.high, level < 55 ? 1 : 0);
   }
 });
 
-test("row history explains repeats and distinguishes both counters", () => {
+test('row history explains repeats and distinguishes both counters', () => {
   const enabled = [true, true, true, true, true];
   let history = initialHistory();
   history = updateRowHistory(history, enabled, 0);
   assert.deepEqual(history[0], { last: 0, previous: 1 });
-  assert.ok(
-    rowWeights(history, enabled).every(
-      (row) => Math.abs(row.share - 0.2) < 1e-6,
-    ),
-  );
+  assert.ok(rowWeights(history, enabled).every((row) => Math.abs(row.share - 0.2) < 1e-6));
   history = updateRowHistory(history, enabled, 1);
   const rows = rowWeights(history, enabled);
   assert.ok(Math.abs(rows[0].share - 1 / 17) < 1e-5);
   assert.ok(Math.abs(rows[2].share - 5 / 17) < 1e-5);
 });
-test("native carrier and placement boundary cases stay distinct", () => {
+test('native carrier and placement boundary cases stay distinct', () => {
   assert.deepEqual(
-    carrierRequests(["cowboy_gargantuar_danger", "cowboy"], 1).map(
-      (row) => row.carrier,
-    ),
+    carrierRequests(['cowboy_gargantuar_danger', 'cowboy'], 1).map((row) => row.carrier),
     [false, false],
   );
   assert.deepEqual(
-    carrierRequests(["eighties_gargantuar_danger", "eighties"], 1).map(
-      (row) => row.carrier,
-    ),
+    carrierRequests(['eighties_gargantuar_danger', 'eighties'], 1).map((row) => row.carrier),
     [false, true],
   );
-  assert.equal(specialPlacement("king", 2, [], false).retained, false);
-  assert.equal(specialPlacement("fisherman", 2, [], false).retained, true);
-  assert.equal(
-    specialPlacement("fisherman", 1, [0, 1, 2, 3, 4], true).rejected,
-    true,
-  );
+  assert.equal(specialPlacement('king', 2, [], false).retained, false);
+  assert.equal(specialPlacement('fisherman', 2, [], false).retained, true);
+  assert.equal(specialPlacement('fisherman', 1, [0, 1, 2, 3, 4], true).rejected, true);
 });
-test("the timed gate and automatic request have different boundaries", () => {
+test('the timed gate and automatic request have different boundaries', () => {
   assert.equal(deadlineScenario(24, 1, false, false).advance, 4);
   assert.equal(deadlineScenario(24, 1, true, false).advance, 1);
   assert.equal(deadlineScenario(24, 1, true, true).advance, 4);
 });
-test("loot scheduling uses strict boundaries and can service multiple due periods", () => {
+test('loot scheduling uses strict boundaries and can service multiple due periods', () => {
   const initial = { length: 0, nextDrop: null, nextSchedule: 0 };
   const a = advanceLootSchedule(initial, 2, 4, 2, 1);
   assert.equal(a.emitted, 0);
@@ -100,29 +92,29 @@ test("loot scheduling uses strict boundaries and can service multiple due period
   const c = advanceLootSchedule(initial, 11, 4, 2, 1);
   assert.equal(c.emitted, 3);
 });
-test("reported health stays separate from native attack and bundled missing-row behavior", () => {
-  const normal = entityStrength("mummy_armor1", 5, false);
-  const leader = entityStrength("mummy_armor1", 5, true);
+test('reported health stays separate from native attack and bundled missing-row behavior', () => {
+  const normal = entityStrength('mummy_armor1', 5, false);
+  const leader = entityStrength('mummy_armor1', 5, true);
   assert.ok(leader.body > normal.body && leader.helmet > normal.helmet);
   assert.equal(normal.bite, null);
   assert.equal(normal.attackMultiplier, null);
   assert.equal(normal.reportedAttack, 2);
   assert.equal(normal.body, 4050);
-  assert.equal(entityStrength("mummy", 10, false).body, 27_000_000);
-  const bundled = entityStrength("mummy_armor1", 5, false, 1, 'bundled');
+  assert.equal(entityStrength('mummy', 10, false).body, 27_000_000);
+  const bundled = entityStrength('mummy_armor1', 5, false, 1, 'bundled');
   assert.equal(bundled.bite, 900);
-  assert.equal(entityStrength("mummy_armor1", 5, true, 1, 'bundled').bite, bundled.bite);
+  assert.equal(entityStrength('mummy_armor1', 5, true, 1, 'bundled').bite, bundled.bite);
   assert.equal(leader.bite, normal.bite);
-  const missing = entityStrength("mummy_armor1", 6, false, 1, 'bundled');
-  const base = entityStrength("mummy_armor1", 1, false);
+  const missing = entityStrength('mummy_armor1', 6, false, 1, 'bundled');
+  const base = entityStrength('mummy_armor1', 1, false);
   assert.equal(missing.body, base.body);
   assert.equal(missing.helmet, base.helmet);
   assert.equal(missing.missingRow, true);
-  assert.equal(entityStrength("mummy_armor1", 6, false).missingRow, false);
-  assert.throws(() => entityStrength("mummy", 11, false), /No reported health/);
+  assert.equal(entityStrength('mummy_armor1', 6, false).missingRow, false);
+  assert.throws(() => entityStrength('mummy', 11, false), /No reported health/);
 });
 
-test("large-wave announcement shifts the old deadline, and an allowed automatic event runs first", () => {
+test('large-wave announcement shifts the old deadline, and an allowed automatic event runs first', () => {
   const guarded = deadlineScenario(35, 1, true, true, true);
   assert.equal(guarded.normalGate, 4);
   assert.equal(guarded.deadline, 1);
@@ -136,5 +128,8 @@ test('a second plant-food unit at level 49 enters the remainder draw after wave 
   // Last eligible flag row requests two draws; max count gives one unit each.
   const plan = foodPlan(49, { bounded: (limit) => limit - 1 });
   assert.deepEqual(plan.draws, [1, 1]);
-  assert.deepEqual(plan.assignments, [{ wave: 5, kind: 'flag' }, { wave: 9, kind: 'remainder' }]);
+  assert.deepEqual(plan.assignments, [
+    { wave: 5, kind: 'flag' },
+    { wave: 9, kind: 'remainder' },
+  ]);
 });

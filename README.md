@@ -1,40 +1,52 @@
-# PvZ2 Endless
+# PvZ2, explained
 
-An interactive exploration of ordinary Endless Challenge in the Chinese mainland iOS edition of Plants vs. Zombies 2.
+A bilingual guide to the mechanisms of Plants vs. Zombies 2, with articles, searchable references, and interactive explanations. Ordinary Endless is the first series; artifacts, accessories, randomness, and implementation defects extend the guide.
+
+Use Node **26.8.2** from `.node-version` and npm **12.0.2** from `package.json`'s `packageManager` field. Both CI workflows use those same versions. After switching Node with your version manager, install the selected npm version with `npm install --global npm@12.0.2`.
 
 ```sh
 npm ci
+npm run build
 npm run dev -- --hostname 127.0.0.1 --port 4173
 ```
 
-Open `/en/` or `/zh-CN/` for the homepage. The introduction starts a seven-chapter reading sequence; `/zombies/` and `/plants/` contain separate searchable references. Every route has an English and Simplified Chinese version.
+Open `/en/` or `/zh-CN/`. `/articles/` groups the three series, and `/reference/` opens the plant, zombie, artifact, and accessory collections. The first build also makes the search index available to the development server.
 
-Articles live in `src/content/`; interface translations in `src/messages/`. Calculations and state transitions in `src/lib/` are independent of React and rendering. Optional views live in `src/components/labs/`. `src/data/` contains selected website inputs, not the private research database.
+## Structure
+
+- `src/content/articles.ts` defines article identity, series order, and related reading. Existing article URLs stay stable.
+- `src/content/en/` and `src/content/zh-CN/` hold the articles. `scripts/prepare-content.ts` generates their explicit MDX import map before development and builds.
+- The article shell renders at build time. Its contents list comes from the article's section headings. Evidence is selected and localized per article, with both dialogs and permanent section anchors.
+- `src/components/labs/` contains optional views. Pure calculations and transitions live in `src/lib/`; animation displays their state.
+- `src/data/` contains selected website inputs. Research databases and original packages remain outside this repository.
+- Pagefind indexes the built articles and equipment pages, plus selected plant/zombie records whose results open the existing record views. Its generated assets remain outside Git.
+
+Read [Architecture](docs/architecture.md) for the implementation and [Editorial direction](docs/editorial-direction.md) for writing and evidence rules.
+
+## Validation
 
 ```sh
 npm test
 npm run typecheck
-npm run build         # static output in out/
-npm run test:browser   # serves this checkout's out/ on a dedicated port
+npm run format:check
+npm run build
+npm run test:browser
 ```
 
-Tests cover arithmetic boundaries, roster accounting, state transitions, translation integrity, links, and browser controls. Assertions should protect a concrete behavior or boundary, not freeze a displayed answer that merely repeats a calculation. Exporters write website inputs only; generated result snapshots and exact game-RNG streams are outside this site's test scope.
+Run the build before the browser suite: it serves this checkout's static `out/` directory on a dedicated port. The suite covers navigation, bilingual content, evidence access, controls, and meaningful state transitions in Chromium and WebKit. Pure-model tests protect arithmetic boundaries and state transitions. The reconstructed generators are compared with selected independent native outputs and recorded libc++ permutations, including regeneration and rejection consumption.
 
-The construction and music views generate ordinary rosters for Egypt and Eighties using the traced selection, filling, reservation, level, and leader rules. A small seeded RNG makes examples repeatable; native pointer order and game random streams are not reproduced. The construction view reports neutral ordinary-action HP and identifies the separate flag action without inventing its effective level.
+The generator modules reproduce the checked routines. Scenario seeds, stream positions, candidate order, timing events, and other inputs remain explicit. A diagram's animation speed is a presentation control; game-time values come from its model inputs.
 
-The portal replay advances a queue through opening, due updates, and a separate removal callback. Placement draws from the computed remaining rows. Steam damage keeps its accumulator between updates; changing the next delta does not reset history. Timing, carrier, and saved-loot views keep explicit editable scenario inputs and calculate the resulting rules.
-
-Health reporting includes per-entity integer conversion, sequential float32 accumulation, and signed int32 saturation. The timing view compares taps before and during a pre-spawn warning, including the retained announcement state and final-wave completion delay. The deployment workflow only publishes from the canonical public repository.
-
-Health examples default to the adopted ten-level Endless gameplay reference. The strength view also offers the five-row bundled DangerRoom table and its native fallback. Reported attack is kept separate from `AttackLevel`; the site calculates a native bite rate only in the bundled comparison. Chapter 04 includes the other selected package tables, without assuming that every declared level is reachable.
-
-The plant exporter publishes an explicit selection of scalar game fields and localized names. It excludes full source objects, source paths, database identifiers, and research provenance. Missing fields stay missing; repeated field declarations are labeled when they agree. Unresolved or conflicting definitions stop export for review. The reference does not infer ownership or availability in an Endless run.
-
-To regenerate the selected website inputs from the local research checkout:
+## Updating selected data
 
 ```sh
-python3 scripts/export-wave-data.py --source ../analyze
-python3 scripts/export-zombie-data.py --source ../analyze
-python3 scripts/export-plant-data.py --source ../analyze
-python3 scripts/export-mechanism-data.py --source ../analyze
+python3 scripts/export-wave-data.py --source /path/to/research-data
+python3 scripts/export-zombie-data.py --source /path/to/research-data
+python3 scripts/export-plant-data.py --source /path/to/research-data
+python3 scripts/export-mechanism-data.py --source /path/to/research-data
+python3 scripts/export-equipment-data.py --source /path/to/research-data
 ```
+
+Exporters select fields and preserve missing values. Ambiguous identities, conflicting declarations, or unexpected references require review. Artifact descriptions and runtime effects have distinct consumers; a formula field must not automatically be presented as a final gameplay value.
+
+This repository publishes [pvzwiki.com](https://pvzwiki.com). Pull requests run the website checks; changes merged to `main` deploy through GitHub Pages. The deployment workflow runs only for the canonical repository.

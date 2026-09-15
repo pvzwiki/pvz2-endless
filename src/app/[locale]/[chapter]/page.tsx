@@ -1,27 +1,40 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { setRequestLocale } from 'next-intl/server';
 import { isLocale } from '@/i18n/locales';
-import { chapters, findChapter } from '@/content/chapters';
+import { articles, articleText, findArticle } from '@/content/articles';
 import { loadArticle } from '@/content/load-article';
 import { ArticleExperience } from '@/components/article-experience';
 
 type Params = Promise<{ locale: string; chapter: string }>;
 export const dynamicParams = false;
-export function generateStaticParams() { return chapters.filter((chapter) => chapter.published).map((chapter) => ({ chapter: chapter.id })); }
+export function generateStaticParams() {
+  return articles.map((article) => ({ chapter: article.id }));
+}
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { locale, chapter: id } = await params;
-  const chapter = findChapter(id);
-  if (!isLocale(locale) || !chapter?.published) notFound();
-  const t = await getTranslations({ locale, namespace: 'chapters' });
-  return { title: t(`${chapter.id}.title`), description: t(`${chapter.id}.subtitle`),
-    alternates: { canonical: `/${locale}/${chapter.id}/`, languages: { en: `/en/${chapter.id}/`, 'zh-CN': `/zh-CN/${chapter.id}/` } } };
+  const article = findArticle(id);
+  if (!isLocale(locale) || !article) notFound();
+  const text = articleText(article.id, locale);
+  return {
+    title: text.title,
+    description: text.subtitle,
+    alternates: {
+      canonical: `/${locale}/${id}/`,
+      languages: { en: `/en/${id}/`, 'zh-CN': `/zh-CN/${id}/` },
+    },
+    openGraph: { title: text.title, description: text.subtitle, type: 'article' },
+  };
 }
-export default async function ChapterPage({ params }: { params: Params }) {
+export default async function ArticlePage({ params }: { params: Params }) {
   const { locale, chapter: id } = await params;
-  const chapter = findChapter(id);
-  if (!isLocale(locale) || !chapter?.published) notFound();
+  const article = findArticle(id);
+  if (!isLocale(locale) || !article) notFound();
   setRequestLocale(locale);
-  const Content = await loadArticle(locale, chapter.id);
-  return <ArticleExperience chapter={chapter.id}><Content /></ArticleExperience>;
+  const Content = await loadArticle(locale, article.id);
+  return (
+    <ArticleExperience article={article.id}>
+      <Content />
+    </ArticleExperience>
+  );
 }

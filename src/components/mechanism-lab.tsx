@@ -1,42 +1,49 @@
-"use client";
+'use client';
 
-import { useEffect, useId, useRef, useState } from "react";
-import dynamic from "next/dynamic";
-import { createPortal } from "react-dom";
-import { useTranslations } from "next-intl";
-import "./labs/labs.css";
+import { useEffect, useId, useRef, useState } from 'react';
+import dynamic from 'next/dynamic';
+import { createPortal } from 'react-dom';
+import { useTranslations } from 'next-intl';
+import './labs/labs.css';
 
 function LoadingView() {
-  const t = useTranslations("labs");
+  const t = useTranslations('labs');
   return (
     <p className="lab-loading" role="status">
-      {t("loading")}
+      {t('loading')}
     </p>
   );
 }
 const views = {
-  pipeline: dynamic(() => import("./labs/pipeline-lab"), {
+  evolution: dynamic(() => import('./labs/evolution-lab'), { loading: LoadingView }),
+  glove: dynamic(() => import('./labs/glove-lab'), { loading: LoadingView }),
+  clock: dynamic(() => import('./labs/clock-lab'), { loading: LoadingView }),
+  formulas: dynamic(() => import('./labs/formulas-lab'), { loading: LoadingView }),
+  streams: dynamic(() => import('./labs/streams-lab'), { loading: LoadingView }),
+  weights: dynamic(() => import('./labs/weights-lab'), { loading: LoadingView }),
+
+  pipeline: dynamic(() => import('./labs/pipeline-lab'), {
     loading: LoadingView,
   }),
-  reservation: dynamic(() => import("./labs/reservation-lab"), {
+  reservation: dynamic(() => import('./labs/reservation-lab'), {
     loading: LoadingView,
   }),
-  jam: dynamic(() => import("./labs/jam-lab"), { loading: LoadingView }),
-  portals: dynamic(() => import("./labs/portal-lab"), { loading: LoadingView }),
-  steam: dynamic(() => import("./labs/steam-lab"), { loading: LoadingView }),
-  strength: dynamic(() => import("./labs/strength-lab"), {
+  jam: dynamic(() => import('./labs/jam-lab'), { loading: LoadingView }),
+  portals: dynamic(() => import('./labs/portal-lab'), { loading: LoadingView }),
+  steam: dynamic(() => import('./labs/steam-lab'), { loading: LoadingView }),
+  strength: dynamic(() => import('./labs/strength-lab'), {
     loading: LoadingView,
   }),
-  placement: dynamic(() => import("./labs/placement-lab"), {
+  placement: dynamic(() => import('./labs/placement-lab'), {
     loading: LoadingView,
   }),
-  timing: dynamic(() => import("./labs/timing-lab"), { loading: LoadingView }),
-  loot: dynamic(() => import("./labs/loot-lab"), { loading: LoadingView }),
+  timing: dynamic(() => import('./labs/timing-lab'), { loading: LoadingView }),
+  loot: dynamic(() => import('./labs/loot-lab'), { loading: LoadingView }),
 };
 export type LabKind = keyof typeof views;
 
 export function MechanismLab({ kind }: { kind: LabKind }) {
-  const t = useTranslations("labs");
+  const t = useTranslations('labs');
   const [open, setOpen] = useState(false),
     [ready, setReady] = useState(false);
   const dialog = useRef<HTMLDialogElement>(null),
@@ -44,23 +51,23 @@ export function MechanismLab({ kind }: { kind: LabKind }) {
   const id = useId(),
     View = views[kind];
   useEffect(() => {
-    setOpen(new URLSearchParams(window.location.search).get("lab") === kind);
+    setOpen(new URLSearchParams(window.location.search).get('lab') === kind);
     setReady(true);
   }, [kind]);
   useEffect(() => {
     if (!ready) return;
     const url = new URL(window.location.href);
     if (open) {
-      url.searchParams.set("lab", kind);
+      url.searchParams.set('lab', kind);
       if (!dialog.current?.open) dialog.current?.showModal();
     } else {
-      if (url.searchParams.get("lab") === kind) url.searchParams.delete("lab");
+      if (url.searchParams.get('lab') === kind) url.searchParams.delete('lab');
       if (dialog.current?.open) {
         dialog.current.close();
         trigger.current?.focus({ preventScroll: true });
       }
     }
-    window.history.replaceState(window.history.state, "", url);
+    window.history.replaceState(window.history.state, '', url);
   }, [open, ready, kind]);
   return (
     <div className="mechanism-lab-launch">
@@ -78,7 +85,7 @@ export function MechanismLab({ kind }: { kind: LabKind }) {
           <small>{t(`${kind}.description`)}</small>
         </span>
         <span className="launcher-action">
-          {t("open")}
+          {t('open')}
           <b aria-hidden="true">+</b>
         </span>
       </button>
@@ -99,14 +106,10 @@ export function MechanismLab({ kind }: { kind: LabKind }) {
           >
             <div className="lab-header">
               <div>
-                <span className="eyebrow">{t("explore")}</span>
+                <span className="eyebrow">{t('explore')}</span>
                 <h2 id={id}>{t(`${kind}.title`)}</h2>
               </div>
-              <button
-                className="close-view"
-                aria-label={t("close")}
-                onClick={() => setOpen(false)}
-              >
+              <button className="close-view" aria-label={t('close')} onClick={() => setOpen(false)}>
                 ×
               </button>
             </div>

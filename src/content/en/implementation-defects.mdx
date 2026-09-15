@@ -1,0 +1,89 @@
+import { Note } from '@/components/evidence-notes';
+import { Link } from '@/i18n/navigation';
+import { MechanismLab } from '@/components/mechanism-lab';
+
+<div className="article-lead">
+A game's rules include what its implementation actually does. When a check happens too late or a selection loop draws at the wrong place, the resulting behavior belongs in an explanation of the mechanism. Calling it a defect tells us why the rule departs from the operation the surrounding code sets up.
+</div>
+
+<section id="remove-before-check" className="prose-section">
+
+## A replacement can commit only half the change
+
+Evolution chooses a replacement before creating a delayed effect. When the effect fires, it kills the old plant and then checks whether the new one can be planted. If that check fails, it skips the addition without restoring the source.
+
+This is a failure of ordering. “Remove the old plant” has become visible before “add the replacement” is known to succeed. The selection-time check cannot guarantee success: it excuses blocked-reason 79 while the final check does not, and the board can change between the two checks.<Note id="evolutionReplace" />
+
+The consequence is an empty cell. It is different from Evolution finding no candidate, which leaves the source untouched. A replacement operation needs its validation and state change to agree on what success means.
+
+The <Link href="/evolution/#replacement-order">replacement timeline</Link> exposes that boundary step by step.
+
+</section>
+
+<section id="redraw-loop" className="prose-section">
+
+## A weighted draw changes meaning inside a loop
+
+A normal cumulative-weight selection draws once, then scans until a cumulative total covers the draw. Gashapon's five-entry loop returns to the draw instruction for each new comparison.
+
+That gives later entries a compound condition: every earlier draw must fail its threshold, then the current draw must pass its own. With five equal weights, the last entry's share is 3.84% rather than 20%. The second entry rises to 32%.<Note id="gashaponWeights" />
+
+The cumulative vector built immediately above the loop explains the intended operation. Those totals partition a single draw. Replacing it with a fresh value on each iteration changes the distribution, even if the generator itself supplies uniform values.
+
+<MechanismLab kind="weights" />
+
+The example uses editable weights. Its output shows the consequences of each selection algorithm, including how changing an early weight affects later entries.
+
+</section>
+
+<section id="manual-rules" className="prose-section">
+
+## A list can drift away from a rule
+
+Evolution's passive description states a cost threshold of 300 sun. Its rate getters instead consult a 26-name whitelist. Eleven ordinary plants meeting that threshold are absent. Their prices satisfy the description, but their names fail the implemented test.<Note id="evolutionPassives" />
+
+A manually maintained list can be appropriate when it expresses exceptions. Here it stands in for a rule that could be evaluated from the plant's cost. New entries require another coordinated edit to keep the two representations aligned.
+
+The Small Clock shows a numerical version of the same problem. At level 4, two effect values are 22%, while their tooltip clauses still say 19%. The refund clause correctly says 13%. The data and prose have been edited independently.<Note id="accessoryText" />
+
+The result is misleading guidance about a functioning effect. It should be described as a tooltip mismatch, rather than as a failure of the Clock's random generator.
+
+</section>
+
+<section id="wrong-initial-value" className="prose-section">
+
+## The initial value can defeat the entire scan
+
+Evolution's rank-4 bonus-plant level starts at 1. The scan then keeps the smaller of its current result and each packet level.
+
+For ordinary packet levels of at least 1, no iteration can raise that initial result. Even a bank full of higher-level plants yields 1. The procedure computes a minimum that is already bounded by its initial value.<Note id="evolutionPassives" />
+
+Starting a minimum scan from a valid first entry, or an appropriate upper sentinel, would let the entries determine the minimum. Starting at the lower edge of their range prevents that. The error is in the reduction itself, not in a low random roll.
+
+</section>
+
+<section id="shared-state" className="prose-section">
+
+## Local features repeatedly reset a global dependency
+
+Weighted loot, coin-spring loot, Gashapon, Zomboss loot, and plant attack routines all contain clock-based reseeds of the same game generator. The census finds 30 such sites. This is a shared-state problem spread across several systems.<Note id="globalReseeding" />
+
+Gardener Grass adds a specific ordering fault: it reseeds before checking whether its optional draw is available. The lower-level branch takes no value, but other consumers inherit the reset anyway.<Note id="gardenerReseed" />
+
+A correct local rate or weighted table cannot isolate a feature from these resets. Whoever reseeds last replaces the state inherited by later consumers. The library shuffle used by Evolution belongs to another engine, so these game-stream resets do not alter its position.
+
+The <Link href="/randomness/#clock-reseeding">randomness article</Link> compares the callers and lets you execute their reseed checkpoint. It also separates values consumed before a reset, which are discarded, from values consumed afterward, which advance the new stream.
+
+</section>
+
+<section id="naming-and-impact" className="prose-section">
+
+## Naming problems deserve their actual weight
+
+The Purple Glove is named `super_clock` internally, while the Speed-up Clock is `super_clock_15`. This makes the data harder to interpret, but the alias-to-id lookup still resolves the intended records.
+
+Likewise, a repeated name in a linear blacklist does not create a second exclusion. It adds redundant data and comparison work. A mismatched display-priority list has a different consequence: the omitted Queen Ice Crown sorts behind all listed items, including its weaker partner.<Note id="accessoryText" />
+
+These cases should not be flattened into one accusation of broken code. Some change gameplay, some misstate values, and some mainly increase maintenance cost. Explaining the operation and consequence makes the criticism precise—and makes the game easier to understand.
+
+</section>

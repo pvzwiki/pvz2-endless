@@ -8,7 +8,8 @@ export function filterLevels(query: string): number[] {
   for (const part of query.split(/[,，]/)) {
     const match = part.trim().match(/^(\d+)(?:\s*[-–]\s*(\d+))?$/);
     if (!match) return [];
-    const start = Number(match[1]), end = Number(match[2] || match[1]);
+    const start = Number(match[1]),
+      end = Number(match[2] || match[1]);
     if (start > end) return [];
     for (const level of ordinaryLevels) if (level >= start && level <= end) requested.add(level);
   }
@@ -20,7 +21,10 @@ export function groupWaves(waves: Wave[]): Wave[][] {
   let current: Wave[] = [];
   for (const wave of waves) {
     current.push(wave);
-    if (wave.flag || wave.final) { groups.push(current); current = []; }
+    if (wave.flag || wave.final) {
+      groups.push(current);
+      current = [];
+    }
   }
   if (current.length) groups.push(current);
   return groups;

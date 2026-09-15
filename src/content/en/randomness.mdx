@@ -1,0 +1,96 @@
+import { Note } from '@/components/evidence-notes';
+import { Link } from '@/i18n/navigation';
+import { MechanismLab } from '@/components/mechanism-lab';
+
+<div className="article-lead">
+A random generator carries state. Taking a value advances that state; seeding it replaces the state. When unrelated systems share a generator, their histories meet at the next draw.
+</div>
+
+<section id="separate-streams" className="prose-section">
+
+## There is more than one stream
+
+The game-owned global generator, the library shuffle generator, and object-owned generators have separate state. The process also initializes another engine from `random_device`. Treating all of them as one sequence gives the wrong dependencies.
+
+The global game generator starts with seed 4357. Its raw result has 31 bits. Bounded integers use modulo reduction, while the float helper scales a value and rounds it to float32.<Note id="gameRandom" />
+
+Evolution's result selection instead calls `std::random_shuffle`. Its library engine is shared with other list shuffles, including Modern portal queues. Resetting the game's global generator does not reset that library engine.<Note id="shuffleLibrary" />
+
+</section>
+
+<section id="draw-history" className="prose-section">
+
+## One extra draw moves the next answer
+
+Imagine one generator whose next values are assigned to a glove roll, a loot roll, and a placement choice. If another operation consumes a value before the loot roll, the loot routine receives a different part of the sequence.
+
+No direct call from one feature to the other is necessary. Shared state is enough. An unused result still advances the generator if the draw already happened.
+
+The <Link href="/purple-glove/#random-consumption">on-kill reward routine</Link> illustrates this: it can draw even when the plant has no corresponding reward rate. An artifact branch can likewise draw values and then overwrite them. The number of draws consumed by a feature is part of its effect on later consumers.
+
+A shuffle adds another variable. Permuting a list of $n$ entries makes $n-1$ distribution calls, and rejection sampling can consume more than one engine value per call. Changing the candidate count can therefore change how far the stream advances.
+
+</section>
+
+<section id="clock-reseeding" className="prose-section">
+
+## Many features reset the same generator
+
+The shared game generator has 38 reseed call sites, and 30 pass `time(NULL)`. This is a pattern across plants, loot, and artifacts. The clock has one-second resolution, and every reseed replaces the generator's accumulated state.<Note id="globalReseeding" />
+
+| Caller | Where the reset happens |
+| --- | --- |
+| Weighted loot selector | Immediately before its bounded weighted draw |
+| Coin-spring loot | In the related loot-selection routine |
+| Gashapon | At spin entry, before its later draws |
+| Zomboss loot | In three copies of the same loot override |
+| Gardener Grass firing | Before checking the level needed for its optional draw |
+| Gardener Grass critical hit | Immediately before its bounded draw |
+
+All of these callers reset the same object. A loot routine can therefore change the random state later read by a plant or artifact, just as a plant can change the state later used by loot.
+
+Two draws with the same bound, each taken immediately after a reseed to the same second, receive the same first result. Draws between those two resets are discarded by the second reset. A draw taken after the second reset but before the next consumer does change which output that consumer receives.
+
+### Gardener Grass adds an ordering mistake
+
+Gardener Grass's fire routine reseeds before checking whether the plant is level 5. Below that level, it does not take the optional draw: it changes the shared state without using a value itself.<Note id="gardenerReseed" />
+
+Moving that level check earlier would remove this particular no-draw reset. It would not fix the wider coupling: the other clock-seeded callers would still replace the shared state. The general issue is a local feature resetting a process-wide dependency.
+
+<MechanismLab kind="streams" />
+
+</section>
+
+<section id="shuffle-history" className="prose-section">
+
+## A fixed seed and a small pool explain different repetitions
+
+With a fixed seed, the same ordered inputs and the same earlier draw history reproduce the same shuffle result. The library replay associated with Evolution uses `mt19937` seed 5489. Its repeatability is a property of that engine and history, not a preference for one plant name.
+
+A pool with only a few candidates can repeat even with an unpredictable seed. Evolution's price ceiling is an example: a cost comparison leaving three plants offers only three names to repeat.
+
+Consequently, observing one repeated result does not distinguish the two causes. A sequence and its candidate sets contain more information. The input order and consumption by other shuffles also matter.
+
+For the site's interactive stream example, each lane has explicit state and controls. Advancing one lane demonstrates coupling within that lane; it leaves the other lane's history intact.
+
+</section>
+
+<section id="biased-selection" className="prose-section">
+
+## A good generator cannot repair the wrong selection loop
+
+Gashapon's five-entry selector builds cumulative weights but draws again as it visits each entry. This is different from drawing once and finding the interval containing that value.
+
+For cumulative totals $C_i$ and total weight $T$, its idealized selection shares are
+
+$$
+P(i)=\left[\prod_{j<i}\left(1-\frac{C_j}{T}\right)\right]\frac{C_i}{T}.
+$$
+
+With five equal weights, those shares are 20%, 32%, 28.8%, 15.36%, and 3.84%. The input weights are equal, but the output frequencies are not.<Note id="gashaponWeights" />
+
+<MechanismLab kind="weights" />
+
+This is a much larger distortion than the tiny modulo bias at ordinary small bounds. The <Link href="/implementation-defects/">implementation article</Link> compares this loop with other cases where the order of operations changes the rules.
+
+</section>

@@ -1,0 +1,83 @@
+import { Note } from '@/components/evidence-notes';
+import { Link } from '@/i18n/navigation';
+import { MechanismLab } from '@/components/mechanism-lab';
+
+<div className="article-lead">
+The Purple Glove can create plant food when a zombie is killed. But a kill is not a free-standing lottery ticket: the game first assigns credit to a plant, then checks that plant's chance, cooldown, and the current mode.
+</div>
+
+<section id="item-values" className="prose-section">
+
+## Start with the right item
+
+The Purple Glove's alias is `super_clock`. The actual Speed-up Clock is `super_clock_15`. Names in this family are poor descriptions of their effects; the <Link href="/accessories/">accessory reference</Link> resolves them by item name.
+
+The glove's plant-food effect unlocks at accessory level 3. Its configured chance rises from 10% to 15% and then 18% at levels 3, 4, and 5. Earlier levels still provide attack-related boosts, but no plant-food-on-kill contribution.<Note id="accessoryValues" />
+
+The stored accessory level directly indexes `SuperBoostList`. Index 0 is the un-upgraded state, followed by levels 1–5. There is no hidden extra shift in this lookup.
+
+</section>
+
+<section id="kill-credit" className="prose-section">
+
+## The zombie remembers the last plant that hit it
+
+A plant-sourced damage event writes the source plant's handle into the zombie's credit field. Another plant's later hit replaces that handle. A later non-plant hit does not supply a new plant handle.
+
+The normal lethal-damage paths can pay either the current plant source or the saved plant credit. This makes the most recent plant damage relevant even when that plant is not the source of the final blow.
+
+Both paths share a one-shot flag on the zombie. They set it before entering the reward routine, so the same normal damage event cannot pay both paths. If a later chance or cooldown gate fails, the flag remains spent.<Note id="gloveCredit" />
+
+This path starts from damage handling. A transformation or removal that bypasses it does not become a glove reward merely because the zombie disappears.
+
+</section>
+
+<section id="drop-gates" className="prose-section">
+
+## Chance and cooldown must both pass
+
+Write $u$ for the random draw, $p$ for the plant's plant-food rate, $t$ for the clock, and $d$ for its stored deadline. The two numerical gates are strict:
+
+$$
+u<p,\qquad d<t.
+$$
+
+An allowed successful drop creates the pickup and sets the new deadline to
+
+$$
+d\leftarrow t+8.
+$$
+
+Each plant has its own deadline. Killing many zombies with the same plant during that interval does not create more opportunities for an immediate pickup. A different plant can have a ready deadline of its own. Equality at the deadline still fails; the clock must pass it. The timeline below uses the routine's clock units.<Note id="gloveGates" />
+
+<MechanismLab kind="glove" />
+
+Only success rearms the cooldown. Failed rolls do not postpone its deadline. The draw itself happens before the cooldown test, so an attempt can consume random state even when the deadline will reject it.
+
+The reward routine also has board and mode checks, including exclusions for several modes using special plant-food variants. Its ordinary plant-food spawn branch does not impose a per-wave quota or check whether the player's plant-food meter is full. Creating a pickup and collecting it are separate operations.
+
+</section>
+
+<section id="shared-reward" className="prose-section">
+
+## Another caller changes the accounting
+
+The Spartan Bamboo matrix system calls the same reward routine for each registered plant that resolves. That caller does not consult the normal per-zombie one-shot flag. Multiple plants can therefore reach their own chance and deadline gates from the same matrix event.
+
+This is a different caller with different accounting. Treating every path as “one roll per zombie” misses it; treating every plant as eligible for repeated normal kill credit also misses the one-shot flag.
+
+The resulting pickup uses the same factory as the <Link href="/drops/#food-pickup">carrier-based plant-food path</Link>. The two systems meet at pickup creation, after arriving through different eligibility rules.
+
+</section>
+
+<section id="random-consumption" className="prose-section">
+
+## Even a failed reward can change later randomness
+
+The routine draws for plant food and coins before reading whether their rates can succeed. Under the ordinary global-stream path, a plant-credited kill uses at least 2 draws. It uses 3 while the sun amount is at most 499, and 5 when the sun payout branch also fires.
+
+That consumption can shift unrelated later results on the same game generator. It does not advance Evolution's separate library-shuffle stream. The <Link href="/randomness/">stream diagram</Link> shows why these distinctions matter.
+
+For the full level table and equip exclusions, see the <Link href="/accessories/super_clock/">Purple Glove record</Link>.
+
+</section>

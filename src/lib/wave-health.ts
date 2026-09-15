@@ -24,7 +24,5 @@ export function waveHealth(entities: readonly { body: number; helmet: number }[]
 }
 
 export function healthThreshold(initial: number, fraction: number) {
-  return reportedHealth(
-    Math.fround(Math.fround(reportedHealth(initial)) * Math.fround(fraction)),
-  );
+  return reportedHealth(Math.fround(Math.fround(reportedHealth(initial)) * Math.fround(fraction)));
 }

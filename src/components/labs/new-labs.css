@@ -1,0 +1,305 @@
+@layer components {
+  .new-lab {
+    padding: 12px 8px 20px;
+  }
+  .new-lab h3 {
+    font-size: 23px;
+    font-weight: 550;
+    letter-spacing: -0.03em;
+    margin: 20px 0;
+  }
+  .new-lab h4 {
+    font-size: 23px;
+    font-weight: 550;
+    margin: 16px 0;
+    line-height: 1.4;
+  }
+  .new-lab .lab-controls {
+    flex-wrap: wrap;
+  }
+  .new-lab .lab-controls > button,
+  .stream-lane > button,
+  .lab-presets button {
+    padding: 12px 18px;
+    border: 1px solid #b8c6ab;
+    border-radius: 5px;
+    background: #e8eddf;
+    font-size: 12px;
+  }
+  .lab-presets {
+    display: flex;
+    gap: 6px;
+  }
+  .lab-presets button[aria-pressed='true'] {
+    background: #29442e;
+    color: #f1f5e7;
+  }
+  .new-lab-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    margin: 25px 0;
+  }
+  .new-lab .lab-stat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 14px;
+    margin: 25px 0;
+  }
+  .new-lab .lab-caption {
+    font-size: 12px;
+    color: #607155;
+    line-height: 1.8;
+    margin: 18px 0;
+  }
+  .new-lab input[type='number'],
+  .new-lab input[type='search'],
+  .new-lab select {
+    border: 1px solid #bac8aa;
+    border-radius: 5px;
+    padding: 9px 11px;
+    font-size: 13px;
+    color: #263b2a;
+    background: #fbfcf5;
+    max-width: 100%;
+  }
+  .new-lab label {
+    font-size: 11px;
+    display: grid;
+    gap: 8px;
+  }
+  .new-lab .lab-toggle {
+    display: flex;
+  }
+  .candidate-list {
+    max-height: 340px;
+    overflow: auto;
+    list-style: none;
+    padding: 0;
+    border-block: 1px solid #d4ddc7;
+    scrollbar-width: thin;
+  }
+  .candidate-list li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 12px;
+    gap: 15px;
+    border-bottom: 1px solid #e0e6d6;
+    padding: 10px 5px;
+  }
+  .candidate-list a span {
+    display: block;
+  }
+  .candidate-list code {
+    display: block;
+    font-size: 10px;
+    color: #778a68;
+    margin-top: 5px;
+  }
+  .lab-outcome {
+    padding: 20px;
+    background: #e5edda;
+    font-size: 15px;
+    line-height: 1.7;
+  }
+  .glove-card {
+    padding: 25px;
+    border: 1px solid #c7d3ba;
+  }
+  .glove-card h3 {
+    margin-top: 0;
+  }
+  .drop-outcome {
+    min-height: 130px;
+    margin: 20px 0;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    text-align: center;
+  }
+  .drop-outcome > span {
+    font-size: 28px;
+    color: #657a48;
+  }
+  .drop-outcome strong {
+    font-size: 14px;
+    font-weight: 550;
+  }
+  .recharge-bars {
+    margin: 35px 0;
+  }
+  .recharge-bars > div {
+    margin-bottom: 22px;
+    font-size: 12px;
+  }
+  .recharge-bars > div > div {
+    position: relative;
+    height: 42px;
+    background: #e3e9da;
+    margin-top: 10px;
+  }
+  .recharge-bars > div > div > div {
+    height: 100%;
+    background: #7e9a65;
+  }
+  .recharge-bars > div > div > strong {
+    position: absolute;
+    top: 12px;
+    left: 15px;
+    color: #162c1d;
+  }
+  .formula-walk {
+    display: flex;
+    flex-direction: column;
+    gap: 13px;
+    align-items: center;
+    padding: 25px;
+    border: 1px solid #c7d3ba;
+  }
+  .formula-walk > div {
+    width: 100%;
+    padding: 20px;
+    background: #e8eddf;
+  }
+  .formula-walk span {
+    display: block;
+    font-size: 11px;
+    margin-bottom: 14px;
+    color: #647455;
+  }
+  .formula-walk code {
+    font-size: 19px;
+  }
+  .stream-lane {
+    padding: 25px;
+    margin: 25px 0;
+    border: 1px solid #c6d1b8;
+  }
+  .stream-lane header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 15px;
+  }
+  .stream-lane h3 {
+    margin: 0;
+  }
+  .stream-lane header > span {
+    font-size: 11px;
+  }
+  .stream-values {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+    margin: 20px 0;
+  }
+  .stream-values > div {
+    padding: 17px 10px;
+    background: #e0e9d2;
+    text-align: center;
+  }
+  .stream-values small {
+    font-size: 10px;
+    color: #768561;
+    display: block;
+  }
+  .stream-values strong {
+    font-size: 16px;
+    font-weight: 500;
+    display: block;
+    margin-top: 10px;
+  }
+  .stream-lane.library .stream-values > div {
+    background: #eee4d0;
+  }
+  .weight-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px;
+    font-size: 11px;
+    margin: 30px 0;
+  }
+  .weight-legend span:before {
+    content: '';
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    margin-right: 8px;
+    background: #79985e;
+    vertical-align: middle;
+  }
+  .weight-legend span + span:before {
+    background: #cf9d63;
+  }
+  .weight-chart-row {
+    display: grid;
+    grid-template-columns: 90px 1fr;
+    align-items: center;
+    gap: 15px;
+    margin: 20px 0;
+  }
+  .weight-chart-row > strong {
+    font-size: 12px;
+    font-weight: 550;
+  }
+  .weight-bar {
+    position: relative;
+    height: 25px;
+    background: #e7ebde;
+    margin: 4px 0;
+    padding-right: 70px;
+  }
+  .weight-bar > div {
+    height: 100%;
+    background: #79985e;
+  }
+  .weight-bar > .redraw {
+    background: #cf9d63;
+  }
+  .weight-bar output {
+    position: absolute;
+    right: 8px;
+    top: 5px;
+    font-size: 11px;
+    font-variant-numeric: tabular-nums;
+  }
+}
+@media (max-width: 720px) {
+  .new-lab-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  .stream-values {
+    gap: 4px;
+  }
+  .stream-values > div {
+    padding: 12px 5px;
+  }
+  .stream-values strong {
+    font-size: 12px;
+  }
+  .weight-chart-row {
+    grid-template-columns: 65px 1fr;
+    gap: 8px;
+  }
+  .formula-walk {
+    padding: 12px;
+  }
+  .formula-walk code {
+    font-size: 15px;
+  }
+}
+
+.shuffle-preview .stream-values {
+  grid-template-columns: repeat(8, 1fr);
+}
+.shuffle-preview .stream-values > strong {
+  padding: 15px 0;
+  text-align: center;
+  background: #eee4d0;
+}

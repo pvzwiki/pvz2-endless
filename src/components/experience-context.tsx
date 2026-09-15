@@ -7,8 +7,12 @@ import { useLocale } from 'next-intl';
 
 type Experience = {
   ready: boolean;
-  locale: Locale; plan: WavePlan; selected: number; showBoost: boolean;
-  setLevel: (level: number) => void; setSelected: (wave: number) => void;
+  locale: Locale;
+  plan: WavePlan;
+  selected: number;
+  showBoost: boolean;
+  setLevel: (level: number) => void;
+  setSelected: (wave: number) => void;
   inspectWave: (level: number, wave: number) => void;
   setShowBoost: (value: boolean) => void;
   view: 'visualization' | 'levels' | 'roster' | null;
@@ -16,7 +20,13 @@ type Experience = {
 };
 const Context = createContext<Experience | null>(null);
 
-export function ExperienceProvider({ children, kind }: { children: ReactNode; kind: 'waves' | 'roster' }) {
+export function ExperienceProvider({
+  children,
+  kind,
+}: {
+  children: ReactNode;
+  kind: 'waves' | 'roster';
+}) {
   const locale = useLocale() as Locale;
   const [level, updateLevel] = useState(36);
   const [selected, updateSelected] = useState(5);
@@ -30,11 +40,15 @@ export function ExperienceProvider({ children, kind }: { children: ReactNode; ki
     const validLevel = isOrdinaryLevel(requested) ? requested : 36;
     const requestedWave = Number(query.get('wave'));
     updateLevel(validLevel);
-    updateSelected(Number.isInteger(requestedWave) && requestedWave > 0
-      ? Math.min(requestedWave, createWavePlan(validLevel).count) : 5);
+    updateSelected(
+      Number.isInteger(requestedWave) && requestedWave > 0
+        ? Math.min(requestedWave, createWavePlan(validLevel).count)
+        : 5,
+    );
     setShowBoost(query.get('boost') !== '0');
     const requestedView = query.get('view');
-    if (kind === 'waves' && (requestedView === 'visualization' || requestedView === 'levels')) setView(requestedView);
+    if (kind === 'waves' && (requestedView === 'visualization' || requestedView === 'levels'))
+      setView(requestedView);
     if (kind === 'roster' && requestedView === 'roster') setView(requestedView);
     setUrlReady(true);
   }, [kind]);
@@ -49,7 +63,8 @@ export function ExperienceProvider({ children, kind }: { children: ReactNode; ki
       url.searchParams.delete('wave');
       url.searchParams.delete('boost');
     }
-    if (view) url.searchParams.set('view', view); else url.searchParams.delete('view');
+    if (view) url.searchParams.set('view', view);
+    else url.searchParams.delete('view');
     window.history.replaceState(window.history.state, '', url);
   }, [level, selected, showBoost, view, urlReady, kind]);
   function setLevel(value: number) {
@@ -57,14 +72,29 @@ export function ExperienceProvider({ children, kind }: { children: ReactNode; ki
     updateLevel(value);
     updateSelected((previous) => Math.min(previous, createWavePlan(value).count));
   }
-  return <Context.Provider value={{ ready: urlReady, locale, plan, selected, showBoost, setLevel,
-    inspectWave: (nextLevel, wave) => {
-      if (!isOrdinaryLevel(nextLevel)) return;
-      updateLevel(nextLevel);
-      updateSelected(Math.max(1, Math.min(createWavePlan(nextLevel).count, wave)));
-    },
-    setSelected: (wave) => updateSelected(Math.max(1, Math.min(plan.count, wave))),
-    setShowBoost, view, setView }}>{children}</Context.Provider>;
+  return (
+    <Context.Provider
+      value={{
+        ready: urlReady,
+        locale,
+        plan,
+        selected,
+        showBoost,
+        setLevel,
+        inspectWave: (nextLevel, wave) => {
+          if (!isOrdinaryLevel(nextLevel)) return;
+          updateLevel(nextLevel);
+          updateSelected(Math.max(1, Math.min(createWavePlan(nextLevel).count, wave)));
+        },
+        setSelected: (wave) => updateSelected(Math.max(1, Math.min(plan.count, wave))),
+        setShowBoost,
+        view,
+        setView,
+      }}
+    >
+      {children}
+    </Context.Provider>
+  );
 }
 
 export function useExperience() {

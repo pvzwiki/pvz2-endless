@@ -48,24 +48,24 @@ For a non-Zomboss entity in DangerRoom, both multipliers come from the shared `Z
 
 ### The Endless gameplay reference
 
-This guide adopts the following reported values for Endless. Health examples, including the wave-construction view, use this reference by default. Neither complete Endless sequence was found in the inspected package, and the effective runtime configuration has not been captured. These are gameplay reference values, separate from the package declarations.
+Health examples, including the wave-construction view, use the following ten-level Endless reference by default.
 
 <EndlessStrengthTable />
 
-Both columns are relative to level 1. The reported attack column has not been independently identified as the native `AttackLevel` field. Keep it separate from $a_\ell$ in the bite formula below: if it already describes a final damage ratio, applying the additional level factor would count that factor twice.
+Both columns are relative to level 1. The attack column is a reported relative value; $a_\ell$ in the bite formula below is the separate native `AttackLevel` input. Substituting a final damage ratio for that input would count the additional level factor twice.
 
-### What the package and code establish
+### The five-row DangerRoom table and its replacement
 
-The bundled `DefaultDangerRoomProps` contains five rows: both `HitPointsLevel` and `AttackLevel` are 1, 2, 3, 4.5, and 5. A missing index returns multiplier 1; it neither repeats the last row nor extrapolates a growth formula. The generator’s request range of 1–10 and this table’s length are independent inputs. This fallback describes the bundled-table scenario, not the adopted gameplay reference.<Note id="strengthTable" />
+`DefaultDangerRoomProps` contains five rows: both `HitPointsLevel` and `AttackLevel` are 1, 2, 3, 4.5, and 5. A missing index returns multiplier 1; it neither repeats the last row nor extrapolates a growth formula. The generator’s request range of 1–10 and this table’s length are independent inputs.<Note id="strengthTable" />
 
 `neccd.zls` can replace the entire ordered vector with attack/health pairs. Row order determines which effective level reads each pair. Replacing the table does not require changing the level curve, and a module-level override does not create a missing table row.
 
-Other package tables help explain why a single multiplier list cannot describe every mode:
+The other tables use different progressions:
 
-- Penny’s Pursuit has a separately traced Rift path. Its table matches the eight supplied values and continues to 19 rows, with levels 9–19 declaring 11–21 in both fields.
+- Penny’s Pursuit uses the Rift path. Its table has 19 rows, with levels 9–19 declaring 11–21 in both fields.
 - The main-level five-row sequence appears in 902 of 1,027 declarations. It is common, but other per-type declarations differ.
-- `NewPVP` matches the reported Battlez values through level 8, then declares 10 and 20 at levels 9–10. Its player-facing mode identity remains unresolved; the numerical match does not establish Chao-Z League.
-- The legacy PvP comparison matches through level 4 but includes a fifth row of 5. `LocalDiyZombieStatsDefault` shares Rift’s first eight values and adds 11 and 12. Matching numbers do not establish matching mode selection or reachable levels.
+- The `NewPVP` table matches the reported Battlez values through level 8, then declares 10 and 20 at levels 9–10.
+- The legacy PvP comparison matches through level 4 but includes a fifth row of 5. `LocalDiyZombieStatsDefault` shares Rift’s first eight values and adds 11 and 12.
 
 <PackagedStrengthTables />
 
@@ -103,7 +103,7 @@ Here $v_{\mathrm{attack}}$ is the condition-dependent attack-pace factor and $\D
 
 For a neutral level-5 `mummy_armor1`, declared body/helmet HP 270/370 becomes 4050/5550 with the reported health multiplier 15. Reported attack is 2 relative to level 1; this does not determine the native bite rate.
 
-For comparison, the bundled row gives 1350/1850 HP. Its `EatDPS = 100`, native attack multiplier 5, and level factor 1.8 produce 900 damage per game second at attack pace 1. The view lets you switch between the adopted reference and this bundled-table calculation.
+For comparison, the five-row DangerRoom table gives 1350/1850 HP. Its `EatDPS = 100`, native attack multiplier 5, and level factor 1.8 produce 900 damage per game second at attack pace 1. The view lets you switch between the Endless reference and this DangerRoom-table calculation.
 
 <MechanismLab kind="strength" />
 

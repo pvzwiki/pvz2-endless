@@ -1,0 +1,2486 @@
+{
+  "schemaVersion": 1,
+  "plants": [
+    {
+      "plant": "sunflower",
+      "type_class": "PlantType",
+      "cost": 50,
+      "black_list_stages": [
+        "moon"
+      ]
+    },
+    {
+      "plant": "peashooter",
+      "type_class": "PlantType",
+      "cost": 100
+    },
+    {
+      "plant": "moton",
+      "type_class": "PlantType",
+      "cost": 200
+    },
+    {
+      "plant": "wallnut",
+      "type_class": "PlantType",
+      "cost": 50
+    },
+    {
+      "plant": "tallnut",
+      "type_class": "PlantType",
+      "cost": 125
+    },
+    {
+      "plant": "hammerflower",
+      "type_class": "PlantType",
+      "cost": 150,
+      "valid_stages": [
+        "beach",
+        "cowboy",
+        "dark",
+        "dino",
+        "egypt",
+        "eighties",
+        "future",
+        "heian",
+        "atlantis",
+        "iceage",
+        "kongfu",
+        "lostcity",
+        "modern",
+        "renai",
+        "steam",
+        "pirate",
+        "night",
+        "roof",
+        "snow_roof",
+        "snow_night",
+        "snow_modern",
+        "rift",
+        "fairy_tale",
+        "newyear_daylight",
+        "newyear_night",
+        "halloween",
+        "spring_night",
+        "spring_daylight",
+        "uncharted_iceage",
+        "childrenday",
+        "newyear_night",
+        "uncharted_needforspeed"
+      ]
+    },
+    {
+      "plant": "ents",
+      "type_class": "PlantType",
+      "cost": 100,
+      "valid_stages": [
+        "beach",
+        "cowboy",
+        "dark",
+        "dino",
+        "egypt",
+        "eighties",
+        "future",
+        "heian",
+        "atlantis",
+        "iceage",
+        "kongfu",
+        "lostcity",
+        "modern",
+        "renai",
+        "steam",
+        "pirate",
+        "night",
+        "roof",
+        "snow_roof",
+        "snow_night",
+        "snow_modern",
+        "rift",
+        "fairy_tale",
+        "newyear_daylight",
+        "newyear_night",
+        "halloween",
+        "spring_night",
+        "spring_daylight",
+        "uncharted_iceage",
+        "childrenday",
+        "newyear_night",
+        "uncharted_needforspeed"
+      ]
+    },
+    {
+      "plant": "tigerstool",
+      "type_class": "PlantType",
+      "cost": 250,
+      "valid_stages": [
+        "beach",
+        "cowboy",
+        "dark",
+        "dino",
+        "egypt",
+        "eighties",
+        "future",
+        "heian",
+        "atlantis",
+        "iceage",
+        "kongfu",
+        "lostcity",
+        "modern",
+        "renai",
+        "steam",
+        "pirate",
+        "night",
+        "roof",
+        "snow_roof",
+        "snow_night",
+        "snow_modern",
+        "rift",
+        "fairy_tale",
+        "newyear_daylight",
+        "newyear_night",
+        "halloween",
+        "spring_night",
+        "spring_daylight",
+        "uncharted_iceage",
+        "childrenday",
+        "newyear_night",
+        "uncharted_needforspeed"
+      ]
+    },
+    {
+      "plant": "magicbeans",
+      "type_class": "PlantType",
+      "cost": 25,
+      "enabled": false,
+      "is_consumable": true
+    },
+    {
+      "plant": "draftodil",
+      "type_class": "PlantType",
+      "cost": 100
+    },
+    {
+      "plant": "heathseeker",
+      "type_class": "PlantType",
+      "cost": 125,
+      "is_consumable": true
+    },
+    {
+      "plant": "bonkchoy",
+      "type_class": "PlantType",
+      "cost": 150
+    },
+    {
+      "plant": "cabbagepult",
+      "type_class": "PlantType",
+      "cost": 100
+    },
+    {
+      "plant": "melonpult",
+      "type_class": "PlantType",
+      "cost": 325
+    },
+    {
+      "plant": "cherry_bomb",
+      "type_class": "PlantType",
+      "cost": 150
+    },
+    {
+      "plant": "coconutcannon",
+      "type_class": "PlantType",
+      "cost": 400
+    },
+    {
+      "plant": "gravebuster",
+      "type_class": "PlantTypeGraveBuster",
+      "cost": 0,
+      "is_consumable": true
+    },
+    {
+      "plant": "iceburg",
+      "type_class": "PlantType",
+      "cost": 0,
+      "is_consumable": true
+    },
+    {
+      "plant": "laser_bean",
+      "type_class": "PlantType",
+      "cost": 200
+    },
+    {
+      "plant": "potatomine",
+      "type_class": "PlantType",
+      "cost": 25,
+      "is_consumable": true
+    },
+    {
+      "plant": "repeater",
+      "type_class": "PlantType",
+      "cost": 200
+    },
+    {
+      "plant": "snapdragon",
+      "type_class": "PlantType",
+      "cost": 150
+    },
+    {
+      "plant": "spikeweed",
+      "type_class": "PlantType",
+      "cost": 100
+    },
+    {
+      "plant": "parallel_spikeweed",
+      "type_class": "PlantType",
+      "cost": 100
+    },
+    {
+      "plant": "threepeater",
+      "type_class": "PlantTypePeashooter",
+      "cost": 300
+    },
+    {
+      "plant": "torchwood",
+      "type_class": "PlantType",
+      "cost": 175
+    },
+    {
+      "plant": "kernelpult",
+      "type_class": "PlantType",
+      "cost": 100
+    },
+    {
+      "plant": "springbean",
+      "type_class": "PlantType",
+      "cost": 50
+    },
+    {
+      "plant": "snowpea",
+      "type_class": "PlantTypePeashooter",
+      "cost": 150
+    },
+    {
+      "plant": "chilibean",
+      "type_class": "PlantType",
+      "cost": 50,
+      "is_consumable": true
+    },
+    {
+      "plant": "splitpea",
+      "type_class": "PlantType",
+      "cost": 125
+    },
+    {
+      "plant": "parallel_splitpea",
+      "type_class": "PlantType",
+      "cost": 125
+    },
+    {
+      "plant": "lightningreed",
+      "type_class": "PlantType",
+      "cost": 125
+    },
+    {
+      "plant": "peapod",
+      "type_class": "PlantTypePeapod",
+      "cost": 125
+    },
+    {
+      "plant": "magnifyinggrass",
+      "type_class": "PlantType",
+      "cost": 50,
+      "black_list_stages": [
+        "moon"
+      ]
+    },
+    {
+      "plant": "bloomerang",
+      "type_class": "PlantTypeBloomerang",
+      "cost": 175
+    },
+    {
+      "plant": "holonut",
+      "type_class": "PlantType",
+      "cost": 75
+    },
+    {
+      "plant": "empea",
+      "type_class": "PlantType",
+      "cost": 25,
+      "is_consumable": true
+    },
+    {
+      "plant": "blover",
+      "type_class": "PlantType",
+      "cost": 50,
+      "is_consumable": true,
+      "black_list_stages": [
+        "moon"
+      ]
+    },
+    {
+      "plant": "starfruit",
+      "type_class": "PlantType",
+      "cost": 150
+    },
+    {
+      "plant": "imitater",
+      "type_class": "PlantType",
+      "cost": null,
+      "is_consumable": true
+    },
+    {
+      "plant": "minigame_imitater",
+      "type_class": "PlantType",
+      "cost": null,
+      "is_consumable": true
+    },
+    {
+      "plant": "minigame_imitater_sun",
+      "type_class": "PlantType",
+      "cost": 25,
+      "is_consumable": true
+    },
+    {
+      "plant": "minigame_imitater_melee1",
+      "type_class": "PlantType",
+      "cost": 200,
+      "is_consumable": true
+    },
+    {
+      "plant": "minigame_imitater_melee2",
+      "type_class": "PlantType",
+      "cost": 200,
+      "is_consumable": true
+    },
+    {
+      "plant": "minigame_imitater_melee3",
+      "type_class": "PlantType",
+      "cost": 200,
+      "is_consumable": true
+    },
+    {
+      "plant": "minigame_imitater_melee4",
+      "type_class": "PlantType",
+      "cost": 200,
+      "is_consumable": true
+    },
+    {
+      "plant": "minigame_imitater_defense",
+      "type_class": "PlantType",
+      "cost": 125,
+      "is_consumable": true
+    },
+    {
+      "plant": "minigame_imitater_pitfall",
+      "type_class": "PlantType",
+      "cost": 25,
+      "is_consumable": true
+    },
+    {
+      "plant": "minigame_imitater_helper",
+      "type_class": "PlantType",
+      "cost": 100,
+      "is_consumable": true
+    },
+    {
+      "plant": "minigame_imitater_adc1",
+      "type_class": "PlantType",
+      "cost": 200,
+      "is_consumable": true
+    },
+    {
+      "plant": "minigame_imitater_adc2",
+      "type_class": "PlantType",
+      "cost": 200,
+      "is_consumable": true
+    },
+    {
+      "plant": "minigame_imitater_adc3",
+      "type_class": "PlantType",
+      "cost": 200,
+      "is_consumable": true
+    },
+    {
+      "plant": "minigame_imitater_adc4",
+      "type_class": "PlantType",
+      "cost": 200,
+      "is_consumable": true
+    },
+    {
+      "plant": "minigame_imitater_adc5",
+      "type_class": "PlantType",
+      "cost": 75,
+      "is_consumable": true
+    },
+    {
+      "plant": "jalapeno",
+      "type_class": "PlantType",
+      "cost": 125,
+      "is_consumable": true
+    },
+    {
+      "plant": "wintermelon",
+      "type_class": "PlantTypeWinterMelon",
+      "cost": 500
+    },
+    {
+      "plant": "parallel_wintermelon",
+      "type_class": "PlantType",
+      "cost": 500
+    },
+    {
+      "plant": "twinsunflower",
+      "type_class": "PlantTypeTwinSunflower",
+      "cost": 125,
+      "black_list_stages": [
+        "moon"
+      ]
+    },
+    {
+      "plant": "marigold",
+      "type_class": "PlantType",
+      "cost": 50,
+      "enabled": true
+    },
+    {
+      "plant": "spikerock",
+      "type_class": "PlantTypeSpikerock",
+      "cost": 250
+    },
+    {
+      "plant": "powerlily",
+      "type_class": "PlantType",
+      "cost": 175,
+      "is_consumable": true,
+      "black_list_stages": [
+        "moon"
+      ]
+    },
+    {
+      "plant": "squash",
+      "type_class": "PlantType",
+      "cost": 50,
+      "is_consumable": true
+    },
+    {
+      "plant": "turnip",
+      "type_class": "PlantType",
+      "cost": 50
+    },
+    {
+      "plant": "firegourd",
+      "type_class": "PlantType",
+      "cost": 200
+    },
+    {
+      "plant": "peach",
+      "type_class": "PlantType",
+      "cost": 125
+    },
+    {
+      "plant": "bamboo",
+      "type_class": "PlantType",
+      "cost": 175
+    },
+    {
+      "plant": "citron",
+      "type_class": "PlantType",
+      "cost": 350
+    },
+    {
+      "plant": "powerplant",
+      "type_class": "PlantTypePowerPlant",
+      "cost": 0,
+      "is_consumable": true
+    },
+    {
+      "plant": "smallcherry",
+      "type_class": "PlantType",
+      "cost": 0,
+      "enabled": false
+    },
+    {
+      "plant": "carrotlauncher",
+      "type_class": "PlantType",
+      "cost": 450
+    },
+    {
+      "plant": "uncharted_carrotlauncher",
+      "type_class": "PlantType",
+      "cost": 125,
+      "enabled": false
+    },
+    {
+      "plant": "carrotmissile",
+      "type_class": "PlantType",
+      "cost": 0,
+      "enabled": false
+    },
+    {
+      "plant": "sunshroom",
+      "type_class": "PlantType",
+      "cost": 25,
+      "black_list_stages": [
+        "moon"
+      ]
+    },
+    {
+      "plant": "puffshroom",
+      "type_class": "PlantType",
+      "cost": 0
+    },
+    {
+      "plant": "sea_puffshroom",
+      "type_class": "SeaPuffshroomType",
+      "cost": 0,
+      "enabled": false
+    },
+    {
+      "plant": "fumeshroom",
+      "type_class": "PlantType",
+      "cost": 125
+    },
+    {
+      "plant": "sunbean",
+      "type_class": "PlantType",
+      "cost": 50,
+      "is_consumable": true,
+      "black_list_stages": [
+        "moon"
+      ]
+    },
+    {
+      "plant": "magnetshroom",
+      "type_class": "PlantType",
+      "cost": 100
+    },
+    {
+      "plant": "hypnoshroom",
+      "type_class": "PlantType",
+      "cost": 75,
+      "is_consumable": true
+    },
+    {
+      "plant": "peanut",
+      "type_class": "PlantType",
+      "cost": 150
+    },
+    {
+      "plant": "oakshooter",
+      "type_class": "PlantType",
+      "cost": 275
+    },
+    {
+      "plant": "iceshroom",
+      "type_class": "PlantType",
+      "cost": 175
+    },
+    {
+      "plant": "fireshroom",
+      "type_class": "PlantType",
+      "cost": 225
+    },
+    {
+      "plant": "coffeebean",
+      "type_class": "PlantTypeCoffeeBean",
+      "cost": 75
+    },
+    {
+      "plant": "streetlamp",
+      "type_class": "PlantType",
+      "cost": 25
+    },
+    {
+      "plant": "dandelion",
+      "type_class": "PlantType",
+      "cost": 200
+    },
+    {
+      "plant": "broccoli",
+      "type_class": "PlantType",
+      "cost": 150
+    },
+    {
+      "plant": "pamegranate",
+      "type_class": "PlantType",
+      "cost": 325,
+      "black_list_stages": [
+        "moon"
+      ]
+    },
+    {
+      "plant": "lilypad",
+      "type_class": "PlantTypeLilyPad",
+      "cost": 25,
+      "is_consumable": false,
+      "valid_stages": [
+        "beach"
+      ]
+    },
+    {
+      "plant": "flowerpot",
+      "type_class": "PlantTypeFlowerPot",
+      "cost": 25,
+      "is_consumable": false,
+      "valid_stages": [
+        "roof",
+        "snow_roof",
+        "roof_night"
+      ]
+    },
+    {
+      "plant": "cosmoss",
+      "type_class": "PlantTypeCosmoss",
+      "cost": 25,
+      "is_consumable": false,
+      "valid_stages": [
+        "moon"
+      ]
+    },
+    {
+      "plant": "bowlingbulb",
+      "type_class": "PlantType",
+      "cost": 200
+    },
+    {
+      "plant": "banana",
+      "type_class": "PlantType",
+      "cost": 500
+    },
+    {
+      "plant": "guacodile",
+      "type_class": "PlantType",
+      "cost": 125
+    },
+    {
+      "plant": "tanglekelp",
+      "type_class": "PlantTypeTangleKelp",
+      "cost": 25,
+      "is_consumable": true,
+      "valid_stages": [
+        "beach"
+      ]
+    },
+    {
+      "plant": "homingthistle",
+      "type_class": "PlantType",
+      "cost": 250
+    },
+    {
+      "plant": "chomper",
+      "type_class": "PlantType",
+      "cost": 150
+    },
+    {
+      "plant": "lemon",
+      "type_class": "PlantType",
+      "cost": 125
+    },
+    {
+      "plant": "ghostpepper",
+      "type_class": "PlantType",
+      "cost": 100
+    },
+    {
+      "plant": "sweetpotato",
+      "type_class": "PlantType",
+      "cost": 300
+    },
+    {
+      "plant": "cracker",
+      "type_class": "PlantType",
+      "cost": 50
+    },
+    {
+      "plant": "lotusshower",
+      "type_class": "PlantType",
+      "cost": 200
+    },
+    {
+      "plant": "sapfling",
+      "type_class": "PlantType",
+      "cost": 150
+    },
+    {
+      "plant": "hurrikale",
+      "type_class": "PlantType",
+      "cost": 100,
+      "is_consumable": true,
+      "black_list_stages": [
+        "moon"
+      ]
+    },
+    {
+      "plant": "firepeashooter",
+      "type_class": "PlantTypePeashooter",
+      "cost": 175
+    },
+    {
+      "plant": "hotpotato",
+      "type_class": "PlantTypeHotPotato",
+      "cost": 0,
+      "is_consumable": true,
+      "valid_stages": [
+        "iceage",
+        "snow_roof",
+        "snow_night",
+        "snow_modern",
+        "uncharted_iceage",
+        "uncharted_childrensday",
+        "newyear_night"
+      ]
+    },
+    {
+      "plant": "pepperpult",
+      "type_class": "PlantType",
+      "cost": 200
+    },
+    {
+      "plant": "chardguard",
+      "type_class": "PlantTypeChardGuard",
+      "cost": 75
+    },
+    {
+      "plant": "stunion",
+      "type_class": "PlantType",
+      "cost": 25,
+      "is_consumable": true
+    },
+    {
+      "plant": "xshot",
+      "type_class": "PlantType",
+      "cost": 150
+    },
+    {
+      "plant": "rafflesia",
+      "type_class": "PlantType",
+      "cost": 350
+    },
+    {
+      "plant": "acorn",
+      "type_class": "PlantType",
+      "cost": 300
+    },
+    {
+      "plant": "chestnut",
+      "type_class": "PlantType",
+      "cost": 175
+    },
+    {
+      "plant": "smallChestnut",
+      "type_class": "PlantTypeChestnut",
+      "cost": null,
+      "enabled": false
+    },
+    {
+      "plant": "smallChestnutLv5",
+      "type_class": "PlantTypeChestnut",
+      "cost": null,
+      "enabled": false
+    },
+    {
+      "plant": "sugarcane",
+      "type_class": "PlantType",
+      "cost": 75
+    },
+    {
+      "plant": "bashopult",
+      "type_class": "PlantType",
+      "cost": 123,
+      "enabled": false
+    },
+    {
+      "plant": "magicshroom",
+      "type_class": "PlantType",
+      "cost": 175
+    },
+    {
+      "plant": "roseswordman",
+      "type_class": "PlantType",
+      "cost": 225
+    },
+    {
+      "plant": "doublesamara",
+      "type_class": "PlantType",
+      "cost": 75,
+      "is_consumable": true
+    },
+    {
+      "plant": "anthurium",
+      "type_class": "PlantType",
+      "cost": 150
+    },
+    {
+      "plant": "asparagus",
+      "type_class": "PlantType",
+      "cost": 125
+    },
+    {
+      "plant": "saucer",
+      "type_class": "PlantType",
+      "cost": 25
+    },
+    {
+      "plant": "horsebean",
+      "type_class": "PlantType",
+      "cost": 450
+    },
+    {
+      "plant": "groundcherry",
+      "type_class": "PlantType",
+      "cost": 25
+    },
+    {
+      "plant": "pineapple",
+      "type_class": "PlantType",
+      "cost": 75
+    },
+    {
+      "plant": "electricblueberry",
+      "type_class": "PlantType",
+      "cost": 150
+    },
+    {
+      "plant": "birthsunflower",
+      "type_class": "PlantType",
+      "cost": 125,
+      "black_list_stages": [
+        "moon"
+      ]
+    },
+    {
+      "plant": "greenturnip",
+      "type_class": "PlantType",
+      "cost": 425
+    },
+    {
+      "plant": "endurian",
+      "type_class": "PlantType",
+      "cost": 100
+    },
+    {
+      "plant": "pumpkinwitch",
+      "type_class": "PlantType",
+      "cost": 250
+    },
+    {
+      "plant": "sunpod",
+      "type_class": "PlantType",
+      "cost": 300,
+      "enabled": false
+    },
+    {
+      "plant": "goldleaf",
+      "type_class": "PlantTypeGoldLeaf",
+      "cost": 50,
+      "is_consumable": true,
+      "valid_stages": [
+        "lostcity"
+      ],
+      "black_list_stages": [
+        "moon"
+      ]
+    },
+    {
+      "plant": "sungun",
+      "type_class": "PlantType",
+      "cost": 50,
+      "enabled": false,
+      "is_consumable": true
+    },
+    {
+      "plant": "akee",
+      "type_class": "PlantType",
+      "cost": 175
+    },
+    {
+      "plant": "springprincess",
+      "type_class": "PlantType",
+      "cost": 250
+    },
+    {
+      "plant": "redstinger",
+      "type_class": "PlantType",
+      "cost": 150
+    },
+    {
+      "plant": "stallia",
+      "type_class": "PlantType",
+      "cost": 0,
+      "is_consumable": true
+    },
+    {
+      "plant": "cottonyeti",
+      "type_class": "PlantType",
+      "cost": 175
+    },
+    {
+      "plant": "agave",
+      "type_class": "PlantType",
+      "cost": 325
+    },
+    {
+      "plant": "lavaguava",
+      "type_class": "PlantType",
+      "cost": 75,
+      "is_consumable": true
+    },
+    {
+      "plant": "toadstool",
+      "type_class": "PlantType",
+      "cost": 200,
+      "black_list_stages": [
+        "moon"
+      ]
+    },
+    {
+      "plant": "fishhookgrass",
+      "type_class": "PlantType",
+      "cost": 150,
+      "valid_stages": [
+        "beach",
+        "cowboy",
+        "dark",
+        "dino",
+        "egypt",
+        "eighties",
+        "future",
+        "heian",
+        "atlantis",
+        "iceage",
+        "kongfu",
+        "lostcity",
+        "modern",
+        "renai",
+        "steam",
+        "pirate",
+        "night",
+        "snow_night",
+        "snow_modern",
+        "skycity",
+        "fairy_tale",
+        "rift",
+        "newyear_daylight",
+        "newyear_night",
+        "halloween",
+        "spring_night",
+        "spring_daylight",
+        "uncharted_iceage",
+        "childrenday",
+        "newyear_night",
+        "uncharted_needforspeed"
+      ]
+    },
+    {
+      "plant": "jackfruit",
+      "type_class": "PlantType",
+      "cost": 75,
+      "is_consumable": true
+    },
+    {
+      "plant": "parallel_jackfruit",
+      "type_class": "PlantType",
+      "cost": 75,
+      "is_consumable": true
+    },
+    {
+      "plant": "kiwifruit",
+      "type_class": "KiwiFruitPlantType",
+      "cost": 200
+    },
+    {
+      "plant": "wintersweet",
+      "type_class": "PlantType",
+      "cost": 225
+    },
+    {
+      "plant": "dragonfruit",
+      "type_class": "PlantType",
+      "cost": 150
+    },
+    {
+      "plant": "pinkstarfruit",
+      "type_class": "PlantType",
+      "cost": 225
+    },
+    {
+      "plant": "matchflower",
+      "type_class": "PlantType",
+      "cost": 225
+    },
+    {
+      "plant": "flamelady",
+      "type_class": "PlantType",
+      "cost": 450,
+      "enabled": true
+    },
+    {
+      "plant": "gatlingpea",
+      "type_class": "PlantTypeGatlingPea",
+      "cost": 375
+    },
+    {
+      "plant": "nekotail",
+      "type_class": "PlantType",
+      "cost": 325,
+      "enabled": true
+    },
+    {
+      "plant": "meteorflower",
+      "type_class": "PlantType",
+      "cost": 250
+    },
+    {
+      "plant": "phatbeet",
+      "type_class": "PlantType",
+      "cost": 150
+    },
+    {
+      "plant": "uncharted_phatbeet",
+      "type_class": "PlantType",
+      "cost": 200,
+      "enabled": false
+    },
+    {
+      "plant": "thymewarp",
+      "type_class": "PlantType",
+      "cost": 75,
+      "is_consumable": true,
+      "valid_stages": [
+        "eighties"
+      ]
+    },
+    {
+      "plant": "celerystalker",
+      "type_class": "PlantTypeCeleryStalker",
+      "cost": 50
+    },
+    {
+      "plant": "sporeshroom",
+      "type_class": "PlantType",
+      "cost": 150
+    },
+    {
+      "plant": "garlic",
+      "type_class": "PlantType",
+      "cost": 50
+    },
+    {
+      "plant": "intensivecarrot",
+      "type_class": "PlantTypeIntensiveCarrot",
+      "cost": 100
+    },
+    {
+      "plant": "morningglory",
+      "type_class": "PlantType",
+      "cost": 375
+    },
+    {
+      "plant": "cactus",
+      "type_class": "PlantType",
+      "cost": 175
+    },
+    {
+      "plant": "smallcactus",
+      "type_class": "PlantType",
+      "cost": null,
+      "enabled": false
+    },
+    {
+      "plant": "primalpeashooter",
+      "type_class": "PlantTypePeashooter",
+      "cost": 175
+    },
+    {
+      "plant": "primalwallnut",
+      "type_class": "PlantType",
+      "cost": 75
+    },
+    {
+      "plant": "perfumeshroom",
+      "type_class": "PlantType",
+      "cost": 150,
+      "is_consumable": true,
+      "valid_stages": [
+        "dino"
+      ]
+    },
+    {
+      "plant": "primalsunflower",
+      "type_class": "PlantType",
+      "cost": 75,
+      "black_list_stages": [
+        "moon"
+      ]
+    },
+    {
+      "plant": "primalpotatomine",
+      "type_class": "PlantType",
+      "cost": 50,
+      "is_consumable": true
+    },
+    {
+      "plant": "gravitree",
+      "type_class": "PlantType",
+      "cost": 100,
+      "black_list_stages": [
+        "atlantis"
+      ]
+    },
+    {
+      "plant": "darkmatter_dragonfruit",
+      "type_class": "PlantType",
+      "cost": 200
+    },
+    {
+      "plant": "phoenixfloat",
+      "type_class": "PlantType",
+      "cost": 200,
+      "black_list_stages": [
+        "skycity",
+        "atlantis",
+        "roof",
+        "snow_roof"
+      ]
+    },
+    {
+      "plant": "grapeshot",
+      "type_class": "PlantType",
+      "cost": 150,
+      "is_consumable": true
+    },
+    {
+      "plant": "coldsnapdragon",
+      "type_class": "PlantType",
+      "cost": 250
+    },
+    {
+      "plant": "shrinkingviolet",
+      "type_class": "PlantType",
+      "cost": 50,
+      "is_consumable": true
+    },
+    {
+      "plant": "dragonroar",
+      "type_class": "PlantType",
+      "cost": 75
+    },
+    {
+      "plant": "bramble",
+      "type_class": "PlantType",
+      "cost": 0
+    },
+    {
+      "plant": "primalrafflesia",
+      "type_class": "PlantType",
+      "cost": 450
+    },
+    {
+      "plant": "dragoncane",
+      "type_class": "PlantType",
+      "cost": 175
+    },
+    {
+      "plant": "cobcannon",
+      "type_class": "PlantTypeCobcannon",
+      "cost": 500
+    },
+    {
+      "plant": "applemortar",
+      "type_class": "PlantType",
+      "cost": 250
+    },
+    {
+      "plant": "firecrackerflower",
+      "type_class": "PlantType",
+      "cost": 250
+    },
+    {
+      "plant": "witchhazel",
+      "type_class": "PlantType",
+      "cost": 200
+    },
+    {
+      "plant": "escaperoot",
+      "type_class": "PlantType",
+      "cost": 50
+    },
+    {
+      "plant": "electriccurrant",
+      "type_class": "PlantType",
+      "cost": 150
+    },
+    {
+      "plant": "whitemelon",
+      "type_class": "PlantType",
+      "cost": 100
+    },
+    {
+      "plant": "caulipower",
+      "type_class": "PlantTypeCaulipower",
+      "cost": 300
+    },
+    {
+      "plant": "dusklobber",
+      "type_class": "PlantType",
+      "cost": 200
+    },
+    {
+      "plant": "beanchemist",
+      "type_class": "PlantType",
+      "cost": 200
+    },
+    {
+      "plant": "shadowshroom",
+      "type_class": "PlantType",
+      "cost": 50,
+      "is_consumable": true
+    },
+    {
+      "plant": "moonflower",
+      "type_class": "PlantType",
+      "cost": 50
+    },
+    {
+      "plant": "explodeonut",
+      "type_class": "PlantType",
+      "cost": 50,
+      "enabled": true
+    },
+    {
+      "plant": "smallexplodeonut",
+      "type_class": "PlantType",
+      "cost": 0,
+      "enabled": false
+    },
+    {
+      "plant": "nightshade",
+      "type_class": "PlantType",
+      "cost": 50
+    },
+    {
+      "plant": "bloominghearts",
+      "type_class": "PlantType",
+      "cost": 150
+    },
+    {
+      "plant": "grimrose",
+      "type_class": "PlantType",
+      "cost": 75,
+      "is_consumable": true
+    },
+    {
+      "plant": "wasabiwhip",
+      "type_class": "PlantType",
+      "cost": 150
+    },
+    {
+      "plant": "parsnip",
+      "type_class": "PlantType",
+      "cost": 125
+    },
+    {
+      "plant": "missiletoe",
+      "type_class": "PlantType",
+      "cost": 400
+    },
+    {
+      "plant": "kiwibeast",
+      "type_class": "PlantTypeKiwibeast",
+      "cost": 180
+    },
+    {
+      "plant": "goldbloom",
+      "type_class": "PlantType",
+      "cost": 0,
+      "enabled": true,
+      "is_consumable": true,
+      "black_list_stages": [
+        "moon"
+      ]
+    },
+    {
+      "plant": "flattenedshroom",
+      "type_class": "PlantTypeFlattenedshroom",
+      "cost": 0,
+      "enabled": true,
+      "valid_stages": [
+        "steam"
+      ]
+    },
+    {
+      "plant": "lotusshooter",
+      "type_class": "PlantType",
+      "cost": 200,
+      "enabled": true
+    },
+    {
+      "plant": "convallariachemist",
+      "type_class": "PlantType",
+      "cost": 175,
+      "enabled": true
+    },
+    {
+      "plant": "passionflower",
+      "type_class": "PlantType",
+      "cost": 125
+    },
+    {
+      "plant": "mulberry",
+      "type_class": "PlantType",
+      "cost": 150,
+      "enabled": true
+    },
+    {
+      "plant": "electricitea",
+      "type_class": "PlantType",
+      "cost": 125,
+      "enabled": true
+    },
+    {
+      "plant": "imppear",
+      "type_class": "PlantType",
+      "cost": 0,
+      "enabled": true,
+      "is_consumable": true
+    },
+    {
+      "plant": "narcissusshooter",
+      "type_class": "PlantType",
+      "cost": 300,
+      "enabled": true
+    },
+    {
+      "plant": "olive",
+      "type_class": "PlantType",
+      "cost": 25,
+      "is_consumable": true
+    },
+    {
+      "plant": "bearberry",
+      "type_class": "PlantType",
+      "cost": 150,
+      "enabled": true
+    },
+    {
+      "plant": "duckpear",
+      "type_class": "PlantType",
+      "cost": 300,
+      "enabled": true,
+      "black_list_stages": [
+        "skycity",
+        "atlantis",
+        "roof",
+        "snow_roof"
+      ]
+    },
+    {
+      "plant": "longmalily",
+      "type_class": "LongmaLilyPlantType",
+      "cost": 150,
+      "enabled": true,
+      "black_list_stages": [
+        "skycity",
+        "atlantis"
+      ]
+    },
+    {
+      "plant": "beercoconut",
+      "type_class": "PlantType",
+      "cost": 125,
+      "enabled": true
+    },
+    {
+      "plant": "clawgloriosa",
+      "type_class": "PlantType",
+      "cost": 200
+    },
+    {
+      "plant": "turkeypult",
+      "type_class": "PlantTypeTurkeypult",
+      "cost": 150,
+      "valid_stages": [
+        "egypt",
+        "pirate",
+        "cowboy",
+        "kongfu",
+        "future",
+        "dark",
+        "beach",
+        "iceage",
+        "lostcity",
+        "eighties",
+        "dino",
+        "modern",
+        "steam",
+        "renai",
+        "heian",
+        "atlantis",
+        "night",
+        "roof",
+        "snow_roof",
+        "snow_night",
+        "snow_modern",
+        "rift",
+        "newyear_daylight",
+        "newyear_night",
+        "fairy_tale",
+        "halloween",
+        "spring_daylight",
+        "spring_night",
+        "uncharted_iceage",
+        "childrenday",
+        "newyear_night",
+        "uncharted_needforspeed"
+      ]
+    },
+    {
+      "plant": "mangosteen",
+      "type_class": "PlantType",
+      "cost": 150
+    },
+    {
+      "plant": "inferno",
+      "type_class": "PlantType",
+      "cost": 200
+    },
+    {
+      "plant": "solarsage",
+      "type_class": "PlantType",
+      "cost": 0,
+      "is_consumable": true,
+      "black_list_stages": [
+        "moon"
+      ]
+    },
+    {
+      "plant": "gardenergrass",
+      "type_class": "PlantType",
+      "cost": 200
+    },
+    {
+      "plant": "hatmushroom",
+      "type_class": "PlantType",
+      "cost": 200
+    },
+    {
+      "plant": "hocuscrocus",
+      "type_class": "PlantType",
+      "cost": 200
+    },
+    {
+      "plant": "byttneriameteorhammer",
+      "type_class": "PlantType",
+      "cost": 150
+    },
+    {
+      "plant": "buttercup",
+      "type_class": "PlantType",
+      "cost": 25
+    },
+    {
+      "plant": "crownflower",
+      "type_class": "PlantType",
+      "cost": 250
+    },
+    {
+      "plant": "jewelrabbit",
+      "type_class": "PlantType",
+      "cost": 200
+    },
+    {
+      "plant": "burdockbatter",
+      "type_class": "PlantType",
+      "cost": 100
+    },
+    {
+      "plant": "deodarcedar",
+      "type_class": "PlantType",
+      "cost": 300
+    },
+    {
+      "plant": "egretflower",
+      "type_class": "PlantType",
+      "cost": 200,
+      "enabled": true
+    },
+    {
+      "plant": "strawburst",
+      "type_class": "PlantType",
+      "cost": 300,
+      "enabled": true
+    },
+    {
+      "plant": "waxgourd",
+      "type_class": "PlantType",
+      "cost": 125,
+      "enabled": true
+    },
+    {
+      "plant": "elaeocarpus",
+      "type_class": "PlantType",
+      "cost": 200,
+      "enabled": true
+    },
+    {
+      "plant": "alarmsagittifolia",
+      "type_class": "PlantType",
+      "cost": 100
+    },
+    {
+      "plant": "hollyknight",
+      "type_class": "PlantType",
+      "cost": 150
+    },
+    {
+      "plant": "hollybarrierleaf",
+      "type_class": "PlantType",
+      "cost": 0,
+      "enabled": false
+    },
+    {
+      "plant": "electricpeashooter",
+      "type_class": "PlantTypePeashooter",
+      "cost": 200
+    },
+    {
+      "plant": "tuliptrumpeter",
+      "type_class": "PlantType",
+      "cost": 125
+    },
+    {
+      "plant": "hotdate",
+      "type_class": "PlantType",
+      "cost": 200
+    },
+    {
+      "plant": "icycurrant",
+      "type_class": "PlantType",
+      "cost": 150
+    },
+    {
+      "plant": "eggplantninja",
+      "type_class": "PlantType",
+      "cost": 200
+    },
+    {
+      "plant": "momotaroninja",
+      "type_class": "PlantType",
+      "cost": 200,
+      "enabled": false
+    },
+    {
+      "plant": "vanilla",
+      "type_class": "PlantTypeVanilla",
+      "cost": 75
+    },
+    {
+      "plant": "plantain",
+      "type_class": "PlantType",
+      "cost": 375
+    },
+    {
+      "plant": "pinecone",
+      "type_class": "PlantType",
+      "cost": 175,
+      "enabled": true
+    },
+    {
+      "plant": "shadowpeashooter",
+      "type_class": "PlantType",
+      "cost": 200,
+      "enabled": true
+    },
+    {
+      "plant": "snappea",
+      "type_class": "PlantType",
+      "cost": 200,
+      "enabled": true
+    },
+    {
+      "plant": "thundersnapdragon",
+      "type_class": "PlantType",
+      "cost": 150,
+      "enabled": true
+    },
+    {
+      "plant": "ultomato",
+      "type_class": "PlantTypeUltomato",
+      "cost": 200,
+      "enabled": true
+    },
+    {
+      "plant": "stephania",
+      "type_class": "PlantType",
+      "cost": 200,
+      "enabled": true
+    },
+    {
+      "plant": "tupistrastalker",
+      "type_class": "PlantType",
+      "cost": 200,
+      "enabled": true
+    },
+    {
+      "plant": "impatiensshooter",
+      "type_class": "PlantType",
+      "cost": 200,
+      "enabled": true
+    },
+    {
+      "plant": "riflebamboo",
+      "type_class": "PlantType",
+      "cost": 250,
+      "enabled": true
+    },
+    {
+      "plant": "zoybeanpod",
+      "type_class": "PlantType",
+      "cost": 200,
+      "enabled": true,
+      "valid_stages": [
+        "beach",
+        "cowboy",
+        "dark",
+        "dino",
+        "egypt",
+        "eighties",
+        "future",
+        "heian",
+        "atlantis",
+        "iceage",
+        "kongfu",
+        "lostcity",
+        "modern",
+        "renai",
+        "steam",
+        "pirate",
+        "night",
+        "roof",
+        "snow_roof",
+        "snow_night",
+        "snow_modern",
+        "rift",
+        "fairy_tale",
+        "newyear_daylight",
+        "newyear_night",
+        "halloween",
+        "spring_night",
+        "spring_daylight",
+        "uncharted_iceage",
+        "childrenday",
+        "newyear_night",
+        "uncharted_needforspeed"
+      ]
+    },
+    {
+      "plant": "orchidmage",
+      "type_class": "PlantType",
+      "cost": 400,
+      "enabled": true
+    },
+    {
+      "plant": "slingpea",
+      "type_class": "PlantType",
+      "cost": 250,
+      "enabled": true
+    },
+    {
+      "plant": "monotropa",
+      "type_class": "PlantType",
+      "cost": 200
+    },
+    {
+      "plant": "aloes",
+      "type_class": "PlantType",
+      "cost": 100
+    },
+    {
+      "plant": "poisonpeashooter",
+      "type_class": "PlantTypePeashooter",
+      "cost": 175
+    },
+    {
+      "plant": "pomegranatejeweler",
+      "type_class": "PlantType",
+      "cost": 175
+    },
+    {
+      "plant": "dartichoke",
+      "type_class": "PlantType",
+      "cost": 225
+    },
+    {
+      "plant": "pokra",
+      "type_class": "PlantType",
+      "cost": 150
+    },
+    {
+      "plant": "hydrocotyledrummer",
+      "type_class": "PlantType",
+      "cost": 150,
+      "enabled": true
+    },
+    {
+      "plant": "shadowvanilla",
+      "type_class": "PlantType",
+      "cost": 175,
+      "enabled": true
+    },
+    {
+      "plant": "icelotus",
+      "type_class": "PlantType",
+      "cost": 50,
+      "enabled": true
+    },
+    {
+      "plant": "sunflowerzombie",
+      "type_class": "PlantType",
+      "cost": 50
+    },
+    {
+      "plant": "dendrobiumguard",
+      "type_class": "PlantType",
+      "cost": 100,
+      "enabled": true
+    },
+    {
+      "plant": "bromelblade",
+      "type_class": "PlantType",
+      "cost": 150,
+      "enabled": true
+    },
+    {
+      "plant": "eleocurling",
+      "type_class": "PlantType",
+      "cost": 250
+    },
+    {
+      "plant": "olivepit",
+      "type_class": "PlantTypeOlivepit",
+      "cost": 175,
+      "valid_stages": [
+        "beach",
+        "cowboy",
+        "dark",
+        "dino",
+        "egypt",
+        "eighties",
+        "future",
+        "heian",
+        "atlantis",
+        "iceage",
+        "kongfu",
+        "lostcity",
+        "modern",
+        "renai",
+        "steam",
+        "night",
+        "snow_night",
+        "snow_modern",
+        "fairy_tale",
+        "newyear_daylight",
+        "newyear_night",
+        "halloween",
+        "spring_night",
+        "spring_daylight",
+        "uncharted_iceage",
+        "childrenday",
+        "newyear_night",
+        "uncharted_needforspeed"
+      ]
+    },
+    {
+      "plant": "headbutterlettuce",
+      "type_class": "PlantType",
+      "cost": 175
+    },
+    {
+      "plant": "cypripedium",
+      "type_class": "PlantType",
+      "cost": 150
+    },
+    {
+      "plant": "boophonegeisha",
+      "type_class": "PlantType",
+      "cost": 175
+    },
+    {
+      "plant": "nukelauncher",
+      "type_class": "PlantTypeNukeLauncher",
+      "cost": 450
+    },
+    {
+      "plant": "dazeychain",
+      "type_class": "PlantType",
+      "cost": 125
+    },
+    {
+      "plant": "boomflower",
+      "type_class": "PlantTypeBoomFlower",
+      "cost": 350
+    },
+    {
+      "plant": "stickybombrice",
+      "type_class": "PlantType",
+      "cost": 225
+    },
+    {
+      "plant": "gumnut",
+      "type_class": "PlantType",
+      "cost": 125,
+      "is_consumable": true
+    },
+    {
+      "plant": "frog",
+      "type_class": "PlantType",
+      "cost": 50,
+      "enabled": false
+    },
+    {
+      "plant": "bitpeashooter",
+      "type_class": "PlantType",
+      "cost": 100,
+      "enabled": false
+    },
+    {
+      "plant": "lancerhoya",
+      "type_class": "PlantType",
+      "cost": 150
+    },
+    {
+      "plant": "cthulhuactinia",
+      "type_class": "PlantTypeCthulhuActinia",
+      "cost": 50
+    },
+    {
+      "plant": "devilsflower",
+      "type_class": "PlantTypeDevilsFlower",
+      "cost": 50
+    },
+    {
+      "plant": "guardshroom",
+      "type_class": "PlantTypeGuardShroom",
+      "cost": 100
+    },
+    {
+      "plant": "seashroom",
+      "type_class": "PlantTypeSeashroom",
+      "cost": 0,
+      "valid_stages": [
+        "beach",
+        "atlantis"
+      ]
+    },
+    {
+      "plant": "scaredyshroom",
+      "type_class": "PlantType",
+      "cost": 25
+    },
+    {
+      "plant": "levitater",
+      "type_class": "PlantType",
+      "cost": 50,
+      "black_list_stages": [
+        "atlantis"
+      ]
+    },
+    {
+      "plant": "gloombara",
+      "type_class": "PlantType",
+      "cost": 100,
+      "black_list_stages": [
+        "atlantis"
+      ]
+    },
+    {
+      "plant": "doombell",
+      "type_class": "PlantType",
+      "cost": 125,
+      "black_list_stages": [
+        "atlantis"
+      ]
+    },
+    {
+      "plant": "glaciershroom",
+      "type_class": "PlantType",
+      "cost": 175,
+      "black_list_stages": [
+        "atlantis"
+      ]
+    },
+    {
+      "plant": "minishroom",
+      "type_class": "PlantTypeMiniShroom",
+      "cost": null,
+      "enabled": false
+    },
+    {
+      "plant": "jackolantern",
+      "type_class": "PlantType",
+      "cost": 200
+    },
+    {
+      "plant": "vamporcini",
+      "type_class": "PlantType",
+      "cost": 100
+    },
+    {
+      "plant": "pumpkin",
+      "type_class": "PlantTypeVine",
+      "cost": 100
+    },
+    {
+      "plant": "geraniifencer",
+      "type_class": "PlantType",
+      "cost": 150
+    },
+    {
+      "plant": "powervine",
+      "type_class": "PlantTypeVine",
+      "cost": 150
+    },
+    {
+      "plant": "sarracenia",
+      "type_class": "PlantType",
+      "cost": 225
+    },
+    {
+      "plant": "seashooter",
+      "type_class": "PlantTypeSeaShooter",
+      "cost": 100
+    },
+    {
+      "plant": "peavine",
+      "type_class": "PlantTypeVine",
+      "cost": 125
+    },
+    {
+      "plant": "maybee",
+      "type_class": "PlantType",
+      "cost": 300
+    },
+    {
+      "plant": "dracaena",
+      "type_class": "PlantType",
+      "cost": 250
+    },
+    {
+      "plant": "nightcap",
+      "type_class": "PlantType",
+      "cost": 300.0
+    },
+    {
+      "plant": "pyrevine",
+      "type_class": "PlantTypeVine",
+      "cost": 125
+    },
+    {
+      "plant": "poisonvine",
+      "type_class": "PlantTypeVine",
+      "cost": 125
+    },
+    {
+      "plant": "goldencassia",
+      "type_class": "PlantType",
+      "cost": 200
+    },
+    {
+      "plant": "gluttonydragon",
+      "type_class": "PlantType",
+      "cost": 200
+    },
+    {
+      "plant": "waterrabbit",
+      "type_class": "PlantType",
+      "cost": 150
+    },
+    {
+      "plant": "heliconiagunner",
+      "type_class": "PlantType",
+      "cost": 200
+    },
+    {
+      "plant": "electricpeel",
+      "type_class": "PlantTypeElectricPeel",
+      "cost": 125
+    },
+    {
+      "plant": "gloomvine",
+      "type_class": "PlantTypeVine",
+      "cost": 125
+    },
+    {
+      "plant": "twinshoneysuckle",
+      "type_class": "PlantType",
+      "cost": 200
+    },
+    {
+      "plant": "eywa",
+      "type_class": "PlantType",
+      "cost": 300
+    },
+    {
+      "plant": "rapeflower",
+      "type_class": "PlantType",
+      "cost": 250
+    },
+    {
+      "plant": "hoyacordata",
+      "type_class": "PlantType",
+      "cost": 75
+    },
+    {
+      "plant": "spartanbamboo",
+      "type_class": "PlantType",
+      "cost": 175
+    },
+    {
+      "plant": "shinevine",
+      "type_class": "PlantTypeShinevine",
+      "cost": 75,
+      "black_list_stages": [
+        "moon"
+      ]
+    },
+    {
+      "plant": "happyleek",
+      "type_class": "PlantType",
+      "cost": 50,
+      "black_list_stages": [
+        "moon"
+      ]
+    },
+    {
+      "plant": "wizardthorns",
+      "type_class": "PlantType",
+      "cost": 200,
+      "valid_stages": [
+        "egypt",
+        "pirate",
+        "cowboy",
+        "kongfu",
+        "future",
+        "dark",
+        "beach",
+        "iceage",
+        "lostcity",
+        "eighties",
+        "dino",
+        "modern",
+        "steam",
+        "renai",
+        "heian",
+        "atlantis",
+        "night",
+        "roof",
+        "snow_roof",
+        "snow_night",
+        "snow_modern",
+        "rift",
+        "newyear_daylight",
+        "fairy_tale",
+        "halloween",
+        "spring_daylight",
+        "spring_night",
+        "uncharted_iceage",
+        "childrenday",
+        "newyear_night",
+        "uncharted_needforspeed"
+      ]
+    },
+    {
+      "plant": "chainsawburmannii",
+      "type_class": "PlantTypeChainsawburmannii",
+      "cost": 200
+    },
+    {
+      "plant": "heavendatura",
+      "type_class": "PlantType",
+      "cost": 100
+    },
+    {
+      "plant": "rhubarbarian",
+      "type_class": "PlantType",
+      "cost": 200
+    },
+    {
+      "plant": "buduhboom",
+      "type_class": "PlantType",
+      "cost": 100,
+      "is_consumable": true
+    },
+    {
+      "plant": "rheumnobile",
+      "type_class": "PlantType",
+      "cost": 225
+    },
+    {
+      "plant": "megagatling",
+      "type_class": "PlantTypeMegaGatlingnormal",
+      "cost": 400
+    },
+    {
+      "plant": "soudacheMegagatling",
+      "type_class": "PlantType",
+      "cost": 400,
+      "enabled": false
+    },
+    {
+      "plant": "soudacheMegagatling_Fire",
+      "type_class": "PlantType",
+      "cost": 400,
+      "enabled": false
+    },
+    {
+      "plant": "soudacheMegagatling_Electric",
+      "type_class": "PlantType",
+      "cost": 400,
+      "enabled": false
+    },
+    {
+      "plant": "seaderris",
+      "type_class": "PlantTypeSeaderris",
+      "cost": 50
+    },
+    {
+      "plant": "aquaweed",
+      "type_class": "PlantType",
+      "cost": 300
+    },
+    {
+      "plant": "animnuts",
+      "type_class": "PlantType",
+      "cost": 300
+    },
+    {
+      "plant": "aeonium",
+      "type_class": "PlantType",
+      "cost": 200
+    },
+    {
+      "plant": "peonychi",
+      "type_class": "PlantType",
+      "cost": 175
+    },
+    {
+      "plant": "doomshroom",
+      "type_class": "PlantType",
+      "cost": 200
+    },
+    {
+      "plant": "exorcislily",
+      "type_class": "PlantType",
+      "cost": 100,
+      "black_list_stages": [
+        "atlantis"
+      ]
+    },
+    {
+      "plant": "parallel_doomshroom",
+      "type_class": "PlantType",
+      "cost": 200
+    },
+    {
+      "plant": "aquavine",
+      "type_class": "PlantTypeAquaVine",
+      "cost": 125
+    },
+    {
+      "plant": "dragonbruit",
+      "type_class": "PlantType",
+      "cost": 200
+    },
+    {
+      "plant": "dragonbabybruit",
+      "type_class": "PlantType",
+      "cost": 0,
+      "enabled": false
+    },
+    {
+      "plant": "mandrake",
+      "type_class": "PlantType",
+      "cost": 225
+    },
+    {
+      "plant": "tristerixaphyllus",
+      "type_class": "PlantType",
+      "cost": 200
+    },
+    {
+      "plant": "eagleclaw",
+      "type_class": "PlantType",
+      "cost": 125
+    },
+    {
+      "plant": "wiregelsemium",
+      "type_class": "PlantType",
+      "cost": 150
+    },
+    {
+      "plant": "iceweed",
+      "type_class": "PlantType",
+      "cost": 150
+    },
+    {
+      "plant": "bubblecoral",
+      "type_class": "PlantType",
+      "cost": 250
+    },
+    {
+      "plant": "paphiopedilum",
+      "type_class": "PlantType",
+      "cost": 200
+    },
+    {
+      "plant": "pineclone",
+      "type_class": "PineClonePlantType",
+      "cost": 150
+    },
+    {
+      "plant": "cosmicpea",
+      "type_class": "PlantType",
+      "cost": 150
+    },
+    {
+      "plant": "cosmicmushroom",
+      "type_class": "PlantType",
+      "cost": 25,
+      "enabled": true,
+      "black_list_stages": [
+        "atlantis"
+      ]
+    },
+    {
+      "plant": "cosmicnut",
+      "type_class": "PlantType",
+      "cost": 75,
+      "enabled": true
+    },
+    {
+      "plant": "actinostemma",
+      "type_class": "PlantType",
+      "cost": 200
+    },
+    {
+      "plant": "mapleblade",
+      "type_class": "PlantType",
+      "cost": 400
+    },
+    {
+      "plant": "armorflame",
+      "type_class": "PlantTypeArmorflame",
+      "cost": 0,
+      "hero_properties": "RTID(HeroPlantArmorflameDefault@HeroPlantConfig)"
+    },
+    {
+      "plant": "winterrambutan",
+      "type_class": "PlantType",
+      "cost": 250
+    },
+    {
+      "plant": "parallel_sunflower",
+      "type_class": "PlantType",
+      "cost": 50
+    },
+    {
+      "plant": "parallel_peashooter",
+      "type_class": "PlantType",
+      "cost": 100
+    },
+    {
+      "plant": "parallel_wallnut",
+      "type_class": "PlantType",
+      "cost": 50
+    },
+    {
+      "plant": "kelpguard",
+      "type_class": "PlantTypeKelpGuard",
+      "cost": 200,
+      "valid_stages": [
+        "atlantis"
+      ]
+    },
+    {
+      "plant": "oxygenalgae",
+      "type_class": "PlantType",
+      "cost": 50,
+      "valid_stages": [
+        "atlantis"
+      ],
+      "black_list_stages": [
+        "moon"
+      ]
+    },
+    {
+      "plant": "umbrellaleaf",
+      "type_class": "PlantType",
+      "cost": 175
+    },
+    {
+      "plant": "parallel_chomper",
+      "type_class": "PlantType",
+      "cost": 150
+    },
+    {
+      "plant": "parallel_cherry_bomb",
+      "type_class": "PlantType",
+      "cost": 150
+    },
+    {
+      "plant": "parallel_iceburg",
+      "type_class": "PlantType",
+      "cost": 125,
+      "is_consumable": true
+    },
+    {
+      "plant": "parallel_bonkchoy",
+      "type_class": "PlantType",
+      "cost": 300
+    },
+    {
+      "plant": "parallel_moonflower",
+      "type_class": "PlantType",
+      "cost": 200
+    },
+    {
+      "plant": "parallel_shadowshroom",
+      "type_class": "PlantType",
+      "cost": 200,
+      "is_consumable": true
+    },
+    {
+      "plant": "parallel_grimrose",
+      "type_class": "PlantType",
+      "cost": 450,
+      "is_consumable": true
+    },
+    {
+      "plant": "parallel_nightshade",
+      "type_class": "PlantType",
+      "cost": 300
+    },
+    {
+      "plant": "parallel_dusklobber",
+      "type_class": "PlantType",
+      "cost": 1200
+    },
+    {
+      "plant": "parallel_shadowpeashooter",
+      "type_class": "PlantType",
+      "cost": 325,
+      "enabled": true
+    },
+    {
+      "plant": "parallel_shadowvanilla",
+      "type_class": "PlantType",
+      "cost": 150,
+      "enabled": true
+    },
+    {
+      "plant": "parallel_primalsunflower",
+      "type_class": "PlantType",
+      "cost": 2000,
+      "black_list_stages": [
+        "moon"
+      ]
+    },
+    {
+      "plant": "parallel_primalpeashooter",
+      "type_class": "PlantType",
+      "cost": 4000
+    },
+    {
+      "plant": "parallel_primalwallnut",
+      "type_class": "PlantType",
+      "cost": 1000
+    },
+    {
+      "plant": "parallel_primalpotatomine",
+      "type_class": "PlantType",
+      "cost": 125,
+      "is_consumable": true
+    },
+    {
+      "plant": "parallel_pumpkin",
+      "type_class": "PlantTypeVine",
+      "cost": 375
+    },
+    {
+      "plant": "parallel_nekotail",
+      "type_class": "PlantType",
+      "cost": 450,
+      "enabled": true
+    },
+    {
+      "plant": "parallel_kernelpult",
+      "type_class": "PlantType",
+      "cost": 100
+    },
+    {
+      "plant": "parallel_cobcannon",
+      "type_class": "ParallelTypeCobcannon",
+      "cost": 500
+    },
+    {
+      "plant": "parallel_potatomine",
+      "type_class": "PlantType",
+      "cost": 25,
+      "is_consumable": true
+    },
+    {
+      "plant": "moonflower_iz",
+      "type_class": "PlantType",
+      "cost": 50,
+      "enabled": false
+    },
+    {
+      "plant": "uncharted_haystack",
+      "type_class": "PlantTypeUnchartedHaystack",
+      "cost": 25,
+      "is_consumable": false,
+      "black_list_stages": [
+        "moon"
+      ]
+    },
+    {
+      "plant": "apsarlotus",
+      "type_class": "PlantType",
+      "cost": 100,
+      "black_list_stages": [
+        "moon"
+      ]
+    },
+    {
+      "plant": "goldmagnet",
+      "type_class": "PlantType",
+      "cost": 150
+    }
+  ],
+  "blacklist": [
+    "sunflower",
+    "twinsunflower",
+    "birthsunflower",
+    "primalsunflower",
+    "imitater",
+    "goldbloom",
+    "sunshroom",
+    "powerplant",
+    "coffeebean",
+    "armorflame",
+    "aquaweed",
+    "oxygenalgae",
+    "kelpguard",
+    "seashroom",
+    "seaderris",
+    "seashooter",
+    "uncharted_phatbeet",
+    "uncharted_haystack",
+    "uncharted_carrotlauncher",
+    "moton",
+    "sunflowerzombie",
+    "gloombara",
+    "soudacheMegagatling",
+    "soudacheMegagatling_Fire",
+    "soudacheMegagatling_Electric"
+  ]
+}

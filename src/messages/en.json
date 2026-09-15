@@ -1,8 +1,8 @@
 {
   "site": {
-    "brand": "ENDLESS",
+    "brand": "PVZ2",
     "brandSub": "EXPLAINED",
-    "series": "Chapters",
+    "series": "Articles",
     "explore": "Explore",
     "about": "About",
     "skip": "Skip to article",
@@ -23,7 +23,7 @@
     "points": "points",
     "wavePlan": "The shape of a level",
     "heroCaption": "Each column is a wave. Gold marks the extra flag or final-wave budget.",
-    "contents": "IN THIS CHAPTER",
+    "contents": "ON THIS PAGE",
     "inputs": "The shared rules",
     "count": "Counting waves",
     "budget": "Building a budget",
@@ -125,7 +125,8 @@
     "scrollableFormula": "Scrollable formula; use the left and right arrow keys",
     "scrollFormulaHint": "Scroll horizontally to read the full formula",
     "zombies": "Zombies",
-    "plants": "Plants"
+    "plants": "Plants",
+    "search": "Search"
   },
   "roster": {
     "chapter": "CHAPTER 02",
@@ -242,51 +243,21 @@
     "metadataTitle": "Zombie reference"
   },
   "home": {
-    "eyebrow": "PVZ2 · CHINA iOS",
-    "title": "Inside",
-    "accent": "Endless.",
-    "description": "How ordinary Endless Challenge chooses, creates, and releases its zombies.",
-    "start": "Start with the introduction",
-    "series": "The series",
-    "introduction": "Introduction",
-    "introDescription": "Scope, research method, and a note from the author.",
-    "reference": "The resource atlas",
-    "referenceDescription": "A shared reference of zombie definitions, costs, weights, health, and geometry.",
-    "openReference": "Browse zombies",
-    "example": "An ordinary wave plan · L 149",
-    "documentTitle": "Endless, explained",
-    "openPlants": "Browse plants",
-    "plantDescription": "Plant definitions, sun costs, base health, recharge times, and selected type fields."
-  },
-  "chapters": {
-    "wave-plan": {
-      "title": "Before the first zombie",
-      "subtitle": "The common wave count and budget model."
-    },
-    "roster": {
-      "title": "Choosing the zombie roster",
-      "subtitle": "Index sampling, weighted filling, and final-wave inclusion."
-    },
-    "worlds": {
-      "title": "How worlds change the plan",
-      "subtitle": "Replacement, extra actions, and world-specific systems."
-    },
-    "strength": {
-      "title": "From level to strength",
-      "subtitle": "Spawn levels, health and attack multipliers, and leader effects."
-    },
-    "placement": {
-      "title": "Where zombies appear",
-      "subtitle": "Eligibility, row history, and the order of placement."
-    },
-    "timing": {
-      "title": "Waves, victory, and progression",
-      "subtitle": "Separate rules for advancing waves, ending a battle, and continuing a run."
-    },
-    "drops": {
-      "title": "Plant food and other drops",
-      "subtitle": "How planned quotas and loot schedules become pickups."
-    }
+    "documentTitle": "PvZ2, explained",
+    "title": "The rules behind",
+    "accent": "the lawn.",
+    "description": "Explore how Plants vs. Zombies 2 works, from waves and plant food to artifacts and the history of a random draw.",
+    "eyebrow": "PVZ2 · MECHANICS, MADE VISIBLE",
+    "start": "Read the introduction",
+    "featured": "START WITH A QUESTION",
+    "featureTitle": "What can your plant become?",
+    "featureDescription": "Follow Evolution through its candidate pool and discover why the replacement sometimes stops.",
+    "featureLink": "Explore Evolution",
+    "series": "Explore the articles",
+    "reference": "Keep the numbers close",
+    "referenceDescription": "Search the identities, values, and restrictions behind each mechanism.",
+    "articlesTitle": "Follow your curiosity.",
+    "articlesDescription": "Three reading paths through the same game. Start anywhere, then follow the connections."
   },
   "labs": {
     "open": "View",
@@ -327,7 +298,7 @@
       "health": "Reported ordinary-action HP",
       "flagExtra": "{n} independent flag instruction",
       "entityLevel": "Entity level {n}",
-      "entitiesCaption": "Each instruction uses its sampled level and the adopted Endless health reference. The HP subtotal assumes neutral creation modifiers and successful placement; the effective runtime table has not been captured.",
+      "entitiesCaption": "Each instruction uses its sampled level and the Endless health reference. The HP subtotal assumes neutral creation modifiers and successful placement.",
       "instructionsCaption": "Each tile is one spawn instruction. Its cost is an input to construction, not its health.",
       "typesCaption": "The basic type and four chosen pool entries become the filler’s active types.",
       "stages": {
@@ -450,7 +421,7 @@
       "blockedPortal": "Completion is blocked by the portal itself, even if its queue or the lawn is empty.",
       "blockedChildren": "The portal is gone, but its surviving children still block completion.",
       "clear": "Neither this portal nor its emitted children block completion now. Other level predicates still apply.",
-      "orderDetail": "The example RNG shuffles all family slots, including duplicates. Each replay step supplies an update or animation callback to the portal state. Timing controls supply the opening time, first offset, and later interval; the closing-animation duration is not modeled.",
+      "orderDetail": "The library shuffle permutes every family slot, including duplicates, from the selected stream position. Each step supplies an update or animation callback. Timing controls set the opening time, first offset, and later interval.",
       "stages": {
         "copy": "Copy all four family slots",
         "shuffle": "Shuffle the full list",
@@ -469,10 +440,11 @@
         "closing": "At the next due emission check, the empty-queue branch requests the closing state and starts the close animation.",
         "removed": "The animation-completion callback requests removal. Only now does the portal’s own resolvable-object blocker disappear."
       },
-      "reshuffle": "Next shuffle",
+      "reshuffle": "Advance the stream",
       "opening": "Opening-completion time (seconds)",
       "clock": "Time at this update",
-      "callbackTime": "Close-completion callback"
+      "callbackTime": "Close-completion callback",
+      "shufflePosition": "Prior library-engine outputs"
     },
     "steam": {
       "title": "Smoke and pipeline clocks",
@@ -571,14 +543,14 @@
       "declared": "Bundled row",
       "fallback": "Missing row → 1",
       "reportedHealth": "Reported wave-health contribution",
-      "reportedDetail": "Health uses the adopted ten-level Endless reference. These reported values have not been captured from the runtime configuration or found as complete sequences in the package.",
+      "reportedDetail": "Health uses the ten-level Endless reference. Leader marking applies its health multiplier separately.",
       "healthReportDetail": "Base getter: float32 body + helmet, then signed int32 conversion. This reporting step leaves the stored HP unchanged.",
       "basis": "Multiplier source",
       "reported": "Endless gameplay reference",
       "bundled": "Bundled DangerRoom table",
-      "bundledDetail": "This comparison uses the five bundled DangerRoom rows and the native bite formula, with neutral modifiers. It is not a current gameplay stat claim.",
+      "bundledDetail": "This comparison uses the five-row DangerRoom table and the native bite formula, with neutral modifiers.",
       "reportedAttack": "Reported attack / level 1",
-      "attackUnmapped": "Native AttackLevel binding is unconfirmed; no bite rate is inferred."
+      "attackUnmapped": "The bite formula requires the separate AttackLevel input."
     },
     "placement": {
       "title": "Rows, history, and final placement",
@@ -625,7 +597,7 @@
       "historyRow": "Row credited in history",
       "visibleRow": "Current visible row",
       "candidates": "Rows remaining after the scan",
-      "chosenShuffle": "Row-draw seed",
+      "chosenShuffle": "Prior library-engine outputs",
       "hookStages": {
         "0": "Sample the provisional row",
         "1": "Apply the jittered position",
@@ -643,7 +615,7 @@
       "shuffledRow": "The current row is unavailable. A draw among the remaining candidates places the newcomer in row {n}, at the last column.",
       "rejectedKing": "No candidate remains. The normal King path enters ZS_Die. It does not retry, refund the instruction, or remove an older King.",
       "rejectedFisher": "No candidate remains. The normal Fisherman path dispatches removal immediately. Board-list erasure happens separately, and the ordinary loot path remains reachable.",
-      "hookCaption": "The provisional row and jitter are supplied inputs. If relocation is needed, the example RNG samples a remaining row. The original row keeps its history contribution.",
+      "hookCaption": "The provisional row and jitter are inputs. Relocation shuffles the remaining rows from the selected library-stream position. The original row keeps its history contribution.",
       "ordinaryHook": "This ordinary type has no King/Fisherman occupancy scan. Its position after the base event is retained.",
       "queueCount": "Earlier entities in this action/row",
       "jitter": "Chosen jitter J (0–29)"
@@ -809,7 +781,258 @@
       "retainedEffect": "The wave clears at {clear}s. In state 2, clearing does not accelerate the fresh deadline at {deadline}s, and the normal button-show logic is omitted. The timer still governs the next transition.",
       "timedEffect": "State 1 runs the normal health and button checks. Clearing can bring the deadline forward, subject to the four-second minimum.",
       "completionBoundary": "For the final wave, victory also requires the entity-clear predicate. A retained warning state needs another normal update after the finalization attempt; no extra scheduled wave is created.",
-      "scope": "All times are game-clock inputs. At an exact boundary this comparison evaluates the timed update before the tap; it does not infer live input ordering or animation duration."
+      "scope": "All times are game-clock inputs. At an exact boundary this comparison evaluates the timed update before the tap."
+    },
+    "evolution": {
+      "title": "Follow an Evolution activation",
+      "description": "Follow actual candidate selection, shared shuffle consumption, and deferred replacements across a 3×3 region.",
+      "preset": "Board example",
+      "presets": ["Mixed targets", "One target", "Rank-4 empty-cell fill"],
+      "source": "Center plant",
+      "cost": "Effective source cost",
+      "plantLevel": "Plant level",
+      "rank": "Artifact rank",
+      "stage": "Stage filter",
+      "stageOff": "Stage gate bypassed",
+      "stages": ["Egypt", "Beach", "Moon", "Steam"],
+      "condition": "Center plant condition",
+      "normal": "Normal",
+      "sheeped": "Sheeped",
+      "check": "Center planting checks",
+      "checks": [
+        "No blocking reasons",
+        "Reason 79 at both checks",
+        "Reason 80 at both checks",
+        "Reason 80 appears after selection"
+      ],
+      "advanced": "Stream and check inputs",
+      "stream": "Prior library-engine outputs",
+      "reverse": "Reverse the supplied target order",
+      "callback": "Reverse the supplied callback order",
+      "lily": "Lily Pad stage virtual returns true",
+      "inputNote": "The grid shows plant anchors. Target order and planting-check results are scenario inputs. The selected stage applies the base stage rule; Lily Pad has its own supplied virtual result.",
+      "phases": {
+        "start": "Trigger",
+        "targets": "Collect targets",
+        "selection": "Choose replacements",
+        "bonus": "Rank-4 pass",
+        "effects": "Apply effects",
+        "complete": "Result"
+      },
+      "board": "The 3×3 active region",
+      "cell": "Column {column}, row {row}",
+      "empty": "Empty",
+      "new": "New plant",
+      "pending": "Effect queued",
+      "old": "Original plant",
+      "level": "Level {level}",
+      "order": "Target {number}",
+      "inspect": "Inspect a cell to follow its selection",
+      "queue": "Pending effects",
+      "noEffects": "No effects queued",
+      "pool": "Remaining candidates",
+      "selected": "Selected replacement",
+      "before": "Before shuffle",
+      "after": "After shuffle",
+      "draws": "Engine outputs consumed",
+      "position": "Library stream position",
+      "cooldown": "Cooldown deadline",
+      "notTriggered": "Not triggered",
+      "sourceCost": "Source effective cost",
+      "baseCost": "Result base cost",
+      "blocked": "Blocking reason",
+      "noCandidate": "No candidate; this target stays in place.",
+      "rejected": "Final check rejected the replacement.",
+      "fullPool": "Inspect the full candidate list",
+      "funnel": "Catalog filter summary",
+      "funnelLabels": [
+        "Enabled",
+        "Alias exclusions",
+        "Class exclusions",
+        "Hero exclusion",
+        "Parallel exclusion",
+        "Consumable exclusion",
+        "Result blacklist"
+      ],
+      "checkNote": "Selection excuses reason 79. The final check excuses nothing. Other candidates use empty blocking-reason sets in these examples.",
+      "selectionReasons": "Selection input reasons",
+      "commitReasons": "Final input reasons",
+      "retained": "The original level is carried into the replacement.",
+      "bonusLevel": "The bonus-level minimum starts at 1. Higher packet levels cannot raise it.",
+      "events": {
+        "ready": "The input board is ready",
+        "trigger": "Start the cooldown",
+        "collect": "Collect overlapping plants",
+        "skip": "Skip this target",
+        "pool": "Filter this target’s result pool",
+        "pick": "Shuffle and take the first type",
+        "queued": "Queue a loop effect",
+        "bonusStart": "Begin the rank-4 pass",
+        "bonusOutside": "Skip an out-of-board cell",
+        "bonusOccupied": "This cell is still occupied",
+        "bonusPool": "Build the bonus pool: cost at most 100",
+        "bonusPick": "Choose a bonus plant on the same stream",
+        "bonusQueued": "Queue a grownew effect",
+        "callback": "Deliver the queued animation event",
+        "remove": "Set the original plant’s health to zero",
+        "check": "Run the final planting check",
+        "added": "Add the chosen plant",
+        "failed": "The replacement is rejected",
+        "complete": "Activation trace complete"
+      },
+      "eventText": {
+        "ready": "The center plant, price, conditions, and check inputs can be changed before replaying.",
+        "trigger": "The base trigger writes clock + cooldown before any target is examined.",
+        "collect": "The collector uses rectangle overlap. Targets are visited in the supplied order.",
+        "skip": "This branch creates no replacement effect and consumes no shuffle outputs.",
+        "pool": "The pool keeps its input order while applying type, cost, stage, planting, and blacklist gates.",
+        "pick": "The complete forward shuffle runs. Its first element becomes the replacement type.",
+        "queued": "The effect stores the selected type, cell, original level, and old-plant reference. The old plant remains on the board.",
+        "bonusStart": "All replacement effects are still pending. The rank-4 scan sees the original board.",
+        "bonusOutside": "The bonus pass checks the board bounds for each cell.",
+        "bonusOccupied": "The pending replacement has not removed the occupant. This cell receives no bonus effect.",
+        "bonusPool": "Bonus selection uses its own cost ceiling and planting check. It does not use the source-cost comparison.",
+        "bonusPick": "The bonus shuffle continues where the earlier shuffles stopped.",
+        "bonusQueued": "The grownew event will add a plant without removing an old one.",
+        "callback": "The supplied callback schedule determines which pending effect runs next. No new shuffle occurs here.",
+        "remove": "The loop handler tags the old plant and sets its health to zero before checking the replacement.",
+        "check": "The final check uses the supplied blocking reasons without the selection-time exception.",
+        "added": "The selected type is added at the stored cell and level.",
+        "failed": "No AddPlant follows. A removed source is not restored.",
+        "complete": "The board now contains the results of the delivered effects. Skipped targets remain unchanged."
+      },
+      "reasons": {
+        "condition": "Excluded condition",
+        "consumable": "Consumable type",
+        "alias": "Explicit alias exclusion",
+        "class": "Excluded plant class",
+        "hero": "Hero type",
+        "parallel": "Parallel type",
+        "emptyPool": "Empty result pool",
+        "occupied": "Occupied cell"
+      },
+      "filterCost": "Price exclusions",
+      "filterStage": "Stage exclusions",
+      "filterTile": "Planting-check exclusions",
+      "filterBlacklist": "Result-blacklist exclusions",
+      "edit": "Edit board inputs",
+      "gridInputs": "Active plant anchors · planting results come from the selected input case.",
+      "showEveryEvent": "Show every event",
+      "guidedPlayback": "Follow the main stages and one queued effect. Inspect any cell to see its selection.",
+      "detailedPlayback": "Step through every target, bonus cell, and queued effect.",
+      "summaries": {
+        "selection": "Replacement choices are ready",
+        "bonus": "The rank-4 choices are ready"
+      },
+      "summaryText": {
+        "selection": "Targets with surviving candidates have chosen a result on the shared stream. Each effect stores that choice; the original plant is still present. Targets with an empty pool stay unchanged.",
+        "bonus": "The scan queues bonus plants for eligible empty cells, continuing the same stream. Replacement effects have not removed any originals yet."
+      }
+    },
+    "glove": {
+      "title": "One kill, several gates",
+      "description": "Compare the strict chance and deadline checks for two plants.",
+      "accessoryLevel": "Accessory level",
+      "clock": "Clock time",
+      "deadline": "Stored deadline",
+      "roll": "Draw value",
+      "plant": "Plant",
+      "credit": "Normal kill credit is available",
+      "allowed": "The board and mode allow the reward",
+      "chance": "Plant-food chance",
+      "result": "Attempt result",
+      "nextDeadline": "Deadline after this attempt",
+      "drop": "Pickup created",
+      "cooldown": "Deadline has not passed",
+      "mode": "Mode or board rejects the reward",
+      "rollFail": "Draw does not beat the chance",
+      "creditFail": "Normal kill credit was already spent",
+      "strict": "Both comparisons are strict: draw < rate and deadline < clock. Only success sets a new deadline.",
+      "otherPlant": "Plant B has its own deadline; Plant A’s success does not change it.",
+      "useA": "Plant A",
+      "useB": "Plant B"
+    },
+    "clock": {
+      "title": "Recharge and reset",
+      "description": "Separate a shorter interval from the chance of skipping that interval.",
+      "accessoryLevel": "Accessory level",
+      "base": "Base recharge interval",
+      "other": "Other fast_plant contributions",
+      "contribution": "Clock contribution",
+      "factor": "Recharge factor",
+      "interval": "Resulting interval",
+      "chance": "Reset chance",
+      "baseLabel": "Base interval",
+      "modifiedLabel": "With recharge contributions",
+      "roll": "Draw value",
+      "resetResult": "Reset selected",
+      "rechargeResult": "Ordinary recharge selected",
+      "formula": "All contributions are summed before division. The roll changes the reset outcome separately. Other packet modifiers are neutral."
+    },
+    "formulas": {
+      "title": "Read an artifact formula",
+      "description": "Change level and rank while keeping their progression requirements.",
+      "artifact": "Artifact",
+      "artifactLevel": "Artifact level",
+      "rank": "Artifact rank",
+      "field": "Formula entry",
+      "source": "Expression",
+      "substitution": "After substitution",
+      "arithmetic": "Arithmetic",
+      "integer": "Signed integer",
+      "floating": "Float32",
+      "raw": "Arithmetic result",
+      "display": "Description result",
+      "guard": "The final MainField entry has a near-zero-to-one display guard.",
+      "noFormula": "This artifact has no nonempty expression in that field.",
+      "bounds": "Level and rank controls follow the shared cultivation ladder."
+    },
+    "streams": {
+      "title": "Two independent random histories",
+      "description": "Consume a value or reseed one stream and compare what comes next.",
+      "game": "Game MT19937 · 31-bit output",
+      "library": "Library MT19937 · 32-bit output",
+      "seed": "Example seed",
+      "advanceGame": "Consume one game-engine value",
+      "advanceLibrary": "Consume one library-engine value",
+      "reseed": "Reseed the game stream",
+      "restart": "Restart both streams",
+      "position": "Values consumed",
+      "next": "Next engine outputs",
+      "caption": "The game lane follows the 31-bit native generator. The library lane replays the seed-5489 engine and rejection-based shuffle recorded in the library probe. Both counters measure raw engine outputs.",
+      "fixed": "Library example seed: 5489",
+      "shuffle": "Next library shuffle of 0–7",
+      "runShuffle": "Consume this shuffle",
+      "consumed": "This permutation consumes {count} engine outputs.",
+      "reseedSource": "Caller of the clock reseed",
+      "clockSeed": "Wall-clock second passed to the seeder",
+      "checkpoint": "Shared reseed checkpoint",
+      "checkpointNote": "All of these callers reset the same game generator. This view stops at the reseed boundary; subsequent draws belong to the caller and other consumers. The library stream is separate.",
+      "discarded": "Discarded game-stream position",
+      "caller": "Caller",
+      "beforeReset": "Before reseed",
+      "afterReset": "After reseed",
+      "census": "The findings identify 30 time(NULL) reseed sites across plant, loot, and artifact code.",
+      "callers": {
+        "weightedLoot": "Weighted loot selector",
+        "coinSpring": "Coin-spring-related loot",
+        "gashapon": "Gashapon spin",
+        "zomboss": "Zomboss loot — three copies",
+        "gardenerFire": "Gardener Grass firing",
+        "gardenerCritical": "Gardener Grass critical hit"
+      }
+    },
+    "weights": {
+      "title": "One draw or a fresh draw at every entry",
+      "description": "Change five weights and compare the resulting distributions.",
+      "entry": "Entry",
+      "weight": "Weight",
+      "single": "One draw across cumulative weights",
+      "redraw": "A fresh draw at each comparison",
+      "chance": "Selection share",
+      "equal": "Equal weights",
+      "last": "Last entry’s share",
+      "caption": "These are the algorithms’ shares for the entered weights. The animation shows changing shares, not sampled frequencies."
     }
   },
   "plants": {
@@ -821,7 +1044,7 @@
     "cooldown": "Recharge (s)",
     "rare": "Rare",
     "close": "Close plant record",
-    "scopeNote": "These are package declarations. A listed plant is not necessarily available in an Endless run; ownership and current inventory are separate.",
+    "scopeNote": "Browse base plant properties here. Ownership and current inventory determine the selection available in an Endless run.",
     "fieldNote": "Rare is a declared integer, separate from the Quality string. An omitted Enabled field does not mean false. Recharge and HP are base declarations; upgrades and runtime modifiers may change them.",
     "repeated": "Repeated declarations agree"
   },
@@ -829,13 +1052,155 @@
     "level": "Effective level",
     "health": "Health",
     "reportedAttack": "Reported attack / level 1",
-    "compare": "Compare the package tables",
-    "packageNote": "These are declared HitPointsLevel and AttackLevel fields, in level order. Additional rows do not establish that those levels are reached during gameplay.",
+    "compare": "Compare the configuration tables",
+    "packageNote": "HitPointsLevel and AttackLevel are shown in level order. Level selection and modifiers determine which row an entity uses.",
     "dangerRoom": "Endless: bundled shared table",
     "rift": "Penny’s Pursuit: Rift configuration",
     "main": "Main-level comparison: Mummy properties",
     "newPvp": "NewPVP: mode identity unresolved",
     "legacy": "Legacy PvP comparison: Imp properties",
     "local": "Local DIY configuration"
+  },
+  "articles": {
+    "wave-plan": {
+      "title": "Before the first zombie",
+      "subtitle": "The common wave count and budget model."
+    },
+    "roster": {
+      "title": "Choosing the zombie roster",
+      "subtitle": "Index sampling, weighted filling, and final-wave inclusion."
+    },
+    "worlds": {
+      "title": "How worlds change the plan",
+      "subtitle": "Replacement, extra actions, and world-specific systems."
+    },
+    "strength": {
+      "title": "From level to strength",
+      "subtitle": "Spawn levels, health and attack multipliers, and leader effects."
+    },
+    "placement": {
+      "title": "Where zombies appear",
+      "subtitle": "Eligibility, row history, and the order of placement."
+    },
+    "timing": {
+      "title": "Waves, victory, and progression",
+      "subtitle": "Separate rules for advancing waves, ending a battle, and continuing a run."
+    },
+    "drops": {
+      "title": "Plant food and other drops",
+      "subtitle": "How planned quotas and loot schedules become pickups."
+    },
+    "evolution": {
+      "title": "Evolution: how the replacement is chosen",
+      "subtitle": "A shrinking candidate pool, two different prices, and a replacement that happens later."
+    },
+    "purple-glove": {
+      "title": "The Purple Glove and the credit for a kill",
+      "subtitle": "A chance roll is only one gate between damage and a plant-food pickup."
+    },
+    "speed-up-clock": {
+      "title": "Three different meanings of faster",
+      "subtitle": "Planting recharge, an instant reset, and attack speed follow different rules."
+    },
+    "artifact-framework": {
+      "title": "The numbers behind an artifact",
+      "subtitle": "Levels, ranks, formula strings, and the separate paths into descriptions and play."
+    },
+    "randomness": {
+      "title": "Randomness has a history",
+      "subtitle": "Shared streams connect the result of one action to events elsewhere on the lawn."
+    },
+    "implementation-defects": {
+      "title": "When implementation changes the rules",
+      "subtitle": "How a misplaced check, a stale list, or one extra draw becomes part of the game."
+    }
+  },
+  "collections": {
+    "endless": {
+      "title": "Ordinary Endless",
+      "description": "Follow a level from the first point budget to the last completion check."
+    },
+    "equipment": {
+      "title": "Artifacts & accessories",
+      "description": "Follow the effects, conditions, and numbers behind the items."
+    },
+    "implementation": {
+      "title": "Randomness & implementation",
+      "description": "The shared systems and programming choices that change the outcome."
+    }
+  },
+  "reading": {
+    "minutes": "{count} min read",
+    "contents": "On this page",
+    "evidence": "All evidence notes",
+    "navigation": "Articles in this series",
+    "previous": "Previous article",
+    "next": "Next article",
+    "related": "Keep exploring",
+    "footer": "Plants vs. Zombies 2, explained through its mechanisms.",
+    "method": "Introduction & methods"
+  },
+  "equipment": {
+    "artifacts": "Artifacts",
+    "accessories": "Accessories",
+    "artifactDescription": "Formula fields, rank progression, and the plant sets behind {count} artifacts.",
+    "accessoryDescription": "Effect values, upgrade requirements, and equip restrictions for {count} accessories.",
+    "search": "Search names or aliases",
+    "all": "All qualities",
+    "results": "{count} records",
+    "open": "Open record",
+    "back": "All records",
+    "alias": "Internal alias",
+    "quality": "Quality",
+    "effects": "Effect values",
+    "field": "Field",
+    "formula": "Expression",
+    "level": "Level",
+    "values": "Values",
+    "boost": "Effect",
+    "restrictions": "Plant restrictions",
+    "disabled": "Equip exclusions",
+    "targetable": "Plant restriction set",
+    "blacklist": "Result blacklist",
+    "upgrade": "Upgrade requirements",
+    "materials": "Materials",
+    "rank": "Rank",
+    "requiredLevel": "Required level",
+    "gold": "Gold",
+    "levelUp": "Level upgrade",
+    "rankUp": "Rank upgrade",
+    "omitted": "Not declared",
+    "empty": "Empty list",
+    "base": "Base effects",
+    "maxLevel": "Maximum accessory level",
+    "minPlantLevel": "Minimum plant level",
+    "pieces": "Required pieces",
+    "related": "Read the mechanism",
+    "formulaHeading": "Description formula fields",
+    "formulaExplanation": "Formulas use the artifact level and cultivation rank. Follow the mechanism article for how each field is consumed.",
+    "restrictionExplanation": "The owning mechanism determines the role of each list. Evolution uses TargetablePlantTypes for its passive buff and plantBlackList for results.",
+    "noResults": "No matching records.",
+    "normal": "Normal",
+    "magic": "Magic",
+    "epic": "Epic",
+    "unique": "Unique",
+    "legend": "Legend",
+    "super": "Super",
+    "referenceTitle": "The reference library",
+    "referenceDescription": "Look up a name, compare a value, and return to the mechanism that uses it."
+  },
+  "search": {
+    "title": "Find a mechanism",
+    "description": "Search the articles and reference records.",
+    "label": "Search the website",
+    "placeholder": "evolution, plant food, cooldown…",
+    "loading": "Searching…",
+    "empty": "No results. Try another word.",
+    "start": "Search a plant, an item, or a question.",
+    "error": "Search is temporarily unavailable. You can browse the articles below.",
+    "results": "{count} results",
+    "more": "Show more results",
+    "open": "Search",
+    "close": "Close search"
   }
 }

@@ -10,11 +10,18 @@ export function announcementScenario(input: {
   final: boolean;
 }) {
   const { deadline, tap, intervalAfterSpawn, clearAfterSpawn, final } = input;
-  if (!Number.isFinite(deadline) || deadline < 0 || deadline > 35
-    || !Number.isFinite(intervalAfterSpawn) || intervalAfterSpawn < 20 || intervalAfterSpawn > 25
-    || !Number.isFinite(clearAfterSpawn) || clearAfterSpawn < 0
-    || (tap !== null && (!Number.isFinite(tap) || tap < 0))) {
-    throw new RangeError("Invalid announcement scenario.");
+  if (
+    !Number.isFinite(deadline) ||
+    deadline < 0 ||
+    deadline > 35 ||
+    !Number.isFinite(intervalAfterSpawn) ||
+    intervalAfterSpawn < 20 ||
+    intervalAfterSpawn > 25 ||
+    !Number.isFinite(clearAfterSpawn) ||
+    clearAfterSpawn < 0 ||
+    (tap !== null && (!Number.isFinite(tap) || tap < 0))
+  ) {
+    throw new RangeError('Invalid announcement scenario.');
   }
   const warningStart = Math.max(4, Math.fround(deadline));
   const warningEnd = Math.max(warningStart, Math.fround(Math.fround(deadline) + 5));
@@ -31,8 +38,16 @@ export function announcementScenario(input: {
     retained ? freshDeadline : Math.min(freshDeadline, clear),
   );
   return {
-    warningStart, warningEnd, visible, accepted, retained, spawn, freshDeadline,
-    clear, following, stateAfterSpawn: retained ? 2 : 1,
+    warningStart,
+    warningEnd,
+    visible,
+    accepted,
+    retained,
+    spawn,
+    freshDeadline,
+    clear,
+    following,
+    stateAfterSpawn: retained ? 2 : 1,
     completionNeedsAnotherUpdate: final && retained,
   };
 }

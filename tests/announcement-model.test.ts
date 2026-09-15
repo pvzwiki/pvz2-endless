@@ -1,10 +1,16 @@
-import test from "node:test";
-import assert from "node:assert/strict";
-import { announcementScenario } from "../src/lib/announcement-model";
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { announcementScenario } from '../src/lib/announcement-model';
 
-const scenario = { deadline: 30, tap: 31, intervalAfterSpawn: 22.5, clearAfterSpawn: 5, final: false };
+const scenario = {
+  deadline: 30,
+  tap: 31,
+  intervalAfterSpawn: 22.5,
+  clearAfterSpawn: 5,
+  final: false,
+};
 
-test("a warning-time tap starts one wave and leaves its fresh deadline in state 2", () => {
+test('a warning-time tap starts one wave and leaves its fresh deadline in state 2', () => {
   const result = announcementScenario(scenario);
   assert.equal(result.warningStart, 30);
   assert.equal(result.warningEnd, 35);
@@ -15,7 +21,7 @@ test("a warning-time tap starts one wave and leaves its fresh deadline in state 
   assert.equal(result.following, 53.5);
 });
 
-test("normal timeout and a pre-warning tap retain HP-driven following transitions", () => {
+test('normal timeout and a pre-warning tap retain HP-driven following transitions', () => {
   const normal = announcementScenario({ ...scenario, tap: null });
   assert.equal(normal.spawn, 35);
   assert.equal(normal.stateAfterSpawn, 1);
@@ -26,7 +32,7 @@ test("normal timeout and a pre-warning tap retain HP-driven following transition
   assert.equal(early.following, 25);
 });
 
-test("only available pre-spawn taps apply; the timed update wins an exact end tie", () => {
+test('only available pre-spawn taps apply; the timed update wins an exact end tie', () => {
   for (const tap of [0, 17.4, 35, 40]) {
     const result = announcementScenario({ ...scenario, tap });
     assert.equal(result.accepted, false);
@@ -37,13 +43,21 @@ test("only available pre-spawn taps apply; the timed update wins an exact end ti
   assert.equal(atEntry.retained, true);
 });
 
-test("the old-deadline shift, minimum interval, and final bookkeeping remain separate", () => {
-  const earlyHealth = announcementScenario({ ...scenario, deadline: 1, tap: null, clearAfterSpawn: 0 });
+test('the old-deadline shift, minimum interval, and final bookkeeping remain separate', () => {
+  const earlyHealth = announcementScenario({
+    ...scenario,
+    deadline: 1,
+    tap: null,
+    clearAfterSpawn: 0,
+  });
   assert.equal(earlyHealth.warningStart, 4);
   assert.equal(earlyHealth.warningEnd, 6);
   assert.equal(earlyHealth.following, 10);
   const final = announcementScenario({ ...scenario, final: true });
   assert.equal(final.following, 53.5);
   assert.equal(final.completionNeedsAnotherUpdate, true);
-  assert.equal(announcementScenario({ ...scenario, tap: null, final: true }).completionNeedsAnotherUpdate, false);
+  assert.equal(
+    announcementScenario({ ...scenario, tap: null, final: true }).completionNeedsAnotherUpdate,
+    false,
+  );
 });

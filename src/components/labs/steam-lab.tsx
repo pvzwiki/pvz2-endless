@@ -1,20 +1,20 @@
-"use client";
-import { useTranslations } from "next-intl";
-import { clamp, f32 } from "@/lib/mechanism-model";
-import { advanceSmokeDamage } from "@/lib/runtime-model";
+'use client';
+import { useTranslations } from 'next-intl';
+import { clamp, f32 } from '@/lib/mechanism-model';
+import { advanceSmokeDamage } from '@/lib/runtime-model';
 import {
   LevelControl,
   Playback,
   Stat,
   Toggle,
   useCanvasWidth,
-  useParameters,
-} from "./lab-controls";
-const stepKeys = ["0", "1", "2", "3", "4", "5", "6", "7"] as const;
+  useEndlessParameters,
+} from './lab-controls';
+const stepKeys = ['0', '1', '2', '3', '4', '5', '6', '7'] as const;
 export default function SteamLab() {
-  const t = useTranslations("labs.steam");
-  const [state, set] = useParameters(
-    "steam",
+  const t = useTranslations('labs.steam');
+  const [state, set] = useEndlessParameters(
+    'steam',
     {
       level: 34,
       mode: 0,
@@ -59,20 +59,12 @@ export default function SteamLab() {
   const activeSmoke = state.mode === 0 && state.step === 3;
   return (
     <div>
-      <div className="lab-tabs" role="tablist" aria-label={t("systems")}>
-        <button
-          role="tab"
-          aria-selected={state.mode === 0}
-          onClick={() => set({ mode: 0 })}
-        >
-          {t("smoke")}
+      <div className="lab-tabs" role="tablist" aria-label={t('systems')}>
+        <button role="tab" aria-selected={state.mode === 0} onClick={() => set({ mode: 0 })}>
+          {t('smoke')}
         </button>
-        <button
-          role="tab"
-          aria-selected={state.mode === 1}
-          onClick={() => set({ mode: 1 })}
-        >
-          {t("pipeline")}
+        <button role="tab" aria-selected={state.mode === 1} onClick={() => set({ mode: 1 })}>
+          {t('pipeline')}
         </button>
       </div>
       <div className="lab-controls">
@@ -91,20 +83,18 @@ export default function SteamLab() {
         {state.mode === 1 && (
           <>
             <label>
-              {t("size")}
+              {t('size')}
               <select
                 value={state.size}
-                onChange={(event) =>
-                  set({ size: Number(event.target.value), time: 0 })
-                }
+                onChange={(event) => set({ size: Number(event.target.value), time: 0 })}
               >
-                <option value={0}>{t("small")}</option>
-                <option value={1}>{t("medium")}</option>
-                <option value={2}>{t("large")}</option>
+                <option value={0}>{t('small')}</option>
+                <option value={1}>{t('medium')}</option>
+                <option value={2}>{t('large')}</option>
               </select>
             </label>
             <label>
-              {t("zombies")}
+              {t('zombies')}
               <input
                 type="number"
                 min={1}
@@ -117,34 +107,24 @@ export default function SteamLab() {
               checked={!!state.blocked}
               onChange={(checked) => set({ blocked: Number(checked) })}
             >
-              {t("blocker")}
+              {t('blocker')}
             </Toggle>
           </>
         )}
       </div>
       <div className="lab-stat-grid">
-        <Stat label={t("holeCount")} value={smoke} />
-        <Stat label={t("pipeCount")} value={pipes} />
+        <Stat label={t('holeCount')} value={smoke} />
+        <Stat label={t('pipeCount')} value={pipes} />
         <Stat
-          label={t("damage")}
+          label={t('damage')}
           value={damage}
-          detail={state.mode === 0 ? t("perPass") : t("perBlocker")}
+          detail={state.mode === 0 ? t('perPass') : t('perBlocker')}
         />
       </div>
       <div className="lab-stage" ref={ref}>
-        <svg
-          viewBox={`0 0 ${width} ${height}`}
-          role="img"
-          aria-label={t("board")}
-        >
+        <svg viewBox={`0 0 ${width} ${height}`} role="img" aria-label={t('board')}>
           {Array.from({ length: 9 }, (_, c) => (
-            <text
-              key={c}
-              x={x(c)}
-              y="14"
-              textAnchor="middle"
-              className="lab-axis-label"
-            >
+            <text key={c} x={x(c)} y="14" textAnchor="middle" className="lab-axis-label">
               {c + 1}
             </text>
           ))}
@@ -161,7 +141,7 @@ export default function SteamLab() {
                   width={cell - 4}
                   height={rowHeight - 4}
                   rx="4"
-                  fill={(r + c) % 2 ? "#1b3527" : "#203d2c"}
+                  fill={(r + c) % 2 ? '#1b3527' : '#203d2c'}
                 />
               ))}
             </g>
@@ -173,7 +153,7 @@ export default function SteamLab() {
                 fill="none"
                 stroke="#bd9967"
                 strokeWidth="3"
-                strokeDasharray={state.mode === 1 ? "" : "3 4"}
+                strokeDasharray={state.mode === 1 ? '' : '3 4'}
                 opacity={state.mode === 1 ? 1 : 0.35}
               />
               <ellipse cx={x(6)} cy={y(r)} rx="11" ry="6" fill="#b69468" />
@@ -182,14 +162,7 @@ export default function SteamLab() {
           ))}
           {Array.from({ length: smoke }, (_, i) => (
             <g key={`hole-${i}`}>
-              <ellipse
-                cx={x(5)}
-                cy={y(i + 1)}
-                rx="13"
-                ry="8"
-                fill="#101713"
-                stroke="#7b8978"
-              />
+              <ellipse cx={x(5)} cy={y(i + 1)} rx="13" ry="8" fill="#101713" stroke="#7b8978" />
               {activeSmoke && (
                 <g className="smoke-cloud">
                   {[-1, 0, 1].flatMap((dy) =>
@@ -224,13 +197,7 @@ export default function SteamLab() {
                 >
                   <circle
                     r="7"
-                    fill={
-                      state.size === 0
-                        ? "#c8df99"
-                        : state.size === 1
-                          ? "#d7b579"
-                          : "#d39277"
-                    }
+                    fill={state.size === 0 ? '#c8df99' : state.size === 1 ? '#d7b579' : '#d39277'}
                   />
                   <text y="4" textAnchor="middle" fontSize="7" fill="#243623">
                     {i + 1}
@@ -240,21 +207,8 @@ export default function SteamLab() {
             })}
           {state.mode === 1 && blocked && (
             <g>
-              <rect
-                x={x(4) - 10}
-                y={y(0) - 13}
-                width="20"
-                height="26"
-                rx="6"
-                fill="#bd7f88"
-              />
-              <text
-                x={x(4)}
-                y={y(0) + 4}
-                textAnchor="middle"
-                fontSize="13"
-                fill="#fff"
-              >
+              <rect x={x(4) - 10} y={y(0) - 13} width="20" height="26" rx="6" fill="#bd7f88" />
+              <text x={x(4)} y={y(0) + 4} textAnchor="middle" fontSize="13" fill="#fff">
                 ×
               </text>
             </g>
@@ -269,9 +223,7 @@ export default function SteamLab() {
             onChange={(step) => set({ step, accumulator: 0, passes: 0 })}
           />
           <div className="lab-readout">
-            <h3>
-              {smoke ? t(`smokeStages.${stepKeys[state.step]}`) : t("noSmoke")}
-            </h3>
+            <h3>{smoke ? t(`smokeStages.${stepKeys[state.step]}`) : t('noSmoke')}</h3>
             <p>
               {smoke
                 ? t(`smokeExplain.${stepKeys[state.step]}`, {
@@ -280,40 +232,36 @@ export default function SteamLab() {
                     cooldown: 5,
                     nextRoar: 8,
                   })
-                : t("noSmokeDetail")}
+                : t('noSmokeDetail')}
             </p>
           </div>
           {state.step === 3 && smoke > 0 && (
             <>
               <div className="lab-controls smoke-updates">
                 <label>
-                  {t("delta")}
+                  {t('delta')}
                   <input
                     type="number"
                     step="0.1"
                     min={0}
                     max={4}
                     value={state.delta}
-                    onChange={(event) =>
-                      set({ delta: Number(event.target.value) })
-                    }
+                    onChange={(event) => set({ delta: Number(event.target.value) })}
                   />
                 </label>
-                <button
-                  onClick={() => set({ ...advanceSmokeDamage(state, state.delta) })}
-                >
-                  {t("update")}
+                <button onClick={() => set({ ...advanceSmokeDamage(state, state.delta) })}>
+                  {t('update')}
                 </button>
                 <button onClick={() => set({ accumulator: 0, passes: 0 })}>
-                  {t("resetDamage")}
+                  {t('resetDamage')}
                 </button>
               </div>
               <div className="lab-stat-grid">
-                <Stat label={t("passes")} value={passes} />
-                <Stat label={t("accumulator")} value={accumulator.toFixed(2)} />
-                <Stat label={t("targetDamage")} value={passes * damage} />
+                <Stat label={t('passes')} value={passes} />
+                <Stat label={t('accumulator')} value={accumulator.toFixed(2)} />
+                <Stat label={t('targetDamage')} value={passes * damage} />
               </div>
-              <p className="lab-caption">{t("onePass")}</p>
+              <p className="lab-caption">{t('onePass')}</p>
             </>
           )}
         </>
@@ -321,7 +269,7 @@ export default function SteamLab() {
         <>
           <div className="lab-controls steam-time">
             <label>
-              {t("time")}
+              {t('time')}
               <span className="control-value" aria-hidden="true">
                 {state.time.toFixed(1)} s
               </span>
@@ -343,42 +291,35 @@ export default function SteamLab() {
           <div className="lab-readout">
             <h3>
               {!pipes
-                ? t("noPipe")
+                ? t('noPipe')
                 : !admitted
-                  ? t("denied")
+                  ? t('denied')
                   : state.time > complete
-                    ? t("completed")
+                    ? t('completed')
                     : state.time >= under
-                      ? t("atExit")
+                      ? t('atExit')
                       : state.time >= 1
-                        ? t("underground")
-                        : t("entry")}
+                        ? t('underground')
+                        : t('entry')}
             </h3>
             <p>
               {admitted
-                ? t("pipeDetail", { under, complete, count: state.count })
-                : t("deniedDetail")}
+                ? t('pipeDetail', { under, complete, count: state.count })
+                : t('deniedDetail')}
             </p>
           </div>
           <div className="lab-stat-grid">
             <Stat
-              label={t("blockerDps")}
+              label={t('blockerDps')}
               value={blocked && admitted && state.time <= complete ? damage : 0}
-              detail={t("notPerZombie")}
+              detail={t('notPerZombie')}
             />
-            <Stat
-              label={t("waveMarker")}
-              value={admitted ? "7" : "—"}
-              detail={t("retained")}
-            />
-            <Stat
-              label={t("countsInHealth")}
-              value={admitted ? t("yes") : "—"}
-            />
+            <Stat label={t('waveMarker')} value={admitted ? '7' : '—'} detail={t('retained')} />
+            <Stat label={t('countsInHealth')} value={admitted ? t('yes') : '—'} />
           </div>
         </>
       )}
-      <p className="lab-caption">{t("positions")}</p>
+      <p className="lab-caption">{t('positions')}</p>
     </div>
   );
 }

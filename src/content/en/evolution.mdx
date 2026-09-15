@@ -1,0 +1,123 @@
+import { Note } from '@/components/evidence-notes';
+import { Link } from '@/i18n/navigation';
+import { MechanismLab } from '@/components/mechanism-lab';
+
+<div className="article-lead">
+Evolution replaces a plant with a type whose listed sun cost beats the source's effective cost. The interesting part is how those two prices are obtained, which plants survive the filters, and what happens between choosing a replacement and putting it on the lawn.
+</div>
+
+<section id="targets" className="prose-section">
+
+## First, find the plants
+
+The base trigger starts the cooldown before collecting targets. Finding no eligible replacement does not undo that deadline. The walkthrough follows this trigger, the selected types, and their queued effects through targeting, selection, and replacement.<Note id="evolutionFlow" />
+
+The active skill collects plants overlapping a 3×3 rectangle. Overlap is enough: a plant occupying several cells can enter the pass even if its footprint is not entirely inside the area.
+
+Collection rejects the sheep, extra mind-control, and witch-group transformation conditions tested by this path. The next gate rejects consumables, vine classes, hero types, aliases beginning with `parallel_`, and the explicit aliases `coffeebean`, `pumpkin`, `powervine`, and `peavine`. The vine class test already covers three of those four aliases.<Note id="evolutionArea" />
+
+The target rules are separate from the result rules. A plant named in `plantBlackList` can still be a target; that list limits what the skill may produce. The similarly inviting name `TargetablePlantTypes` belongs to the passive buff, discussed below.
+
+</section>
+
+<section id="candidate-pool" className="prose-section">
+
+## Build a pool, then make it smaller
+
+The result pool begins with plant types in the registry. Seven catalog filters leave 257 of the 383 definitions:
+
+| Filter applied | Remaining definitions |
+| --- | ---: |
+| Enabled types | 360 |
+| Four explicit alias exclusions | 356 |
+| Excluded plant classes | 350 |
+| Hero types removed | 349 |
+| Parallel types removed | 322 |
+| Consumables removed | 272 |
+| Result blacklist applied | 257 |
+
+An omitted `Enabled` field keeps the constructor's true default. Treating omission as false would remove plants that belong in this pool.
+
+The level's seed-bank blacklist is merged with the artifact's own list. Cost, stage rules, and the planting conditions of the individual cell narrow the result further. Thus 257 describes the catalog-filter pool, rather than a fixed choice count for every activation.<Note id="evolutionPool" />
+
+<MechanismLab kind="evolution" />
+
+</section>
+
+<section id="cost-comparison" className="prose-section">
+
+## The two prices are different quantities
+
+For a source with effective cost $S$, a candidate with declared cost $C$ must satisfy
+
+$$
+C>S.
+$$
+
+The source price is calculated. It can include a mode-specific price, a level adjustment, discounts, and multipliers, followed by a zero lower bound. The candidate price is the plain `Cost` field. The comparison is therefore asymmetric.<Note id="evolutionCost" />
+
+A discount can open the pool to plants whose listed price is below the original plant's listed price. If the source reaches effective cost 0, all positive-cost members of the catalog pool pass the price comparison. That leaves 254 candidates before location checks.
+
+This is why “evolves into a more expensive plant” needs the two prices defined. It compares the source's adjusted price with the result's base price; it does not compare two equally adjusted purchases.
+
+</section>
+
+<section id="ceiling" className="prose-section">
+
+## The ladder ends at 500 sun
+
+At effective cost 450, the catalog pool has exactly three candidates: `wintermelon`, `banana`, and `cobcannon`. Each has declared cost 500. None of the filtered candidates costs more.
+
+At effective source cost 500 or above, the strict comparison leaves no candidate. The picker returns an empty result, and the driver leaves that plant untouched. Cheaper eligible plants in the same area can still change.
+
+The empty-pool outcome is different from a failed replacement. Here no removal effect is created. A 500-cost plant can become eligible again if its effective source price is reduced; the ceiling belongs to the comparison, not permanently to those three plant names.
+
+</section>
+
+<section id="replacement-order" className="prose-section">
+
+## Selection happens before the plant changes
+
+The picker shuffles the candidate list and takes its first element. The driver then creates an effect carrying the chosen type, the cell, and the old plant's level. The actual replacement waits for an animation event.
+
+On that event, the code performs this sequence:
+
+1. Tag the old plant and set its health to zero.
+2. Check whether the replacement can be planted.
+3. Add the replacement if the check succeeds.
+
+The failure branch has no rollback. If the final check rejects the replacement, the old plant has already been removed and the cell stays empty.<Note id="evolutionReplace" />
+
+The two placement checks are not equivalent. Selection excuses blocked-reason 79; the final check does not. Board state can also change while the effect is pending. This makes the remove-before-check ordering a real defect in the replacement procedure.
+
+The effect carries the original level into the new plant. It does not carry the old plant's health, accumulated conditions, or accessory state through that payload. The new plant's construction can obtain its own state from the board and profile.
+
+</section>
+
+<section id="passives" className="prose-section">
+
+## Higher ranks take separate paths
+
+The rank-2 buff getters use a 26-name whitelist. The description expresses a 300-sun threshold, but the getters perform membership checks instead of testing cost. Eleven ordinary plants at or above that price are missing from the list. Updating a plant's cost or adding a new expensive plant does not update this whitelist automatically.
+
+The rank-3 passive uses a timer and a separate spawn path. A late update advances the deadline by one interval and performs one spawn attempt. It does not process all missed intervals in a loop. Its row draw covers rows 0–4.
+
+Rank 4 scans empty cells in the active area and chooses bonus plants costing at most 100. This scan runs after the replacement effects are scheduled but before those effects remove their old plants. It therefore sees the earlier board.
+
+The bonus-plant level calculation starts at 1 and repeatedly takes the smaller packet level. Ordinary packet levels cannot raise the result above 1. That initialization prevents the scan from finding a higher minimum even when every packet has a higher level.<Note id="evolutionPassives" />
+
+The <Link href="/artifacts/artifact_evolution/">Evolution reference</Link> contains the formulas and both plant lists.
+
+</section>
+
+<section id="repeated-results" className="prose-section">
+
+## Repetition has more than one cause
+
+A small candidate pool makes repeated names unsurprising. A repeatable shuffle stream is a different mechanism: its result depends on the ordered list and how far earlier consumers have advanced the stream.
+
+Evolution calls the library's `std::random_shuffle`. It shares that library stream with other shuffles, including Modern portal queues. A full permutation is computed even though this picker uses only the first element; the remaining work advances the stream for later consumers.<Note id="shuffleLibrary" />
+
+The <Link href="/randomness/">randomness article</Link> follows this shared history and explains why changing an earlier action can change a later result without changing the artifact itself.
+
+</section>

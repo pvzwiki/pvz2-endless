@@ -1,7 +1,7 @@
-"use client";
-import { useEffect, useRef, useState, type ReactNode } from "react";
-import { useTranslations } from "next-intl";
-import { ordinaryLevels } from "@/lib/wave-model";
+'use client';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { useTranslations } from 'next-intl';
+import { ordinaryLevels } from '@/lib/wave-model';
 
 // Lab bodies mount only inside the client-side dialog portal. Read their URL
 // inputs on the first mount so a later effect cannot overwrite an early click.
@@ -9,20 +9,18 @@ export function useParameters<T extends Record<string, number>>(
   prefix: string,
   defaults: T,
   limits: { [K in keyof T]: readonly [number, number, number?] },
+  transform?: (key: keyof T, value: number) => number,
 ) {
   const bounds = useRef(limits);
   const normalize = (key: keyof T, value: number) => {
     const [min, max, step = 1] = bounds.current[key];
     // A zero step preserves a computed state value (such as the smoke accumulator).
     let result = Math.max(min, Math.min(max, step ? Math.round(value / step) * step : value));
-    if (key === "level" && result % 5 === 0) result = Math.min(max, result + 1);
-    return result;
+    return transform ? transform(key, result) : result;
   };
   const [values, setValues] = useState<T>(() => {
     const next = { ...defaults };
-    const query = new URLSearchParams(
-      typeof window === "undefined" ? "" : window.location.search,
-    );
+    const query = new URLSearchParams(typeof window === 'undefined' ? '' : window.location.search);
     for (const key in next) {
       const raw = query.get(`${prefix}.${key}`);
       if (raw === null) continue;
@@ -33,9 +31,8 @@ export function useParameters<T extends Record<string, number>>(
   });
   useEffect(() => {
     const url = new URL(window.location.href);
-    for (const key in values)
-      url.searchParams.set(`${prefix}.${key}`, String(values[key]));
-    window.history.replaceState(window.history.state, "", url);
+    for (const key in values) url.searchParams.set(`${prefix}.${key}`, String(values[key]));
+    window.history.replaceState(window.history.state, '', url);
   }, [prefix, values]);
   const update = (patch: Partial<T>) =>
     setValues((old) => {
@@ -49,6 +46,16 @@ export function useParameters<T extends Record<string, number>>(
     });
   return [values, update, true] as const;
 }
+export function useEndlessParameters<T extends Record<string, number>>(
+  prefix: string,
+  defaults: T,
+  limits: { [K in keyof T]: readonly [number, number, number?] },
+) {
+  return useParameters(prefix, defaults, limits, (key, value) =>
+    key === 'level' && value % 5 === 0 ? Math.min(limits[key][1], value + 1) : value,
+  );
+}
+
 export function useCanvasWidth() {
   const ref = useRef<HTMLDivElement>(null),
     [width, setWidth] = useState(900);
@@ -69,14 +76,11 @@ export function LevelControl({
   value: number;
   onChange: (value: number) => void;
 }) {
-  const t = useTranslations("labs");
+  const t = useTranslations('labs');
   return (
     <label>
-      {t("level")}
-      <select
-        value={value}
-        onChange={(event) => onChange(Number(event.target.value))}
-      >
+      {t('level')}
+      <select value={value} onChange={(event) => onChange(Number(event.target.value))}>
         {ordinaryLevels.map((level) => (
           <option key={level} value={level}>
             {level}
@@ -95,7 +99,7 @@ export function Playback({
   total: number;
   onChange: (step: number) => void;
 }) {
-  const t = useTranslations("labs");
+  const t = useTranslations('labs');
   const [playing, setPlaying] = useState(false);
   const callback = useRef(onChange);
   callback.current = onChange;
@@ -116,24 +120,20 @@ export function Playback({
     <div className="lab-playback">
       <div>
         <button onClick={() => go(0)} disabled={step === 0}>
-          {t("reset")}
+          {t('reset')}
         </button>
-        <button
-          onClick={() => go(step - 1)}
-          disabled={step === 0}
-          aria-label={t("previous")}
-        >
+        <button onClick={() => go(step - 1)} disabled={step === 0} aria-label={t('previous')}>
           ←
         </button>
         <button onClick={() => setPlaying(!playing)} disabled={step >= total}>
-          {playing ? t("pause") : t("play")}
+          {playing ? t('pause') : t('play')}
         </button>
         <button onClick={() => go(step + 1)} disabled={step >= total}>
-          {t("next")} →
+          {t('next')} →
         </button>
       </div>
       <label>
-        <span className="sr-only">{t("step")}</span>
+        <span className="sr-only">{t('step')}</span>
         <input
           type="range"
           min={0}
@@ -196,7 +196,7 @@ export function StepTitle({
 }) {
   return (
     <div className="lab-step-title">
-      <span>{String(index).padStart(2, "0")}</span>
+      <span>{String(index).padStart(2, '0')}</span>
       <div>
         <h3>{title}</h3>
         {children && <p>{children}</p>}
