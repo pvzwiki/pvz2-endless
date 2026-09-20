@@ -1,0 +1,22 @@
+1:"$Sreact.fragment"
+2:I[3020,["/_next/static/chunks/2zsmg5v514e14.js","/_next/static/chunks/2gxwm5xkhfgbv.js","/_next/static/chunks/26gfob30ivbqi.js"],"SiteHeader"]
+3:I[77105,["/_next/static/chunks/2zsmg5v514e14.js","/_next/static/chunks/2gxwm5xkhfgbv.js","/_next/static/chunks/26gfob30ivbqi.js"],"default"]
+4:I[97367,["/_next/static/chunks/0h2qsuyze9ds1.js"],"OutletBoundary"]
+5:"$Sreact.suspense"
+9:I[97367,["/_next/static/chunks/0h2qsuyze9ds1.js"],"ViewportBoundary"]
+a:I[97367,["/_next/static/chunks/0h2qsuyze9ds1.js"],"MetadataBoundary"]
+b:I[27201,["/_next/static/chunks/0h2qsuyze9ds1.js"],"IconMark"]
+d:I[39756,["/_next/static/chunks/0h2qsuyze9ds1.js"],"default"]
+e:I[37457,["/_next/static/chunks/0h2qsuyze9ds1.js"],"default"]
+8:X
+10:X
+10:C
+0:{"buildId":"2Hkn57y--NIvb5DHwIcRt","data":[{"rsc":["$","$1","c",{"children":[[["$","$L2",null,{"locale":"zh-CN"}],["$","main",null,{"id":"main-content","className":"directory-main","children":[["$","header",null,{"className":"directory-heading","children":[["$","span",null,{"className":"eyebrow","children":"PVZ2"}],["$","h1",null,{"children":"参考资料库"}],["$","p",null,{"children":"查一个名称，对比一个数值，再回到使用它的机制。"}]]}],["$","div",null,{"className":"reference-grid","children":[["$","$L3","plants",{"href":"/zh-CN/plants/","localeCookie":{"name":"ENDLESS_LOCALE","sameSite":"lax"},"children":[["$","span",null,{"className":"reference-count","children":383}],["$","strong",null,{"children":"植物资料"}],["$","span",null,{"aria-hidden":"true","children":"↗"}]]}],["$","$L3","zombies",{"href":"/zh-CN/zombies/","localeCookie":"$0:data:0:rsc:props:children:0:1:props:children:1:props:children:0:props:localeCookie","children":[["$","span",null,{"className":"reference-count","children":1030}],["$","strong",null,{"children":"僵尸资料"}],["$","span",null,{"aria-hidden":"true","children":"↗"}]]}],["$","$L3","artifacts",{"href":"/zh-CN/artifacts/","localeCookie":"$0:data:0:rsc:props:children:0:1:props:children:1:props:children:0:props:localeCookie","children":[["$","span",null,{"className":"reference-count","children":38}],["$","strong",null,{"children":"神器"}],["$","span",null,{"aria-hidden":"true","children":"↗"}]]}],["$","$L3","accessories",{"href":"/zh-CN/accessories/","localeCookie":"$0:data:0:rsc:props:children:0:1:props:children:1:props:children:0:props:localeCookie","children":[["$","span",null,{"className":"reference-count","children":62}],["$","strong",null,{"children":"挂件"}],["$","span",null,{"aria-hidden":"true","children":"↗"}]]}]]}]]}]],[["$","script","script-0",{"src":"/_next/static/chunks/26gfob30ivbqi.js","async":true}]],["$","$L4",null,{"children":["$","$5",null,{"name":"Next.MetadataOutlet","children":"$@6"}]}]]}],"isPartial":"$@7","staleTime":"$8","varyParams":null},{"rsc":["$","$1","h",{"children":[null,["$","$L9",null,{"children":[["$","meta","0",{"charSet":"utf-8"}],["$","meta","1",{"name":"viewport","content":"width=device-width, initial-scale=1"}]]}],["$","div",null,{"hidden":true,"children":["$","$La",null,{"children":["$","$5",null,{"name":"Next.Metadata","children":[["$","title","0",{"children":"参考资料库 · PvZ2"}],["$","meta","1",{"name":"description","content":"查一个名称，对比一个数值，再回到使用它的机制。"}],["$","link","2",{"rel":"canonical","href":"https://pvzwiki.com/zh-CN/reference/"}],["$","link","3",{"rel":"alternate","hrefLang":"en","href":"https://pvzwiki.com/en/reference/"}],["$","link","4",{"rel":"alternate","hrefLang":"zh-CN","href":"https://pvzwiki.com/zh-CN/reference/"}],["$","link","5",{"rel":"icon","href":"/icon.svg"}],["$","$Lb","6",{}]]}]}]}],["$","meta",null,{"name":"next-size-adjust","content":""}]]}],"isPartial":"$@c","staleTime":"$8","varyParams":null},{"rsc":["$","$1","c",{"children":[null,["$","$Ld",null,{"parallelRouterKey":"children","template":["$","$Le",null,{}]}]]}],"isPartial":"$@f","staleTime":"$8","varyParams":"$10"}],"isUpgradeableISRFallback":false,"a":"$@11","rootVaryParams":null,"needsRuntimeRequest":"$@12"}
+6:null
+12:true
+8:300
+8:C
+11:0
+c:"$undefined"
+f:"$undefined"
+7:"$undefined"
