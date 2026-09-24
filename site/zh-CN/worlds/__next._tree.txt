@@ -1,4 +1,4 @@
 :HL["/_next/static/chunks/0s_xmyinoai11.css","style"]
 :HC["/",""]
 :HL["/_next/static/chunks/1dbp0b-wfx3qe.css","style"]
-0:{"tree":{"name":"","param":null,"prefetchHints":4176,"slots":{"children":{"name":"locale","param":{"type":"d","key":"zh-CN","siblings":[]},"prefetchHints":4144,"slots":{"children":{"name":"chapter","param":{"type":"d","key":"worlds","siblings":["accessories","articles","artifacts","introduction","plants","reference","search","tools","zombies"]},"prefetchHints":4160,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":4256,"slots":null}}}}}}},"staleTime":300,"buildId":"WFJQpJtpE6IP45-z85-on"}
+0:{"tree":{"name":"","param":null,"prefetchHints":4176,"slots":{"children":{"name":"locale","param":{"type":"d","key":"zh-CN","siblings":[]},"prefetchHints":4144,"slots":{"children":{"name":"chapter","param":{"type":"d","key":"worlds","siblings":["accessories","articles","artifacts","introduction","plants","reference","search","tools","zombies"]},"prefetchHints":4160,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":4256,"slots":null}}}}}}},"staleTime":300,"buildId":"IT_GoE2F8RfrgMtOch-HO"}
